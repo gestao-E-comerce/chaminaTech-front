@@ -30,7 +30,7 @@
   <div
     class="col-11 d-flex justify-content-center flex-column align-items-center"
   >
-    @if (loginService.getUser().role != "ADMIN") { @if
+    @if (loginService.getUser().role != "ADMIN" && loginService.getUser().role != "ADMINFUNCIONARIO") { @if
     (loginService.getUser().role == "FUNCIONARIO") {
     <div class="d-flex justify-content-between col-12 gap-3 lista-venda">
       @if (usuario && usuario.permissao && usuario.permissao.caixa) {
