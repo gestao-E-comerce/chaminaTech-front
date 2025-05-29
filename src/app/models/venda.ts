@@ -1,0 +1,38 @@
+import { Caixa } from "./caixa";
+import { Cliente } from "./cliente";
+import { Endereco } from "./endereco";
+import { Funcionario } from "./funcionario";
+import { Matriz } from "./matriz";
+import { ProdutoVenda } from "./produto-venda";
+import { VendaPagamento } from "./venda-pagamento";
+
+export class Venda {
+    id!: number;
+    ativo!: boolean;
+    retirada!: boolean;
+    entrega!: boolean;
+    balcao!: boolean;
+    deletado: boolean = false;
+    chaveUnico!: string;
+    imprimirDeletar: boolean = true;
+    imprimirCadastrar: boolean = true;
+    imprimirNotaFiscal: boolean = true;
+    notaFiscal: boolean = true;
+    statusEmAberto: boolean = false;
+    statusEmPagamento: boolean = false;
+    valorTotal!: number;
+    dataVenda!: Date;
+    dataEdicao!: Date;
+    mesa!: number;
+    motivo!: string;
+    nomeImpressora!: string | null;
+    taxaEntrega!: number;
+    tempoEstimado!: number;
+    cliente!: Cliente;
+    endereco!:Endereco
+    produtoVendas!: ProdutoVenda[];
+    funcionario!: Funcionario;
+    caixa!: Caixa;
+    matriz!: Matriz;
+    vendaPagamento!: VendaPagamento;
+}

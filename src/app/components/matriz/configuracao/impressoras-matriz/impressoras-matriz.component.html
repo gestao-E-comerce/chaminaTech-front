@@ -1,0 +1,47 @@
+@if(!tipoImpressoa){
+<div class="d-flex flex-column gap-3">
+  <div class="d-flex flex-column">
+    <label>Apelido impressora</label>
+    <input
+      autocomplete="off"
+      class="form-control"
+      type="text"
+      name="apelido"
+      [(ngModel)]="impressora.apelidoImpressora"
+    />
+  </div>
+  <div class="d-flex flex-column">
+    <label>Nome de impressora</label>
+    <input
+      class="form-control"
+      autocomplete="off"
+      type="text"
+      name="nomeImpressora"
+      [(ngModel)]="impressora.nomeImpressora"
+    />
+  </div>
+</div>
+} @else if(tipoImpressoa){
+<div class="d-flex flex-column gap-3">
+  <div class="d-flex flex-column">
+    <label>Apelido caixa</label>
+    <input
+      autocomplete="off"
+      class="form-control"
+      type="text"
+      name="apelido"
+      [(ngModel)]="identificador.identificadorNome"
+    />
+  </div>
+  <div class="d-flex flex-column">
+    <label>Nome de impressora</label>
+    <input
+      class="form-control"
+      autocomplete="off"
+      type="text"
+      name="nomeImpressora"
+      [(ngModel)]="identificador.impressoraNome"
+    />
+  </div>
+</div>
+}

@@ -1,0 +1,177 @@
+<div class="d-flex flex-column">
+  @if (estoque && !estoque.id) {
+  <div class="mb-3">
+    <label for="client" class="form-label">Produto:</label>
+    @if (estoque.produto == null) {
+    <p
+      class="alert alert-danger d-flex justify-content-between align-items-center"
+    >
+      Produto não vinculado, é obrigatório!
+      <button
+        type="button"
+        (click)="buscar(modalProduto)"
+        class="btn-comum btn-comum-vermelho"
+      >
+        Buscar
+      </button>
+    </p>
+    } @if (estoque.produto != null) {
+    <p
+      class="alert alert-success d-flex justify-content-between align-items-center"
+    >
+      {{ estoque.produto.nome }}
+      <button
+        type="button"
+        (click)="buscar(modalProduto)"
+        class="btn-comum btn-comum-cinza"
+      >
+        Trocar
+      </button>
+    </p>
+    }
+  </div>
+  } @if ( estoque && estoque.produto && estoque.produto.produtoMaterias &&
+  estoque.produto.produtoMaterias.length > 0 ) {
+  <div class="col-12 d-flex flex-column w-100 espaco-impressoras p-2 mb-2">
+    <div class="d-flex align-items-center justify-content-between w-100 mb-2">
+      <label>Lista de Matérias:</label>
+    </div>
+    <div class="lista-curta w-100">
+      @for (produtoMateria of estoque.produto.produtoMaterias; track $index) {
+      @if (produtoMateria.ativo) {
+      <div class="d-flex align-items-center justify-content-between w-100 p-2">
+        <label
+          for="materia_{{ produtoMateria.materia.id }}"
+          class="form-label w-25"
+          >{{ produtoMateria.materia.nome }}</label
+        >
+        <input
+          id="materia_{{ produtoMateria.materia.id }}"
+          autocomplete="off"
+          type="number"
+          class="form-control w-75"
+          name="materia_{{ produtoMateria.materia.id }}"
+          [(ngModel)]="produtoMateria.quantidadeGasto"
+          required
+          #quantidadeGasto="ngModel"
+          [ngClass]="{
+            'borda-vermelha': !quantidadeGasto.valid && quantidadeGasto.touched
+          }"
+          inputmode="numeric"
+          min="0"
+          step="1"
+          oninput="if (this.value.length > 10) this.value = this.value.slice(0, 10)"
+          onkeydown="return !['e', 'E', '-', '+' , ','].includes(event.key)"
+        />
+      </div>
+      } }
+    </div>
+  </div>
+  } @if ( estoque && estoque.produto && estoque.produto.produtoCompostos &&
+  estoque.produto.produtoCompostos.length > 0 ) {
+
+  <div class="col-12 d-flex flex-column w-100 espaco-impressoras p-2">
+    <div class="d-flex align-items-center justify-content-between w-100 mb-2">
+      <label>Lista de Produtos:</label>
+    </div>
+    <div class="lista-curta">
+      @for (produtoSegundo of estoque.produto.produtoCompostos; track $index) {
+      @if (produtoSegundo.ativo) {
+      <div class="d-flex align-items-center justify-content-between">
+        <label
+          for="produto_{{ produtoSegundo.produtoComposto.id }}"
+          class="form-label"
+          >{{ produtoSegundo.produtoComposto.nome }}</label
+        >
+        <input
+          id="produto_{{ produtoSegundo.produtoComposto.id }}"
+          autocomplete="off"
+          type="number"
+          class="form-control"
+          name="produto_{{ produtoSegundo.produtoComposto.id }}"
+          [(ngModel)]="produtoSegundo.quantidadeGasto"
+          required
+          #quantidadeGasto="ngModel"
+          [ngClass]="{
+            'borda-vermelha': !quantidadeGasto.valid && quantidadeGasto.touched
+          }"
+          inputmode="numeric"
+          min="0"
+          step="1"
+          oninput="if (this.value.length > 10) this.value = this.value.slice(0, 10)"
+          onkeydown="return !['e', 'E', '-', '+' , ','].includes(event.key)"
+        />
+      </div>
+      } }
+    </div>
+  </div>
+  }
+  <div class="d-flex justify-content-between">
+    @if (estoque && !estoque.id) {
+    <div class="mb-3">
+      <label for="quantidade" class="form-label">Quantidade</label>
+      <input
+        id="quantidade"
+        autocomplete="off"
+        type="number"
+        class="form-control"
+        name="quantidade"
+        [(ngModel)]="estoque.quantidade"
+        required
+        #quantidade="ngModel"
+        [ngClass]="{
+          'borda-vermelha': !quantidade.valid && quantidade.touched
+        }"
+        inputmode="numeric"
+        min="0"
+        step="1"
+        oninput="if (this.value.length > 10) this.value = this.value.slice(0, 10)"
+        onkeydown="return !['e', 'E', '-', '+' , ','].includes(event.key)"
+      />
+    </div>
+    } @if ( estoque && estoque.produto && (!estoque.produto.produtoMaterias ||
+    estoque.produto.produtoMaterias.length === 0) &&
+    (!estoque.produto.produtoCompostos ||
+    estoque.produto.produtoCompostos.length === 0) ) {
+    <div class="mb-3">
+      <label for="valorTotal" class="form-label">Valor Compra</label>
+      <input
+        id="valorTotal"
+        autocomplete="off"
+        type="number"
+        class="form-control"
+        name="valorTotal"
+        [(ngModel)]="estoque.valorTotal"
+        required
+        #valorTotal="ngModel"
+        [ngClass]="{
+          'borda-vermelha': !valorTotal.valid && valorTotal.touched
+        }"
+        inputmode="numeric"
+        min="0"
+        step="1"
+        oninput="if (this.value.length > 10) this.value = this.value.slice(0, 10)"
+        onkeydown="return !['e', 'E', '-', '+' , ','].includes(event.key)"
+      />
+    </div>
+    }
+  </div>
+</div>
+
+<ng-template #modalProduto let-modal>
+  <div class="modal-header cabecalhoModal">
+    <h4 class="modal-title">Buscar Produto</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="badyModal">
+    <app-produto-list
+      [modoVincular]="true"
+      (retorno)="retornoProduto($event)"
+    ></app-produto-list>
+  </div>
+</ng-template>

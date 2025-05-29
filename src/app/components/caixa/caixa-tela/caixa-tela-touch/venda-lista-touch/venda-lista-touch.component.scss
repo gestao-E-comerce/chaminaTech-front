@@ -1,0 +1,87 @@
+.lista {
+    background-color: var(--cor-cinza-escuro);
+    border: 2px solid var(--cor-laranja);
+    border-radius: 20px;
+    border-end-start-radius: 0px;
+    border-end-end-radius: 0px;
+    margin: 0px;
+}
+
+.botao-venda {
+    background-color: var(--cor-cinza-escuro-fundo);
+    border: 2px solid var(--cor-laranja);
+    border-radius: 10px;
+    color: var(--cor-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--sp-input-vertical) var(--sp-input-horizontal) !important;
+
+    &:hover {
+        background-color: var(--cor-laranja);
+        border-color: var(--cor-cinza-escuro-fundo);
+    }
+}
+
+.botao-text {
+    display: inline-block;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+    font-size: 14px;
+}
+
+.botao-amarelo {
+    background-color: rgb(195, 195, 82) !important;
+}
+
+.botao-vermelho {
+    background-color: red !important;
+}
+
+.status-vendas {
+    background-color: var(--cor-cinza-fundo);
+    border: 2px solid var(--cor-laranja);
+    border-top: 0;
+    border-end-start-radius: 20px;
+    border-end-end-radius: 20px;
+    color: var(--cor-white);
+    font-size: var(--fs-button) !important;
+}
+
+.status-indicator {
+    padding: var(--sp-input-vertical-bem-menor) var(--sp-input-horizontal-bem-menor) !important;
+    color:  var(--cor-white);
+    text-align: center;
+    border-radius: 5px;
+    font-size: var(--fs-span);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.olho {
+    filter: var(--cor-white-filter-icon);
+    width: var(--sp-card);
+    height: var(--sp-card);
+}
+
+.atrasado {
+    display: none;
+}
+
+.atrasado-mostrar {
+    .atrasado {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: var(--cor-vermelho);
+        font-size: var(--fs-button);
+    }
+}
+
+.botao-atrasado {
+    border-color: var(--cor-vermelho);
+}

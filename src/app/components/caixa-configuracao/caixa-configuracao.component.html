@@ -1,0 +1,531 @@
+<div class="h-100 d-flex w-100">
+  <div
+    class="d-flex flex-column menuVendas menu-container"
+    [class.expanded]="menuAberto"
+  >
+    @if (!menuAberto) {
+    <div
+      class="d-flex flex-column align-items-center justify-content-between text-center h-100 w-100"
+    >
+      <div>
+        <button class="abrir-menu w-100" (click)="menuAberto = true">☰</button>
+        <h2 class="titulo-vertical">Caixa Configuração</h2>
+      </div>
+      <button
+        type="button"
+        name="sair"
+        class="botao_voltar mb-2"
+        routerLink="/home"
+      >
+        <i class="bi bi-arrow-left"></i>
+      </button>
+    </div>
+    } @if (menuAberto) {
+    <div class="d-flex flex-column p-2 pm-0 col-12">
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <div class="d-flex align-items-center">
+          <button
+            type="button"
+            name="sair"
+            class="botao_voltar me-2"
+            routerLink="/home"
+          >
+            <i class="bi bi-arrow-left "></i>
+          </button>
+
+          <h2 class="titulo m-0">Caixa Configuração</h2>
+        </div>
+        <button class="fechar-menu" (click)="menuAberto = false">✕</button>
+      </div>
+      <div
+        class="col-lg-12 d-flex align-items-center gap-3 pb-2 w-100 area-pesquisa"
+      >
+        <div class="d-flex flex-column w-100">
+          <label for="nome">Funcionário</label>
+          <div class="filtro-pesquisa">
+            <input
+              autocomplete="off"
+              type="text"
+              placeholder="Nome"
+              [(ngModel)]="nomeFuncionario"
+              (keydown.enter)="pesquisarCaixa(nomeFuncionario)"
+              class="form-control"
+            />
+            <button
+              type="button"
+              class="botao_cep"
+              (click)="pesquisarCaixa(nomeFuncionario)"
+            >
+              <img src="../../../../assets/images/search.svg" class="busca" />
+            </button>
+          </div>
+        </div>
+        <div class="d-flex flex-column w-25">
+          <label>Tipo</label>
+          <select
+            class="select-filtro p-1"
+            name="filtro"
+            [(ngModel)]="filtroTipo"
+            (change)="filtrarPorTipo()"
+          >
+            <option value="">Todos</option>
+            <option value="aberta">Aberta</option>
+            <option value="fechada">Fechada</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex flex-column lista-btns">
+      @for (caixa of listaCaixasFiltrada; track $index) {
+      <button
+        type="button"
+        name="{{ caixa.id }}"
+        (click)="selecionarCaixa(caixa)"
+        class="btn-lista d-flex align-items-center text-start px-3 py-2 m-1"
+        [ngClass]="{ 'btn-lista-active': active == caixa }"
+      >
+        <span class="text-start" style="width: 150px">
+          <strong>Caixa </strong>
+          <span
+            [ngClass]="{
+              'text-danger': !caixa.ativo,
+              'text-success': caixa.ativo
+            }"
+            >{{ caixa.ativo ? "Aberta" : "Fechada" }}</span
+          >
+        </span>
+
+        <span class="text-start flex-grow-1 ps-3">
+          <strong>Funcionário</strong>
+          {{ caixa.funcionario.nome }}
+        </span>
+      </button>
+      }
+    </div>
+    }
+  </div>
+  <div class="h-100 p-3 pb-0 w-100 content-container">
+    @if (caixaSelecionado) {
+    <div class="d-flex flex-column h-100 w-100">
+      <div class="d-flex justify-content-between w-100 h-dados">
+        <div class="w-50 h-100">
+          <h4>Detalhes do Caixa ID: {{ caixaSelecionado.id }}</h4>
+          <p>
+            <strong>Data e Hora Abertura: </strong>
+            {{ caixaSelecionado.dataAbertura | date : "dd/MM/yyyy HH:mm:ss a" }}
+          </p>
+          @if (caixaSelecionado.dataFechamento) {
+          <p>
+            <strong>Data e Hora Fechamento: </strong>
+            {{
+              caixaSelecionado.dataFechamento | date : "dd/MM/yyyy HH:mm:ss a"
+            }}
+          </p>
+          }
+          <p>
+            <strong>Funcionário: </strong>
+            {{ caixaSelecionado.funcionario.nome }}
+          </p>
+          <p>
+            <strong>Valor Abertura: </strong>
+            {{ caixaSelecionado.valorAbertura }}
+          </p>
+        </div>
+        <div class="w-50 d-flex flex-column h-100">
+          <div class="d-flex justify-content-between w-100">
+            <div class="w-50">
+              <p><strong>Dinheiro: </strong> {{ saldoDinheiro || 0 }}</p>
+              <p><strong>Crédito: </strong> {{ saldoCredito || 0 }}</p>
+            </div>
+            <div class="w-50">
+              <p><strong>Débito: </strong> {{ saldoDebito || 0 }}</p>
+              <p><strong>Pix: </strong> {{ saldoPix || 0 }}</p>
+            </div>
+          </div>
+          <div class="d-flex justify-content-between w-100">
+            <div class="w-50">
+              <p><strong>Sangrias: </strong> {{ saldoSangrias || 0 }}</p>
+            </div>
+            <div class="w-50">
+              <p><strong>Suprimentos: </strong> {{ saldoSuprimentos || 0 }}</p>
+            </div>
+          </div>
+          <h4 class="mt-4">Saldo: {{ saldo || 0 }}</h4>
+        </div>
+      </div>
+      <div class="h-listas w-100">
+        <div
+          class="d-flex flex-wrap flex-md-nowrap justify-content-center gap-3 w-100 h-50"
+        >
+          <div class="d-flex flex-column lista-col">
+            <div class="d-flex justify-content-start">
+              <h4>Sangrias</h4>
+            </div>
+            <div class="lista">
+              <table class="table ">
+                <thead>
+                  <th class="text-center col-1">#</th>
+                  <th class="text-start col-2">Motivo</th>
+                  <th class="text-center col-1">Valor</th>
+                  <th class="text-center col-2">Ações</th>
+                </thead>
+                <tbody>
+                  @for (sangria of caixaSelecionado.sangrias; track $index) {
+                  <tr>
+                    <td class="text-center">{{ $index + 1 + "." }}</td>
+                    <td class="text-start">{{ sangria.motivo }}</td>
+                    <td class="text-center">{{ sangria.valor }}</td>
+                    <td>
+                      <div class="col-acoes">
+                        @if (usuario && usuario.permissao &&
+                        usuario.permissao.editarSangria) {
+                        <button
+                          type="button"
+                          name="{{ sangria.dataSangria }}"
+                          (click)="editarSangria(modalSangria, sangria, $index)"
+                          class="hover-btn"
+                        >
+                          <img
+                            src="../../../assets/images/botao_editar.svg"
+                            alt="Editar"
+                          />
+                          <span class="hover-text">Editar</span>
+                        </button>
+                        } @if ((usuario && usuario.permissao &&
+                        usuario.permissao.imprimir) && matriz.usarImpressora) {
+                        <button
+                          type="button"
+                          name="{{ sangria.dataSangria }}"
+                          (click)="imprimirSangria(sangria)"
+                          class="hover-btn"
+                        >
+                          <img
+                            class="icon-impressora"
+                            src="../../../assets/images/impressora.svg"
+                            alt="Impiemir"
+                          />
+                          <span class="hover-text">Imprimir</span>
+                        </button>
+                        } @if (usuario && usuario.permissao &&
+                        usuario.permissao.deletarSangria) {
+                        <button
+                          type="button"
+                          name="{{ sangria.dataSangria }}"
+                          (click)="deletarSangria(modalDeletar, sangria)"
+                          class="hover-btn"
+                        >
+                          <img
+                            src="../../../assets/images/botao_deletar.svg"
+                            alt="Deletar"
+                          />
+                          <span class="hover-text">Deletar</span>
+                        </button>
+                        } @else { &nbsp; }
+                      </div>
+                    </td>
+                  </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="d-flex flex-column lista-col">
+            <div class="d-flex justify-content-start">
+              <h4>Suprimentos</h4>
+            </div>
+            <div class="lista">
+              <table class="table ">
+                <thead>
+                  <th class="text-center col-1">#</th>
+                  <th class="text-start col-2">Motivo</th>
+                  <th class="text-center col-1">Valor</th>
+                  <th class="text-center col-2">Ações</th>
+                </thead>
+                <tbody>
+                  @for (suprimento of caixaSelecionado.suprimentos; track
+                  $index) {
+                  <tr>
+                    <td class="text-center">{{ $index + 1 + "." }}</td>
+                    <td class="text-start">{{ suprimento.motivo }}</td>
+                    <td class="text-center">{{ suprimento.valor }}</td>
+                    <td>
+                      <div class="col-acoes">
+                        @if (usuario && usuario.permissao &&
+                        usuario.permissao.editarSuprimento) {
+                        <button
+                          type="button"
+                          name="{{ suprimento.dataSuprimento }}"
+                          (click)="
+                            editarSuprimento(
+                              modalSuprimento,
+                              suprimento,
+                              $index
+                            )
+                          "
+                          class="hover-btn"
+                        >
+                          <img
+                            src="../../../assets/images/botao_editar.svg"
+                            alt="Editar"
+                          />
+                          <span class="hover-text">Editar</span>
+                        </button>
+                        } @if ((usuario && usuario.permissao &&
+                        usuario.permissao.imprimir) && matriz.usarImpressora) {
+                        <button
+                          type="button"
+                          name="{{ suprimento.dataSuprimento }}"
+                          (click)="imprimirSuprimento(suprimento)"
+                          class="hover-btn"
+                        >
+                          <img
+                            class="icon-impressora"
+                            src="../../../assets/images/impressora.svg"
+                            alt="Impiemir"
+                          />
+                          <span class="hover-text">Imprimir</span>
+                        </button>
+                        } @if (usuario && usuario.permissao &&
+                        usuario.permissao.deletarSuprimento) {
+                        <button
+                          type="button"
+                          name="{{ suprimento.dataSuprimento }}"
+                          (click)="deletarSuprimento(modalDeletar, suprimento)"
+                          class="hover-btn"
+                        >
+                          <img
+                            src="../../../assets/images/botao_deletar.svg"
+                            alt="Deletar"
+                          />
+                          <span class="hover-text">Deletar</span>
+                        </button>
+                        }@else { &nbsp; }
+                      </div>
+                    </td>
+                  </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="h-50 mt-2">
+          <div class="d-flex flex-column h-100">
+            <div class="d-flex justify-content-start">
+              <h4>Vendas</h4>
+            </div>
+            <div class="lista">
+              <table class="table ">
+                <thead>
+                  <th class="text-center col-1">#</th>
+                  <th class="text-center col-1">Venda</th>
+                  <th class="text-center col-1">Pagamento</th>
+                  <th class="text-center col-1">Valor Total</th>
+                </thead>
+                <tbody>
+                  @for (venda of caixaSelecionado.vendas; track $index) {
+                  <tr>
+                    <td class="text-center">{{ $index + 1 + "." }}</td>
+                    <td class="text-center">
+                      {{
+                        venda.mesa != null
+                          ? " Mesa"
+                          : venda.retirada
+                          ? " Retirada"
+                          : venda.entrega
+                          ? " Entrega"
+                          : venda.balcao
+                          ? " Balcão"
+                          : ""
+                      }}
+                      {{ venda.mesa }}
+                    </td>
+                    <td class="text-center">
+                      @if (venda.vendaPagamento.dinheiro > 0) {
+                      <span>Dinheiro</span>
+                      } @if (venda.vendaPagamento.credito > 0) {
+                      <span> Crédito</span>
+                      } @if (venda.vendaPagamento.debito > 0) {
+                      <span> Débito</span>
+                      } @if (venda.vendaPagamento.pix > 0) {
+                      <span> PIX</span>
+                      }
+                    </td>
+                    <td class="text-center">{{ venda.valorTotal }}</td>
+                  </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex justify-content-end align-items-center w-100 h-btn gap-3">
+        @if ((usuario && usuario.permissao && usuario.permissao.imprimir) && matriz.usarImpressora) {
+        <button
+          type="button"
+          name="impremir"
+          class="hover-btn btn-imprimir"
+          (click)="abrirModalImpressao(modalImpressao)"
+        >
+          <img
+            class="icon-impressora"
+            src="../../../../assets/images/impressora.svg"
+            alt="Imprimir"
+          />
+          <span class="hover-text">Imprimir</span>
+        </button>
+        } @if (usuario && usuario.permissao && usuario.permissao.deletarCaixa) {
+        <button
+          type="button"
+          name="deletar"
+          class="btn-comum btn-comum-vermelho"
+          (click)="deletarCaixa(modalDeletar)"
+        >
+          Deletar Caixa
+        </button>
+        } @if (usuario && usuario.permissao && usuario.permissao.editarCaixa) {
+        <button
+          type="button"
+          name="editar"
+          class="btn-comum btn-comum-laranja"
+          (click)="editarCaixa(modalCaixa)"
+        >
+          Editar Caixa
+        </button>
+        }
+      </div>
+    </div>
+    }
+  </div>
+</div>
+
+<ng-template #modalCaixa let-modal>
+  <div class="modal-header modal-style">
+    <h4 class="modal-title">{{ tituloModal }}</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+      name="close"
+    ></button>
+  </div>
+  <div class="modal-body modal-style">
+    <div class="d-flex justify-content-between">
+      <div class="mb-3">
+        <label for="valorAbertura" class="form-label">Saldo abertura</label>
+        <input
+          autocomplete="off"
+          #valorAbertura
+          type="number"
+          class="form-control"
+          name="valorAbertura"
+          inputmode="numeric"
+          min="0"
+          step="0.01"
+          oninput="if (this.value.length > 10) this.value = this.value.slice(0, 10)"
+          onkeydown="return !['e', 'E', '-', '+' , ','].includes(event.key)"
+          [(ngModel)]="caixa.valorAbertura"
+        />
+      </div>
+    </div>
+    <div class="d-flex justify-content-center">
+      <button
+        type="button"
+        name="salvar"
+        class="btn-comum btn-comum-laranja"
+        (click)="salvarCaixa()"
+      >
+        Salvar
+      </button>
+    </div>
+  </div>
+</ng-template>
+<ng-template #modalDeletar let-modal>
+  <div class="modal-header modal-style">
+    <h4 class="modal-title">{{ tituloModal }}</h4>
+  </div>
+  <div class="modal-body modal-style">
+    <h5>Tem certeza que deseja deletar?</h5>
+  </div>
+  <div class="modal-footer modal-style justify-content-center">
+    <button
+      type="button"
+      name="confirmarDeletar"
+      class="btn-comum btn-comum-vermelho"
+      (click)="confirmarDeletar()"
+    >
+      Deletar
+    </button>
+    <button
+      type="button"
+      name="fechar"
+      class="btn-comum btn-comum-cinza"
+      (click)="modal.close('Close click')"
+    >
+      Fechar
+    </button>
+  </div>
+</ng-template>
+<ng-template #modalSangria let-modal>
+  <div class="modal-header modal-style justify-content-between p-3">
+    <h4 class="modal-title">{{ tituloModal }}</h4>
+    <i
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+      class="bi bi-x-lg close"
+    ></i>
+  </div>
+  <div class="modal-body modal-style p-3">
+    <app-sangria [sangria]="sangria" (retorno)="atualizar()"></app-sangria>
+  </div>
+</ng-template>
+<ng-template #modalSuprimento let-modal>
+  <div class="modal-header modal-style justify-content-between p-3">
+    <h4 class="modal-title">{{ tituloModal }}</h4>
+    <i
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+      class="bi bi-x-lg close"
+    ></i>
+  </div>
+  <div class="modal-body modal-style p-3">
+    <app-suprimento
+      [suprimento]="suprimento"
+      (retorno)="atualizar()"
+    ></app-suprimento>
+  </div>
+</ng-template>
+<ng-template #modalImpressao let-modal>
+  <div class="modal-header modal-style">
+    <h4 class="modal-title">{{ tituloModal }}</h4>
+    <button
+      type="button"
+      name="close"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Close click')"
+    ></button>
+  </div>
+  <div class="modal-body modal-style">
+    <div class="d-flex flex-column w-100 gap-3">
+      <button
+        type="button"
+        name="abertura"
+        class="botao-imprimir"
+        (click)="imprimirAbertura(caixa)"
+      >
+        Imprimir Abertura
+      </button>
+      <button
+        type="button"
+        name="conferencia"
+        class="botao-imprimir"
+        (click)="imprimirConferenciaCaixa(caixa)"
+      >
+        Imprimir Conferencia Caixa
+      </button>
+    </div>
+  </div>
+</ng-template>

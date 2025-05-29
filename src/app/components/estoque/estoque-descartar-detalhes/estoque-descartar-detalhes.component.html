@@ -1,0 +1,91 @@
+<div class="d-flex flex-column">
+    @if (!estoqueDescartar.id) {
+    <div class="mb-3">
+      <label for="client" class="form-label">Produto:</label>
+      @if (estoqueDescartar.produto == null) {
+      <p
+        class="alert alert-danger d-flex justify-content-between align-items-center"
+      >
+        Produto não vinculado, é obrigatório!
+        <button
+          type="button"
+          (click)="buscar(modalProduto)"
+          class="btn-comum btn-comum-vermelho"
+        >
+          Buscar
+        </button>
+      </p>
+      } @if (estoqueDescartar.produto != null) {
+      <p
+        class="alert alert-success d-flex justify-content-between align-items-center"
+      >
+        {{ estoqueDescartar.produto.nome }}
+        <button
+          type="button"
+          (click)="buscar(modalProduto)"
+          class="btn-comum btn-comum-cinza"
+        >
+          Trocar
+        </button>
+      </p>
+      }
+    </div>
+    }
+    <div class="d-flex flex-column w-100">
+      <div class="mb-3">
+        <label for="quantidade" class="form-label">Quantidade</label>
+        <input
+          id="quantidade"
+          autocomplete="off"
+          type="number"
+          class="form-control"
+          name="quantidade"
+          [(ngModel)]="estoqueDescartar.quantidade"
+          required
+          #quantidade="ngModel"
+          [ngClass]="{
+            'borda-vermelha': !quantidade.valid && quantidade.touched
+          }"
+          inputmode="numeric"
+          min="0"
+          step="1"
+          oninput="if (this.value.length > 10) this.value = this.value.slice(0, 10)"
+          onkeydown="return !['e', 'E', '-', '+' , ','].includes(event.key)"
+        />
+      </div>
+      <div class="w-100">
+        <label for="motivo" class="form-label">Motivo</label>
+        <textarea
+          id="motivo"
+          autocomplete="off"
+          type="text"
+          class="form-control"
+          name="motivo"
+          [(ngModel)]="estoqueDescartar.motivo"
+          #motivo="ngModel"
+          [ngClass]="{
+            'borda-vermelha': !motivo.valid && motivo.touched
+          }"
+        ></textarea>
+      </div>
+    </div>
+  </div>
+  
+  <ng-template #modalProduto let-modal>
+    <div class="modal-header cabecalhoModal">
+      <h4 class="modal-title">Buscar Produto</h4>
+      <button
+        type="button"
+        class="btn-close"
+        aria-label="Close"
+        (click)="modal.dismiss('Cross click')"
+      ></button>
+    </div>
+    <div class="badyModal">
+      <app-produto-list
+        [modoVincular]="true"
+        (retorno)="retornoProduto($event)"
+      ></app-produto-list>
+    </div>
+  </ng-template>
+  

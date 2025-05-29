@@ -1,0 +1,89 @@
+<div class="tela d-flex flex-column col-lg-12 w-100 p-2 tela_modoVincular">
+  <div class="d-flex align-items-center justify-content-start">
+    <h2 class="titulo m-0">Produtos</h2>
+  </div>
+
+  <div
+    class="col-lg-12 d-flex align-items-center gap-3 pb-2 w-100 area-pesquisa"
+  >
+    <div class="d-flex flex-column w-100">
+      <label>Nome</label>
+      <div class="filtro-pesquisa">
+        <input
+          class="form-control"
+          type="text"
+          placeholder="nome"
+          [(ngModel)]="nome"
+          (keydown.enter)="filtrarProdutos()"
+        />
+        <button type="button" class="botao_cep" (click)="filtrarProdutos()">
+          <img src="../../../../assets/images/search.svg" class="busca" />
+        </button>
+      </div>
+    </div>
+
+    <div class="largura d-flex flex-column">
+      <label>Cardápio</label>
+      <select
+        class="select-filtro p-1"
+        [(ngModel)]="cardapio"
+        (change)="filtrarProdutos()"
+      >
+        <option value="">Todos</option>
+        <option value="true">Sim</option>
+        <option value="false">Não</option>
+      </select>
+    </div>
+
+    <div class="largura d-flex flex-column">
+      <label>Categoria</label>
+      <select
+        class="select-filtro p-1"
+        [(ngModel)]="categoriaNome"
+        (change)="filtrarProdutos()"
+      >
+        <option value="">Todos</option>
+        @for (categoria of listaCategorias; track $index) {
+        <option value="{{ categoria.nome }}">{{ categoria.nome }}</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  <div class="lista">
+    <table class="table ">
+      <thead>
+        <th class="text-center col-1">#</th>
+        <th class="text-center col-1">Codigo</th>
+        <th class="text-start col-2">Nome</th>
+        <th class="text-center col-3">Valor</th>
+        <th class="text-center col-2">Ações</th>
+      </thead>
+      <tbody>
+        @for (produto of listaProdutosFiltrada; track $index) {
+        <tr>
+          <td class="text-center">{{ $index }}</td>
+          <td class="text-center">{{ produto.codigo }}</td>
+          <td class="text-start">{{ produto.nome }}</td>
+          <td class="text-center">{{ produto.valor }}</td>
+          <td>
+            <div class="col-acoes">
+              <button
+                type="button"
+                (click)="vincular(produto)"
+                class="hover-btn"
+              >
+                <img
+                  src="../../../../assets/images/link-vincular.svg"
+                  alt="Vincular"
+                />
+                <span class="hover-text">Vincular</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

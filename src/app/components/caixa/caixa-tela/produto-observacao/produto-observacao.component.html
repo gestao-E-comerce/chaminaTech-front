@@ -1,0 +1,67 @@
+<div>
+  <div class="form-group">
+    <label class="form-label">Adicionais</label>
+    <div class="obs-container">
+      <div class="obs-scroll">
+        <ng-container>
+          @for (observacao of categoria.observacoesCategoria; track $index) {
+          <ng-container>
+            @if (observacao.valor != null) {
+            <input
+              autocomplete="off"
+              type="button"
+              name="obs_{{ observacao.observacao }}"
+              (click)="colar(observacao)"
+              [ngClass]="{
+                'btn btn-outline-secondary mx-1 mb-1': true,
+                ativo: isObservacaoSelecionada(observacao)
+              }"
+              value="{{ observacao.observacao }} - R$ {{ observacao.valor }}"
+            />
+            }
+          </ng-container>
+          }
+        </ng-container>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="form-label">Recomendações</label>
+    <div class="obs-container">
+      <div class="obs-scroll">
+        <ng-container>
+          @for (observacao of categoria.observacoesCategoria; track $index) {
+          <ng-container>
+            @if (observacao.valor == null) {
+            <input
+              autocomplete="off"
+              type="button"
+              name="obs_{{ observacao.observacao }}"
+              (click)="colar(observacao)"
+              [ngClass]="{
+                'btn btn-outline-secondary mx-1 mb-1': true,
+                ativo: isObservacaoSelecionada(observacao)
+              }"
+              value="{{ observacao.observacao }}"
+            />
+            }
+          </ng-container>
+          }
+        </ng-container>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="nome" class="form-label">Observação</label>
+    <input
+      autocomplete="off"
+      type="text"
+      placeholder="Obs"
+      [(ngModel)]="produtoVenda.observacaoProdutoVenda"
+      name="obs"
+      class="form-control"
+    />
+  </div>
+</div>

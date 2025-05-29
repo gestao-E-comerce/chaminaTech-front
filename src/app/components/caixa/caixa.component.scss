@@ -1,0 +1,149 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.menu-container {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: 4vw;
+    background-color: var(--cor-cinza-escuro);
+    overflow: hidden;
+    transition: width 0.3s ease-in-out;
+    z-index: 1050;
+}
+
+.menu-container.expanded {
+    width: auto;
+}
+
+.content-container {
+    margin-left: 4vw;
+    width: calc(100% - 4vw);
+}
+
+.logo {
+    width: 100% !important;
+}
+
+.menu-container.expanded .logo {
+    width: 11vw;
+}
+
+.icon-img {
+    filter: var(--cor-white-filter-icon);
+}
+
+.menu-container.expanded .icon-img {
+    width: 30px;
+}
+
+.texto-balcao {
+    color: var(--cor-white);
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    display: inline-block;
+}
+
+.menu-container.expanded .texto-balcao {
+    opacity: 1;
+}
+
+.botao_maisOpc {
+    border: none;
+    color: var(--cor-white);
+    background-color: transparent;
+    width: 100%;
+    text-align: left;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    transition: background 0.3s ease-in-out;
+}
+
+.botao_opc {
+    border: none;
+    color: var(--cor-white);
+    background-color: transparent;
+    width: 100%;
+    text-align: left;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+
+}
+
+.botao_opc:hover {
+    background-color: var(--cor-white);
+    color: var(--cor-cinza-escuro-fundo);
+
+    .texto-balcao {
+        color: var(--cor-preto);
+    }
+}
+
+.botao:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.close {
+    cursor: pointer;
+}
+
+.submenu {
+    background-color: var(--cor-cinza-medio);
+}
+
+.abrir-menu {
+    background-color: var(--cor-laranja);
+    color: var(--cor-white);
+    border: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+}
+
+.logo-vertical {
+    transform: rotate(270deg);
+    height: 10% !important;
+    width: 500% !important;
+    object-fit: contain;
+}
+
+@media (max-width: 1024px) {
+    .menu-container {
+        width: 6vw;
+    }
+
+    .content-container {
+        margin-left: 6vw;
+        width: calc(100% - 6vw);
+    }
+}
+
+@media (max-width: 768px) {
+    .menu-container {
+        width: 8vw;
+    }
+
+    .content-container {
+        margin-left: 8vw;
+        width: calc(100% - 8vw);
+    }
+}
+
+@media (max-width: 480px) {
+    .menu-container {
+        width: 10vw;
+    }
+
+    .content-container {
+        margin-left: 10vw;
+        width: calc(100% - 10vw);
+    }
+}

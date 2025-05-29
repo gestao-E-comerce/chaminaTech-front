@@ -1,0 +1,360 @@
+<div class="row h-100">
+  <div
+    class="menu-container"
+    [class.expanded]="menuPrincipalAberto"
+    (focusin)="menuPrincipalAberto = true"
+    (mouseenter)="menuPrincipalAberto = true"
+    (mouseleave)="menuPrincipalAberto = false"
+    tabindex="0"
+  >
+    @if (!menuPrincipalAberto) {
+    <div
+      class="d-flex flex-column align-items-center justify-content-between text-center h-100 w-100"
+      (click)="menuPrincipalAberto = true"
+    >
+      <button class="abrir-menu w-100">☰</button>
+
+      <div
+        class="logo-container d-flex justify-content-center align-items-center flex-grow-1 w-100"
+      >
+        <img
+          src="../../../assets/images/logo-da-empresa.png"
+          class="logo-vertical"
+        />
+      </div>
+
+      <button
+        type="button"
+        name="sair"
+        class="botao_voltar mb-2"
+        routerLink="/home"
+      >
+        <i class="bi bi-arrow-left icon-img"></i>
+      </button>
+    </div>
+    } @if (menuPrincipalAberto) {
+    <div class="d-flex flex-column h-100 align-items-center">
+      <div>
+        <img
+          src="../../../assets/images/logo-da-empresa.png"
+          class="mt-5 mb-5 logo"
+        />
+
+        @if (usuario != null) {
+        <div>
+          <label>Usuário Logado: {{ usuario.nome }}</label>
+        </div>
+        }
+      </div>
+      <div
+        class="d-flex flex-column h-100 w-100 align-items-center justify-content-between mt-3"
+      >
+        <div class="w-100">
+          @if (usuario && usuario.permissao && (usuario.permissao.vendaBalcao ==
+          true && urlString === 'caixa')) {
+          <button
+            type="button"
+            [class.active]="router.url === '/' + urlString + '/balcao'"
+            class="mb-3 w-100 text-start d-flex align-items-center botao"
+            [routerLink]="['/' + urlString, 'balcao']"
+          >
+            <img
+              src="../../../assets/images/bolcao.svg"
+              class="pe-2 icon-img"
+            />
+            <span class="texto-balcao">Balcão</span>
+          </button>
+          } @if (usuario && usuario.permissao && usuario.permissao.vendaMesa ==
+          true) {
+          <button
+            type="button"
+            [class.active]="router.url === '/' + urlString + '/mesa'"
+            class="mb-3 w-100 text-start d-flex align-items-center botao"
+            [routerLink]="['/' + urlString, 'mesa']"
+          >
+            <img
+              src="../../../assets/images/mesa.svg"
+              class="pe-2 icon-img"
+            />
+            <span class="texto-balcao">Mesas</span>
+          </button>
+          } @if (usuario && usuario.permissao && usuario.permissao.vendaRetirada
+          == true) {
+          <button
+            type="button"
+            [class.active]="router.url === '/' + urlString + '/retirada'"
+            class="mb-3 w-100 text-start d-flex align-items-center botao"
+            [routerLink]="['/' + urlString, 'retirada']"
+          >
+            <img
+              src="../../../assets/images/retirada.svg"
+              class="pe-2 icon-img"
+            />
+            <span class="texto-balcao">Retiradas</span>
+          </button>
+          } @if (usuario && usuario.permissao && usuario.permissao.vendaEntrega
+          == true) {
+          <button
+            type="button"
+            [class.active]="router.url === '/' + urlString + '/entrega'"
+            class="mb-3 w-100 text-start d-flex align-items-center botao"
+            [routerLink]="['/' + urlString, 'entrega']"
+          >
+            <img
+              src="../../../assets/images/entrega.svg"
+              class="pe-2 icon-img"
+            />
+            <span class="texto-balcao">Entregas</span>
+          </button>
+          } @if (usuario && usuario.permissao && ( ( (usuario.permissao.caixa ||
+          usuario.permissao.cadastrarSangria ||
+          usuario.permissao.cadastrarSuprimento) && urlString === 'caixa' ) ||
+          usuario.permissao.liberarVenda || usuario.permissao.historicoVenda ||
+          podeMudarModo == true )) {
+          <div
+            [ngClass]="{ submenu: menuAberto == true }"
+            (mouseenter)="menuAberto = true"
+            (mouseleave)="menuAberto = false"
+          >
+            <button
+              type="button"
+              class="mb-1 w-100 text-start d-flex align-items-center botao_maisOpc"
+            >
+              <i class="bi bi-chevron-down pe-2 icon-img"></i>
+              <span class="texto-balcao">Mais Opções</span>
+            </button>
+            @if (menuAberto) { @if (usuario && usuario.permissao &&
+            (usuario.permissao.caixa && urlString === 'caixa')) {
+            <button
+              type="button"
+              class="mb-1 w-100 text-start d-flex align-items-center botao_opc"
+              (click)="fechar(modalFecharCaixa, modalConfermacao)"
+            >
+              <span class="texto-balcao">Fechar Caixa</span>
+            </button>
+            } @if (usuario && usuario.permissao &&
+            (usuario.permissao.cadastrarSangria && urlString === 'caixa')) {
+            <button
+              type="button"
+              class="mb-1 w-100 text-start d-flex align-items-center botao_opc"
+              (click)="sangria(modalSangria)"
+            >
+              <span class="texto-balcao">Sangria</span>
+            </button>
+            } @if (usuario && usuario.permissao &&
+            (usuario.permissao.cadastrarSuprimento && urlString === 'caixa')) {
+            <button
+              type="button"
+              class="mb-1 w-100 text-start d-flex align-items-center botao_opc"
+              (click)="suprimento(modalSuprimento)"
+            >
+              <span class="texto-balcao">Adicionar Saldo</span>
+            </button>
+            } @if (usuario && usuario.permissao &&
+            usuario.permissao.liberarVenda) {
+            <button
+              type="button"
+              class="mb-1 w-100 text-start d-flex align-items-center botao_opc"
+              (click)="abrirModalLiberarVenda(modalLiberarVenda)"
+            >
+              <span class="texto-balcao">Liberar Venda</span>
+            </button>
+            } @if (usuario && usuario.permissao &&
+            usuario.permissao.historicoVenda) {
+            <button
+              type="button"
+              class="mb-1 w-100 text-start d-flex align-items-center botao_opc"
+              (click)="abrirModalHistoricoVendas(modalHistoricoVendas)"
+            >
+              <span class="texto-balcao">Histórico Venda</span>
+            </button>
+            } @if (podeMudarModo) {
+
+            <button
+              type="button"
+              class="mb-1 w-100 text-start d-flex align-items-center botao_opc"
+              (click)="trocarModoTouch()"
+            >
+              <span class="texto-balcao">
+                {{ modoTouch ? "Desativar Modo Touch" : "Ativar Modo Touch" }}
+              </span>
+            </button>
+            } }
+          </div>
+          }
+        </div>
+        <div class="w-100">
+          <button
+            type="button"
+            class="mb-3 w-100 text-start d-flex align-items-center botao"
+            routerLink="/home"
+          >
+            <i class="bi bi-arrow-lefticon-img"></i>
+            <span class="texto-balcao">Sair</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+
+  <div class="content-container">
+    <router-outlet class="h-100 w-100"></router-outlet>
+  </div>
+</div>
+
+<ng-template #modalFecharCaixa let-modal>
+  <div class="modal-header modal-style justify-content-between p-3">
+    <h4 class="modal-title">{{ tituloModal }}</h4>
+    <i
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+      class="bi bi-x-lg close"
+    ></i>
+  </div>
+  <div class="modal-body modal-style p-3">
+    <app-fechar-caixa (retorno)="fechamentoCaixa($event)"></app-fechar-caixa>
+  </div>
+</ng-template>
+<ng-template #modalLiberarVenda let-modal>
+  <div class="modal-header p-3">
+    <h4 class="modal-title">{{ tituloModal }}</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body p-3">
+    <label class="d-block fw-bold mb-2">Escolha o tipo:</label>
+    <div class="mb-3 d-flex justify-content-between flex-wrap">
+      <label class="radio-personalizado">
+        <input
+          type="radio"
+          id="radioMesa"
+          name="tipoVenda"
+          value="mesa"
+          [(ngModel)]="tipoLiberacao"
+        />
+        <span class="bolinha"></span>
+        <span>Mesa</span>
+      </label>
+
+      <label class="radio-personalizado">
+        <input
+          type="radio"
+          id="radioRetirada"
+          name="tipoVenda"
+          value="retirada"
+          [(ngModel)]="tipoLiberacao"
+        />
+        <span class="bolinha"></span>
+        <span>Retirada</span>
+      </label>
+
+      <label class="radio-personalizado">
+        <input
+          type="radio"
+          id="radioEntrega"
+          name="tipoVenda"
+          value="entrega"
+          [(ngModel)]="tipoLiberacao"
+        />
+        <span class="bolinha"></span>
+        <span>Entrega</span>
+      </label>
+    </div>
+
+    <div class="mb-3">
+      <label for="numeroVenda" class="fw-bold mb-2">
+        {{ tipoLiberacao === "mesa" ? "Número da Mesa" : "Número do Cupom" }}
+      </label>
+      <input
+        autocomplete="off"
+        type="number"
+        oninput="if (this.value.length > 10) this.value = this.value.slice(0, 10)"
+        id="numeroVenda"
+        class="form-control p-2"
+        [(ngModel)]="numeroVenda"
+        inputmode="numeric"
+        min="0"
+        step="1"
+        onkeydown="return !['e', 'E', '-', '+' , ','].includes(event.key)"
+        placeholder="Digite o número"
+      />
+    </div>
+  </div>
+
+  <div class="modal-footer d-flex justify-content-center border-0 mb-4">
+    <button
+      type="button"
+      class="btn-comum btn-comum-laranja"
+      (click)="confirmarLiberacao()"
+    >
+      Liberar
+    </button>
+  </div>
+</ng-template>
+<ng-template #modalSangria let-modal>
+  <div class="modal-header modal-style justify-content-between p-3">
+    <h4 class="modal-title">{{ tituloModal }}</h4>
+    <i
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+      class="bi bi-x-lg close"
+    ></i>
+  </div>
+  <div class="modal-body modal-style p-3">
+    <app-sangria></app-sangria>
+  </div>
+</ng-template>
+<ng-template #modalSuprimento let-modal>
+  <div class="modal-header modal-style justify-content-between p-3">
+    <h4 class="modal-title">{{ tituloModal }}</h4>
+    <i
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+      class="bi bi-x-lg close"
+    ></i>
+  </div>
+  <div class="modal-body modal-style p-3">
+    <app-suprimento></app-suprimento>
+  </div>
+</ng-template>
+<ng-template #modalConfermacao let-modal>
+  <div class="modal-header modal-style p-3">
+    <h4 class="modal-title">{{ "Confirmação!" }}</h4>
+  </div>
+  <div class="modal-body modal-style p-3">
+    <h5>Existe venda aberta. Você deseja fechar o caixa mesmo assim?</h5>
+  </div>
+  <div class="modal-footer modal-style d-flex justify-content-center p-2 gap-3">
+    <button
+      type="button"
+      class="btn-comum btn-comum-laranja"
+      (click)="abrirModalFechar(modalFecharCaixa)"
+    >
+      Sim
+    </button>
+    <button
+      type="button"
+      class="btn-comum btn-comum-vermelho"
+      (click)="modal.close('Close click')"
+    >
+      Não
+    </button>
+  </div>
+</ng-template>
+<ng-template #modalHistoricoVendas let-modal>
+  <div class="modal-header modal-style justify-content-end p-3 border-0">
+    <i
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+      class="bi bi-x-lg close"
+    ></i>
+  </div>
+  <div class="modal-body">
+    <app-historico-vendas></app-historico-vendas>
+  </div>
+</ng-template>

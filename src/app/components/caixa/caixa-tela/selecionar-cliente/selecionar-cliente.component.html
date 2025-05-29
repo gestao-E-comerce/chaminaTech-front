@@ -1,0 +1,79 @@
+<div class="mb-3 h-100">
+  <div class="mb-3">
+    <label for="client" class="form-label">Cliente:</label>
+    @if (vendaNova.cliente == null) {
+    <p
+      class="alert alert-danger d-flex justify-content-between align-items-center"
+    >
+      Cliente não vinculado, é obrigatório!
+      <button
+        type="button"
+        (click)="buscar(modalCliente)"
+        class="btn-comum btn-comum-vermelho"
+      >
+        Buscar
+      </button>
+    </p>
+    } @if (vendaNova.cliente != null) {
+    <p
+      class="alert alert-success d-flex justify-content-between align-items-center"
+    >
+      {{ vendaNova.cliente.nome }}
+      <button
+        type="button"
+        (click)="buscar(modalCliente)"
+        class="btn-comum btn-comum-cinza"
+      >
+        Trocar
+      </button>
+    </p>
+    }
+  </div>
+
+  @if (!modoRetirada) {
+  <div class="mb-3">
+    <label for="endereco" class="form-label">Endereço:</label>
+    <select
+      #endereco="ngModel"
+      required
+      [compareWith]="byId"
+      class="form-select select_endereco"
+      name="endereco"
+      [(ngModel)]="vendaNova.endereco"
+      [disabled]="!vendaNova.cliente"
+      [ngClass]="{ 'borda-vermelha': !endereco.valid && endereco.touched }"
+    >
+      <option [ngValue]="undefined">Selecione...</option>
+      @if (vendaNova.cliente) { 
+        @for (endereco of vendaNova.cliente.enderecos; track $index) {
+          <option [ngValue]="endereco">
+            {{ endereco.rua }}, {{ endereco.numero }} - {{ endereco.bairro }}
+          </option>
+        } 
+      }
+    </select>
+  </div>
+  }
+  <div class="d-flex justify-content-center">
+    <button type="button" class="btn-comum btn-comum-laranja mt-4" (click)="salvar()">Salvar</button>
+  </div>
+</div>
+
+<ng-template #modalCliente let-modal>
+  <div class="modal-header cabecalhoModal">
+    <h4 class="modal-title">Buscar Cliente</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="badyModal">
+    <app-cliente-list
+      [modoRetirada]="modoRetirada"
+      [modoVincular]="true"
+      (retorno)="retornoCliente($event)"
+    ></app-cliente-list>
+  </div>
+</ng-template>

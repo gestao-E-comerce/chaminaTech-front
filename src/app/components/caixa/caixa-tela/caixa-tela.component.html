@@ -1,0 +1,2104 @@
+@if (modoTouch) {
+<div class="tela col-12 w-100">
+  @if (tipoCaixa === 'balcao') {
+  <div class="d-flex flex-column p-2 w-100">
+    <div class="d-flex align-items-center gap-3 w-100">
+      <div class="d-flex flex-column w-100">
+        <label for="nome">Nome Produto</label>
+        <div class="filtro-pesquisa">
+          <input
+            autocomplete="off"
+            id="nome"
+            class="form-control"
+            type="text"
+            placeholder="Pesquisar produtos..."
+            [(ngModel)]="nomeProdutoPesquisa"
+            (keydown.enter)="buscarTodosProdutos()"
+          />
+          <button
+            type="button"
+            class="botao_cep"
+            (click)="buscarTodosProdutos()"
+          >
+            <img src="../../../../assets/images/search.svg" class="busca" />
+          </button>
+        </div>
+      </div>
+      <div class="h-100 d-flex justify-content-center align-items-center">
+        <button
+          class="btn-comum btn-comum-laranja"
+          type="button"
+          (click)="cancelar()"
+          [disabled]="venda.produtoVendas == null"
+        >
+          Fechar
+        </button>
+      </div>
+    </div>
+    <div class="d-flex flex-column mt-3">
+      <h4>Categorias</h4>
+      <ul class="lista_categorias p-2">
+        @for (categoria of listaCategorias; track $index) {
+        <button
+          name="categoria"
+          type="button"
+          class="m-1"
+          [ngClass]="{
+            categoriaSelecionada: categoriaSelecionada == categoria
+          }"
+          (click)="filtrarPorCategoria(categoria)"
+        >
+          {{ categoria.nome }}
+        </button>
+        }
+      </ul>
+    </div>
+    <h4 class="mt-3">Produtos</h4>
+    <div class="d-flex flex-column lista p-2 gap-3 lista_produtos">
+      @for (produto of listaProdutosFiltrada; track $index) {
+      <div
+        class="d-flex align-items-center justify-content-between p-3 col-12 produto-item"
+      >
+        <p class="w-50">{{ produto.nome }}</p>
+        <div class="d-flex justify-content-between w-50">
+          <p>R${{ produto.valor }}</p>
+          <div class="d-flex align-items-center gap-3">
+            <button
+              type="button"
+              class="btn btn-sm btn-outline-success"
+              (click)="adicionarProduto(modalObservacaoTouchDeve, produto)"
+            >
+              +
+            </button>
+            @if (produto.categoria.obsObrigatotio == false) {
+            <button
+              type="button"
+              class="btnObs"
+              (click)="abrirModalObservacao(modalObservacaoTouch, produto)"
+              [disabled]="(quantidadesProdutosVenda[produto.id] || 0) === 0"
+            >
+              Obs
+            </button>
+            }
+          </div>
+        </div>
+      </div>
+      @if (getProdutoVendasDoProduto(produto.id).length > 0) {
+
+      <div class="d-flex flex-column ms-4">
+        @for (produtoVenda of getProdutoVendasDoProduto(produto.id); track
+        $index) {
+        <div
+          class="d-flex align-items-center justify-content-between p-2 px-3 mb-2 col-11 produto-venda-item"
+        >
+          <p>Qtd: {{ produtoVenda.quantidade }}</p>
+          <p class="text-wrap" style="white-space: normal">
+            Obs:{{ getObservacoesFormatadas(produtoVenda) }}
+          </p>
+          <p>Val: {{ produtoVenda.valor }}</p>
+          <div class="d-flex gap-2">
+            @if (produto.categoria.obsObrigatotio == false) {
+            <button
+              type="button"
+              (click)="
+                editarObservacaoProdutoVenda(modalObservacaoTouch, produtoVenda)
+              "
+              class="hover-btn"
+            >
+              <img
+                src="../../../../assets/images/botao_editar.svg"
+                alt="Editar"
+              />
+              <span class="hover-text">Editar</span>
+            </button>
+            } @else if (produto.categoria.obsObrigatotio == true) {
+            <button
+              type="button"
+              (click)="
+                editarObservacaoProdutoVendaDeve(
+                  modalObservacaoTouchDeve,
+                  produtoVenda
+                )
+              "
+              class="hover-btn"
+            >
+              <img
+                src="../../../../assets/images/botao_editar.svg"
+                alt="Editar"
+              />
+              <span class="hover-text">Editar</span>
+            </button>
+            }
+            <button
+              type="button"
+              (click)="removerProdutoVenda(produtoVenda)"
+              class="hover-btn"
+            >
+              <img
+                src="../../../../assets/images/botao_deletar.svg"
+                alt="Deletar"
+              />
+              <span class="hover-text">Deletar</span>
+            </button>
+          </div>
+        </div>
+        }
+      </div>
+      } }
+    </div>
+    <div class="d-flex align-items-center justify-content-between w-100 mt-2">
+      @if (usuario && usuario.permissao && (usuario.permissao.caixa && urlString
+      === 'caixa')) {
+      <div
+        class="d-flex justify-content-between align-items-center areaPagar p-3 w-75"
+      >
+        <h3 class="m-0">VALOR TOTAL</h3>
+        <h3 class="m-0 barra">|</h3>
+        <h3 class="m-0 valorVenda">R$ {{ venda.valorTotal || 0 }}</h3>
+      </div>
+      }
+      <div class="d-flex justify-content-end w-25">
+        @if (podeSalvarVenda()) {
+        <button
+          type="button"
+          class="btn-comum btn-comum-laranja"
+          (click)="
+            prepararListaProdutosNovos();
+            abrirModalConferencia(modalConferencia)
+          "
+        >
+          Salvar
+        </button>
+        }
+      </div>
+    </div>
+  </div>
+  } @if (tipoCaixa !== 'balcao') {
+  <div class="d-flex flex-column p-2 w-100">
+    <div class="d-flex flex-column w-100">
+      @if (tipoCaixa === 'mesa') {
+      <label for="nome">Mesa</label>
+      } @else if(tipoCaixa === 'entrega'){
+      <label for="nome">Cupom Entrega</label>
+      } @else if(tipoCaixa === 'retirada'){
+      <label for="nome">Cupom Retirada</label>
+      }
+      <div class="d-flex align-items-center gap-3">
+        <div class="filtro-pesquisa">
+          <input
+            autocomplete="off"
+            class="form-control"
+            type="number"
+            #numeroVenda
+            (input)="validarNumero($event)"
+            placeholder="{{ tituloInput }}"
+            (keydown.enter)="
+              verificarVenda(
+                +numeroVenda.value,
+                modalPagamentos,
+                modalVendaSelecionada
+              )
+            "
+          />
+          <button
+            type="button"
+            class="botao_cep"
+            (click)="
+              verificarVenda(
+                +numeroVenda.value,
+                modalPagamentos,
+                modalVendaSelecionada
+              )
+            "
+          >
+            <img src="../../../../assets/images/search.svg" class="busca" />
+          </button>
+        </div>
+        @if (tipoCaixa == 'retirada') {
+        <div>
+          <button
+            type="button"
+            class="btn-comum btn-comum-laranja"
+            (click)="selecionarCliente(modalCliente)"
+          >
+            Nova Retirada
+          </button>
+        </div>
+        } @if (tipoCaixa == 'entrega') {
+        <div>
+          <button
+            type="button"
+            class="btn-comum btn-comum-laranja"
+            (click)="selecionarCliente(modalCliente)"
+          >
+            Nova Entrega
+          </button>
+        </div>
+        }
+      </div>
+    </div>
+
+    <div class="lista-vendas h-100 mt-2">
+      <app-venda-lista-touch
+        class="col-lg-12 h-100"
+        #vendasListagem
+        (vendaDuploClique)="
+          abrirVendaSelecionada(
+            $event,
+            modalCancelar,
+            modalPagamentos,
+            modalVendaSelecionada
+          )
+        "
+      ></app-venda-lista-touch>
+    </div>
+  </div>
+  }
+</div>
+} @else if (!modoTouch) {
+<div class="tela col-lg-12 w-100">
+  <div
+    class="d-flex flex-column h-100"
+    [ngClass]="{
+      'col-lg-12 p-3': tipoCaixa == 'balcao',
+      'col-lg-10': tipoCaixa != 'balcao'
+    }"
+  >
+    <div class="d-flex flex-column w-100">
+      <div class="d-flex justify-content-between w-100">
+        <div class="w-75 d-flex flex-column gap-2">
+          <div class="w-50">
+            @if ((tipoCaixa == "mesa" && !venda.mesa && !transferir) ||
+            ((tipoCaixa == "retirada" || tipoCaixa == "entrega") &&
+            !venda.cliente)) {
+            <input
+              autocomplete="off"
+              class="w-100 w-100 input-group py-2 py-2"
+              type="number"
+              #numeroVenda
+              (input)="validarNumero($event)"
+              placeholder="{{ tituloInput }}"
+              (keydown.enter)="
+                verificarVenda(
+                  +numeroVenda.value,
+                  modalPagamentos,
+                  modalVendaSelecionada
+                )
+              "
+            />
+            } @if (transferir) {
+            <input
+              name="transferir"
+              autocomplete="off"
+              class="w-100 input-group py-2"
+              type="number"
+              #numeroMesaTransferir
+              (input)="validarNumero($event)"
+              placeholder="Para qual mesa"
+              (keydown.enter)="
+                abrirModalTransferir(
+                  +numeroMesaTransferir.value,
+                  modalTransferir,
+                  venda
+                )
+              "
+              (keydown.escape)="cancelarTransferir()"
+            />
+            } @if ( (tipoCaixa == "mesa" && !produtoSelecionado && venda.mesa &&
+            !transferir) || (tipoCaixa == "balcao" && !produtoSelecionado) ||
+            ((tipoCaixa == "entrega" || tipoCaixa == "retirada") &&
+            !produtoSelecionado && venda.cliente)) {
+            <input
+              autocomplete="off"
+              class="w-100 input-group py-2"
+              type="number"
+              #codigoProduto
+              (input)="validarNumero($event)"
+              placeholder="Digite o código do produto"
+              (keydown.enter)="
+                verificarCodigo(
+                  +codigoProduto.value,
+                  modalPagamentos,
+                  modalConfirmarImpressao,
+                  modalObservacao,
+                  modalObservacaoTouchDeve
+                )
+              "
+              (keydown.escape)="cancelar()"
+              [(ngModel)]="codigoNomeProduto"
+              (input)="buscarNomeProduto(codigoNomeProduto)"
+              (keydown)="abrirModalProdutos($event, modalSelecionarProdutos)"
+            />
+            } @if (produtoSelecionado && !modoQuantidade) {
+            <input
+              autocomplete="off"
+              class="w-100 input-group py-2"
+              type="number"
+              name="quantedade"
+              #quantidadeProduto
+              (input)="validarNumero($event)"
+              (keydown)="
+                observacao(
+                  modalObservacao,
+                  modalObservacaoTouchDeve,
+                  produtoVendaSelecionada,
+                  $event
+                )
+              "
+              placeholder="Digite a quantidade"
+              (keydown.enter)="adicionarQuantidade(+quantidadeProduto.value)"
+              value="1"
+            />
+            } @if (produtoSelecionado && modoQuantidade) {
+            <input
+              autocomplete="off"
+              class="w-100 input-group py-2"
+              type="text"
+              name="quantedadePeso"
+              #quantidadeProdutoPeso
+              (input)="validarNumeroPeso($event)"
+              (keydown)="
+                observacao(
+                  modalObservacao,
+                  modalObservacaoTouchDeve,
+                  produtoVendaSelecionada,
+                  $event
+                )
+              "
+              placeholder="Digite a quantidade"
+              (keydown.enter)="
+                adicionarQuantidade(+quantidadeProdutoPeso.value)
+              "
+              value="1"
+            />
+            }
+          </div>
+
+          <div class="espaco">
+            @if (nomeProduto) {
+            <div class="nome-produto-exibido ps-2">
+              {{ nomeProduto }}
+            </div>
+            } @if ( (tipoCaixa == "mesa" && produtoSelecionado && !transferir &&
+            venda.mesa && mostrarBotaoObservacoes) || ((tipoCaixa == "balcao" ||
+            tipoCaixa == "retirada" || tipoCaixa == "entrega") &&
+            produtoSelecionado && !transferir && !venda.mesa)) {
+            <input
+              autocomplete="off"
+              class="ms-2 btnObs"
+              type="button"
+              name="obs"
+              (click)="
+                observacaoBotao(
+                  modalObservacao,
+                  modalObservacaoTouchDeve,
+                  produtoVendaSelecionada
+                )
+              "
+              value="(*) Observações"
+            />
+            }
+          </div>
+        </div>
+        <div class="w-50 d-flex gap-3 justify-content-end">
+          @if ((tipoCaixa =='mesa' && !produtoSelecionado && venda.mesa) ||
+          ((tipoCaixa =='retirada' || tipoCaixa =='entrega') &&
+          !produtoSelecionado && venda.cliente) || (tipoCaixa == 'balcao' &&
+          !produtoSelecionado)) {
+          <div>
+            <button
+              class="btn-comum btn-comum-laranja"
+              type="button"
+              (click)="abrirModalProdutosClick(modalSelecionarProdutos)"
+            >
+              Produtos
+            </button>
+          </div>
+          } @if ( (tipoCaixa =='mesa' && !vendaAlterada() && venda.mesa &&
+          venda.dataVenda != null && venda.deletado == false) && (usuario &&
+          usuario.permissao && usuario.permissao.transferirVenda)) {
+          <div>
+            <button
+              class="btn-comum btn-comum-laranja"
+              type="button"
+              (click)="transferirMesa(modalTransferirNumero)"
+            >
+              Transferir
+            </button>
+          </div>
+          } @if (venda.cliente && venda.dataVenda == null && (tipoCaixa ==
+          'retirada' || tipoCaixa == 'entrega')) {
+          <div>
+            <input
+              autocomplete="off"
+              class="btn-comum btn-comum-laranja"
+              type="button"
+              value="Trocar Cliente"
+              (click)="trocarCliente(modalCliente, venda)"
+            />
+          </div>
+          } @if ( (tipoCaixa == "mesa" && venda.mesa != null) || (tipoCaixa ==
+          "balcao" && venda.produtoVendas != null) || ((tipoCaixa == "entrega"
+          || tipoCaixa == "retirada") && venda.cliente != null)) {
+          <div>
+            <button
+              class="btn-comum btn-comum-laranja"
+              type="button"
+              (click)="cancelar()"
+            >
+              Fechar
+            </button>
+          </div>
+          } @if (!venda.cliente && (tipoCaixa == 'retirada' || tipoCaixa ==
+          'entrega')) {
+          <div>
+            <input
+              autocomplete="off"
+              type="button"
+              value="Selecionar cliente"
+              class="btn-comum btn-comum-laranja"
+              (click)="selecionarCliente(modalCliente)"
+            />
+          </div>
+          }
+        </div>
+      </div>
+      <div class="d-flex flex-column w-100">
+        @if(tipoCaixa == 'retirada' || tipoCaixa == 'entrega'){
+        <div class="d-flex flex-column w-100">
+          @if (venda.cliente == null) {
+          <h3 class="cliente">Cliente</h3>
+          <div>
+            <div class="d-flex justify-content-between w-100">
+              <p class="dados_cliente w-100">Nome:</p>
+              <p class="dados_cliente w-100">Celular:</p>
+            </div>
+            <div class="d-flex justify-content-between w-100">
+              <p class="dados_cliente w-100">CPF:</p>
+              @if(tipoCaixa == 'entrega'){ @if (venda.endereco == null) {
+              <p class="dados_cliente w-100">Endereço:</p>
+              <p class="dados_cliente w-100">Taxa de Entrega:</p>
+              } }
+            </div>
+          </div>
+          } @if(venda.cliente != null){
+          <h3 class="cliente">Cliente</h3>
+          <div>
+            <div class="d-flex justify-content-between w-100">
+              <p class="dados_cliente w-100">
+                Nome: <span>{{ venda.cliente.nome || "" }}</span>
+              </p>
+              <p class="dados_cliente w-100">
+                Celular:
+                <span>{{
+                  venda.cliente.celular || "" | mask : "(00) 0 0000-0000"
+                }}</span>
+              </p>
+            </div>
+            <div class="d-flex justify-content-between w-100">
+              <p class="dados_cliente w-100">
+                CPF:
+                <span>{{
+                  venda.cliente.cpf || "" | mask : "000.000.000-00"
+                }}</span>
+              </p>
+              @if(tipoCaixa == 'entrega'){
+              <p class="dados_cliente w-100">
+                Endereço:
+                <span
+                  >{{ venda.endereco.rua || "" }} N°{{
+                    venda.endereco.numero || ""
+                  }}</span
+                >
+              </p>
+              <p class="dados_cliente w-100">
+                Taxa de Entrega:
+                <span
+                  >{{ venda.taxaEntrega || "" }} ({{
+                    kmEntregaCalculado
+                  }}
+                  km)</span
+                >
+              </p>
+              }
+            </div>
+          </div>
+          }
+        </div>
+        } @if (tipoCaixa != "balcao") {
+        <div class="pedido-section">
+          <p class="textoMesa">
+            @if (tipoCaixa === 'mesa') { Número de mesa atual:
+            <span class="ps-2 numeroMesa">{{ venda.mesa || 0 }}</span>
+            } @else if (tipoCaixa === 'retirada' || tipoCaixa === 'entrega') {
+            Numero de cupom atual:
+            <span class="ps-2 numeroMesa">{{
+              cupomSelecionado.cupom || 0
+            }}</span>
+            @if (venda.cliente != null && venda.dataVenda != null) {
+            <span class="ms-4"
+              >Tempo Previsto até:
+              <span class="ps-2 numeroMesa">{{
+                horaEntregaPrevista
+              }}</span></span
+            >
+            } }
+          </p>
+        </div>
+        }
+      </div>
+    </div>
+
+    <div class="lista">
+      <table class="table">
+        <thead>
+          @if (tamanhoTela > 1300) {
+          <th class="text-center col-1">Código</th>
+          <th class="text-center col-1">N. item</th>
+          }
+          <th class="text-start col-2">Nome</th>
+          <th class="text-center col-1">Valor Un.</th>
+          <th class="text-center col-1">Quantidade</th>
+          <th class="text-center col-1">Valor It.</th>
+          <th class="text-start col-2">Observação</th>
+          @if (tamanhoTela > 1026) {
+          <th class="text-center col-1">Operador</th>
+          <th class="text-center col-1">Hora</th>
+          }
+          <th class="text-center col-2">Ações</th>
+        </thead>
+        <tbody>
+          @for (produtoVenda of venda.produtoVendas; track $index) {
+          <tr>
+            @if (tamanhoTela > 1300) {
+            <td class="text-center">{{ produtoVenda.produto.codigo }}</td>
+            <td class="text-center">{{ $index + 1 + "." }}</td>
+            }
+            <td class="text-start">{{ produtoVenda.produto.nome }}</td>
+            <td class="text-center">R${{ produtoVenda.produto.valor }}</td>
+            <td class="text-center">{{ produtoVenda.quantidade }}</td>
+            <td class="text-center">R${{ produtoVenda.valor }}</td>
+            <td class="text-wrap" style="white-space: normal">
+              {{ getObservacoesFormatadas(produtoVenda) }}
+            </td>
+            @if (tamanhoTela > 1026) {
+
+            <td class="text-center">
+              {{ produtoVenda?.funcionario?.nome }}
+            </td>
+            <td class="text-center">
+              {{ produtoVenda?.data | date : "HH:mm" }}
+            </td>
+            }
+            <td>
+              <div class="col-acoes">
+                @if (usuario && usuario.permissao &&
+                usuario.permissao.editarProdutoVenda || produtoVenda.id == null)
+                {
+                <button
+                  type="button"
+                  (click)="editarProduto(produtoVenda, $index)"
+                  class="hover-btn"
+                >
+                  <img
+                    src="../../../../assets/images/botao_editar.svg"
+                    alt="Editar"
+                  />
+                  <span class="hover-text">Editar</span>
+                </button>
+                } @if (usuario && usuario.permissao &&
+                usuario.permissao.deletarProdutoVenda || produtoVenda.id ==
+                null) {
+                <button
+                  type="button"
+                  (click)="
+                    deletarProduto(
+                      $index,
+                      modalDeletarProduto,
+                      modalConfirmarImpressao
+                    )
+                  "
+                  class="hover-btn"
+                >
+                  <img
+                    src="../../../../assets/images/botao_deletar.svg"
+                    alt="Deletar"
+                  />
+                  <span class="hover-text">Deletar</span>
+                </button>
+                } @if (tamanhoTela < 1300) {
+                <button
+                  type="button"
+                  class="hover-btn"
+                  (click)="
+                    abrirModalDetalhes(produtoVenda, $index, modalDetalhes)
+                  "
+                >
+                  <img
+                    src="../../../../assets/images/mais-detalhes.png"
+                    alt="Detalhes"
+                    class="detalhes"
+                  />
+                  <span class="hover-text">Detalhes</span>
+                </button>
+                }@else { &nbsp; }
+              </div>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center w-100 mt-2">
+      <div class="d-flex gap-2 align-items-center w-50">
+        @if (usuario && usuario.permissao && (usuario.permissao.caixa &&
+        urlString === 'caixa')) {
+        <div
+          class="d-flex justify-content-between align-items-center w-75 areaPagar p-3"
+        >
+          <h3 class="m-0">VALOR TOTAL</h3>
+          <h3 class="m-0 barra">|</h3>
+          <h3 class="m-0 valorVenda">R$ {{ venda.valorTotal || 0 }}</h3>
+        </div>
+        }
+        <div>
+          @if ((((tipoCaixa == "mesa" || tipoCaixa == "retirada" || tipoCaixa ==
+          "entrega") && !vendaAlterada() && venda.dataVenda != null &&
+          venda.deletado == false ) && (usuario && usuario.permissao &&
+          (usuario.permissao.imprimir && urlString === 'caixa'))) &&
+          matriz.usarImpressora) {
+          <button
+            type="button"
+            class="hover-btn btn-imprimir"
+            (click)="abrirModalImpressao(venda, modalImpressao)"
+          >
+            <img
+              class="icon-impressora"
+              src="../../../../assets/images/impressora.svg"
+              alt="Imprimir"
+            />
+            <span class="hover-text">Imprimir</span>
+          </button>
+          }
+        </div>
+      </div>
+      <div class="d-flex w-50 justify-content-end gap-3">
+        <div>
+          @if (tipoCaixa == 'mesa' && vendaAlterada() && !transferir ||
+          ((tipoCaixa == 'retirada' || tipoCaixa == 'entrega') &&
+          vendaAlterada() && venda.produtoVendas)) {
+          <button
+            type="button"
+            class="btn-comum btn-comum-laranja"
+            (click)="lancarVendaTipo(modalConfirmarImpressao, modalPagamentos)"
+          >
+            Lançar
+          </button>
+          }
+        </div>
+        <div>
+          @if ( ( ( (tipoCaixa == "mesa" || tipoCaixa == "retirada" || tipoCaixa
+          == "entrega") && !vendaAlterada() && venda.dataVenda != null &&
+          venda.deletado == false ) || (tipoCaixa == "balcao" &&
+          venda.produtoVendas != null) ) && (usuario && usuario.permissao &&
+          (usuario.permissao.caixa && urlString === 'caixa')) ) {
+          <button
+            type="button"
+            class="btn-comum btn-comum-verde"
+            (click)="pagar(chaveUnico, modalPagamentos)"
+          >
+            Pagar
+          </button>
+          }
+        </div>
+        <div>
+          @if ((tipoCaixa != "balcao" && !vendaAlterada() && venda.dataVenda !=
+          null && venda.deletado == false) && ((usuario && usuario.permissao &&
+          usuario.permissao.deletarVenda) && urlString === 'caixa' )) {
+          <button
+            type="button"
+            class="btn-comum btn-comum-vermelho"
+            (click)="
+              deletarVenda(venda, modalDeletarVenda, modalConfirmarImpressao)
+            "
+          >
+            Deletar
+          </button>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+  @if (tipoCaixa != "balcao") {
+  <app-venda-lista
+    class="col-lg-2"
+    #vendasListagem
+    (vendaDuploClique)="
+      abrirVendaSelecionada(
+        $event,
+        modalCancelar,
+        modalPagamentos,
+        modalVendaSelecionada
+      )
+    "
+  ></app-venda-lista>
+  }
+</div>
+}
+
+<ng-template #modalConfirmarImpressao let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">{{ tituloModalConfermacao }}</h4>
+  </div>
+  <div class="modal-body">
+    <h5>{{ modalMessage }}</h5>
+  </div>
+  <div class="modal-footer d-flex justify-content-start align-items-center">
+    <button
+      type="button"
+      class="botaoModal btn-voltar"
+      (click)="modalRef.dismiss()"
+    >
+      Voltar
+    </button>
+    @if (mostrarAmbos == false) {
+    <button
+      type="button"
+      class="botaoModal btn-nao"
+      (click)="modalRef.close('naoImprimir')"
+    >
+      Não
+    </button>
+    <button
+      type="button"
+      class="botaoModal btn-imprimir-geral"
+      (click)="modalRef.close('imprimir')"
+    >
+      Sim
+    </button>
+    } @if (mostrarAmbos == true) {
+    <button
+      type="button"
+      class="botaoModal btn-imprimir-geral"
+      (click)="modalRef.close('imprimirAmbos')"
+    >
+      Imprimir ambos
+    </button>
+    <button
+      type="button"
+      class="botaoModal btn-imprimir-geral"
+      (click)="modalRef.close('imprimirCadastrar')"
+    >
+      Imprimir Apenas Cadastro
+    </button>
+    <button
+      type="button"
+      class="botaoModal btn-imprimir-geral"
+      (click)="modalRef.close('imprimirDeletar')"
+    >
+      Imprimir Apenas Deleção
+    </button>
+    <button
+      type="button"
+      class="botaoModal btn-imprimir-geral"
+      (click)="modalRef.close('naoImprimirNada')"
+    >
+      Não Imprimir ambos
+    </button>
+    }
+  </div>
+</ng-template>
+<ng-template #modalCancelar let-modal>
+  <div class="modal-header modal-style">
+    <h4 class="modal-title">Cancelar Venda</h4>
+  </div>
+  <div class="modal-body modal-style">
+    <h5>
+      Você tem certeza que deseja cancelar? Todas as alterações serão perdidas.
+    </h5>
+  </div>
+  <div class="modal-footer modal-style justify-content-center">
+    <button
+      type="button"
+      class="btn-comum btn-comum-vermelho"
+      (click)="confirmarEFechar(modal)"
+    >
+      Cancelar
+    </button>
+    <button
+      type="button"
+      class="btn-comum btn-comum-cinza"
+      (click)="modal.dismiss()"
+    >
+      Fechar
+    </button>
+  </div>
+</ng-template>
+<ng-template #modalObservacao let-modal>
+  <div class="modal-header modal-style">
+    <h4 class="modal-title">Observação</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Close click'); cancelarSelecaoProduto()"
+    ></button>
+  </div>
+  <div class="modal-body modal-style">
+    <app-produto-observacao
+      #produtoObservacao
+      [produtoVenda]="produtoVendaSelecionada"
+      (retorno)="retornoObservacao($event)"
+    ></app-produto-observacao>
+  </div>
+  <div
+    class="modal-footer d-flex justify-content-center align-items-center border-0"
+  >
+    <button
+      type="button"
+      class="btn-comum btn-comum-laranja"
+      (click)="produtoObservacao.salvar()"
+    >
+      Salvar
+    </button>
+  </div>
+</ng-template>
+<ng-template #modalDeletarVenda let-modal>
+  <div class="modal-header modal-style">
+    <h4 class="modal-title">Deleter Venda</h4>
+  </div>
+  <div class="w-100 modal-body modal-style">
+    <h5>Você tem certeza que deseja deletar a venda?</h5>
+    <label for="motivo" class="form-label mt-2">Motivo</label>
+    <textarea
+      autocomplete="off"
+      #motivo="ngModel"
+      required
+      type="text"
+      class="form-control"
+      name="motivo"
+      [(ngModel)]="motivoDeletar"
+      [ngClass]="{
+        'borda-vermelha':
+          motivoDeletar == null && !motivo.valid && motivo.touched
+      }"
+    ></textarea>
+  </div>
+  <div class="modal-footer modal-style justify-content-center">
+    <button
+      type="button"
+      class="btn-comum btn-comum-vermelho"
+      (click)="confirmarDeletarVenda(modalConfirmarImpressao)"
+    >
+      Delatar
+    </button>
+    <button
+      type="button"
+      class="btn-comum btn-comum-cinza"
+      (click)="modal.close('Close click')"
+    >
+      Fechar
+    </button>
+  </div>
+</ng-template>
+<ng-template #modalDeletarProduto let-modal>
+  <div class="modal-header modal-style">
+    <h4 class="modal-title">Deleter Produto</h4>
+  </div>
+  <div class="w-100 modal-body modal-style">
+    <h5>Você tem certeza que deseja deletar este produto?</h5>
+    <label for="motivo" class="form-label mt-2">Motivo</label>
+    <textarea
+      autocomplete="off"
+      #motivo="ngModel"
+      required
+      type="text"
+      class="form-control"
+      name="motivo"
+      [(ngModel)]="motivoDeletar"
+      [ngClass]="{
+        'borda-vermelha':
+          motivoDeletar == null && !motivo.valid && motivo.touched
+      }"
+    ></textarea>
+  </div>
+  <div class="modal-footer modal-style justify-content-center">
+    <button
+      type="button"
+      class="btn-comum btn-comum-vermelho"
+      (click)="confirmarDeletarProduto(index, modalConfirmarImpressao)"
+    >
+      Delatar
+    </button>
+    <button
+      type="button"
+      class="btn-comum btn-comum-cinza"
+      (click)="modal.close('Close click')"
+    >
+      Fechar
+    </button>
+  </div>
+</ng-template>
+<ng-template #modalTransferir let-modal>
+  <div class="modal-header modal-style">
+    <h4 class="modal-title">{{ tituloModal }}</h4>
+  </div>
+  <div class="modal-body modal-style">
+    <app-transferir-mesa
+      #transferirMesa
+      [venda]="venda"
+      [vendaTransferir]="vendaTransferir"
+      (retorno)="retornoTransferir(venda, vendaTransferir)"
+    ></app-transferir-mesa>
+  </div>
+  <div
+    class="modal-footer d-flex justify-content-center align-items-center border-0"
+  >
+    <button
+      type="button"
+      class="btn-comum btn-comum-laranja"
+      (click)="transferirMesa.salvar()"
+    >
+      Salvar
+    </button>
+    <button
+      type="button"
+      class="btn-comum btn-comum-cinza"
+      (click)="modal.dismiss(); cancelarTransferir()"
+    >
+      Fechar
+    </button>
+  </div>
+</ng-template>
+<ng-template #modalSelecionarProdutos let-modal>
+  <div class="modal-header modal-style">
+    <h4 class="modal-title">Buscar Produto</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Close click')"
+    ></button>
+  </div>
+  <div class="modal-body modal-style">
+    <app-selecionar-produtos
+      [produto]="produto"
+      (retorno)="retornoProdutoSelecionado($event)"
+    ></app-selecionar-produtos>
+  </div>
+</ng-template>
+<ng-template #modalPagamentos let-modal>
+  <div class="modal-header modal-style">
+    <h4 class="modal-title">{{ tituloModal }} {{ tipoPagamento }}</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="
+        modal.dismiss('Cross click'); fecharModalPagamentoERestaurarVenda()
+      "
+    ></button>
+  </div>
+  <div class="modal-body p-0 modal-style">
+    <app-pagamentos
+      #vendaPagamento
+      [chaveUnico]="chaveUnico"
+      [venda]="venda"
+      (retorno)="retornoVendaPagamento($event, modalConfirmarImpressao)"
+      (retornoPagamentoParcial)="atualizarVendaOriginal($event)"
+    ></app-pagamentos>
+  </div>
+  <div class="modal-footer d-flex justify-content-center border-0">
+    <button
+      type="button"
+      class="btn-comum btn-comum-verde"
+      (click)="vendaPagamento.salvar()"
+    >
+      Salvar
+    </button>
+    @if (tipoCaixa === 'mesa') {
+    <button
+      class="btn-comum btn-comum-laranja"
+      type="button"
+      (click)="vendaPagamento.abrirModalPagarParcial()"
+      [disabled]="!vendaPagamento.podePagarParcial"
+    >
+      Pagar Parcial
+    </button>
+    }
+  </div>
+</ng-template>
+<ng-template #modalCliente let-modal>
+  <div class="modal-header modal-style">
+    <h4 class="modal-title">{{ tituloModal }}</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Close click')"
+    ></button>
+  </div>
+  <div class="modal-body modal-style">
+    <app-selecionar-cliente
+      [modoRetirada]="modoRetirada"
+      [venda]="venda"
+      (retorno)="vincularCliente(modalVendaSelecionada)"
+    ></app-selecionar-cliente>
+  </div>
+</ng-template>
+<ng-template #modalImpressao let-modal>
+  <div class="modal-header modal-style">
+    <h4 class="modal-title">Impressao</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Close click')"
+    ></button>
+  </div>
+  <div class="modal-body modal-style">
+    <div class="d-flex flex-column w-100 gap-3">
+      <button
+        type="button"
+        class="botao-imprimir"
+        (click)="imprimirProdutos(venda, modalProdutos)"
+      >
+        Imprimir Produtos
+      </button>
+      @if (venda.mesa != null) {
+      <button
+        type="button"
+        class="botao-imprimir"
+        (click)="abrirModalImprimirConta(modalQuantedade)"
+      >
+        Imprimir Conta
+      </button>
+      } @if (venda.retirada || venda.entrega) {
+      <button
+        type="button"
+        class="botao-imprimir"
+        (click)="imprimirConferencia()"
+      >
+        Imprimir Conferencia
+      </button>
+      }
+    </div>
+  </div>
+
+  <ng-template #modalQuantedade let-modal>
+    <div class="modal-header modal-style">
+      <h4 class="modal-title">{{ tituloModal }}</h4>
+      <button
+        type="button"
+        class="btn-close"
+        aria-label="Close"
+        (click)="modal.dismiss('Close click')"
+      ></button>
+    </div>
+    <div class="modal-body modal-style d-flex flex-column">
+      <span class="mb-2">Quantas pessoas?</span>
+      <input
+        class="form-control"
+        type="number"
+        #quantedadePessoas
+        inputmode="numeric"
+        min="0"
+        step="1"
+        oninput="if (this.value.length > 10) this.value = this.value.slice(0, 10)"
+        onkeydown="return !['e', 'E', '-', '+' , ',' , '.'].includes(event.key)"
+        placeholder="Digite o número"
+        [(ngModel)]="quantedadePessoas"
+      />
+    </div>
+    <div
+      class="modal-footer modal-style d-flex justify-content-center border-0"
+    >
+      <button
+        type="button"
+        class="btn-comum btn-comum-laranja"
+        (click)="imprimirConta()"
+      >
+        Imprimir
+      </button>
+    </div>
+  </ng-template>
+</ng-template>
+<ng-template #modalProdutos let-modal>
+  <div class="modal-header modal-style">
+    <h4 class="modal-title">Selecionar produtos</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Close click')"
+    ></button>
+  </div>
+  <div class="modal-body modal-style">
+    <app-produtos
+      #prodtosImprimir
+      [venda]="venda"
+      [modalRef]="modal"
+    ></app-produtos>
+  </div>
+  <div
+    class="modal-footer d-flex justify-content-center align-items-center border-0"
+  >
+    <button
+      type="button"
+      class="btn-comum btn-comum-laranja"
+      (click)="prodtosImprimir.salvar()"
+    >
+      Salvar
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #modalConferencia let-modal>
+  <div class="modal-header modal-style">
+    <h4 class="modal-title">Conferência Produtos</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Close click')"
+    ></button>
+  </div>
+  <div class="modal-body modal-style">
+    <div class="lista">
+      <table class="table">
+        <thead>
+          <th class="text-center col-1">Código</th>
+          <th class="text-center col-1">N. item</th>
+          <th class="text-start col-2">Nome</th>
+          <th class="text-center col-1">Valor Un.</th>
+          <th class="text-center col-1">Quantidade</th>
+          <th class="text-center col-1">Valor It.</th>
+          <th class="text-start col-2">Observação</th>
+          <th class="text-center col-1">Operador</th>
+          <th class="text-center col-1">Hora</th>
+        </thead>
+        <tbody>
+          @for (produtoVenda of listaProdutosNovos; track $index) {
+          <tr>
+            <td class="text-center">{{ produtoVenda.produto.codigo }}</td>
+            <td class="text-center">{{ $index + 1 + "." }}</td>
+            <td class="text-start">{{ produtoVenda.produto.nome }}</td>
+            <td class="text-center">R${{ produtoVenda.produto.valor }}</td>
+            <td class="text-center">{{ produtoVenda.quantidade }}</td>
+            <td class="text-center">R${{ produtoVenda.valor }}</td>
+            <td class="text-wrap" style="white-space: normal">
+              {{ getObservacoesFormatadas(produtoVenda) }}
+            </td>
+            <td class="text-center">
+              {{ produtoVenda?.funcionario?.nome }}
+            </td>
+            <td class="text-center">
+              {{ produtoVenda?.data | date : "HH:mm" }}
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div
+    class="modal-footer d-flex justify-content-center align-items-center border-0"
+  >
+    <button
+      type="button"
+      class="btn-comum btn-comum-laranja"
+      (click)="salvarVendaModoToch(modalPagamentos)"
+    >
+      Lançar
+    </button>
+  </div>
+</ng-template>
+<ng-template #modalObservacaoTouch let-modal>
+  <div class="modal-header modal-style">
+    <h4 class="modal-title">Observação</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Close click')"
+    ></button>
+  </div>
+  <div class="modal-body modal-style">
+    <app-produto-observacao-touch
+      #produtoObservacaoTouch
+      [produtosVendas]="produtosVendaSelecionados"
+      (retorno)="retornoObservacaoTouch($event)"
+    ></app-produto-observacao-touch>
+  </div>
+  <div
+    class="modal-footer d-flex justify-content-center align-items-center border-0"
+  >
+    <button
+      type="button"
+      class="btn-comum btn-comum-laranja"
+      (click)="produtoObservacaoTouch.salvar()"
+    >
+      Salvar
+    </button>
+  </div>
+</ng-template>
+<ng-template #modalObservacaoTouchDeve let-modal>
+  <div class="modal-header modal-style">
+    <h4 class="modal-title">Observação</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Close click')"
+    ></button>
+  </div>
+  <div class="modal-body modal-style">
+    <app-produto-observacao-touch-deve
+      #produtoObservacaoTouchDeve
+      [produtoVenda]="produtoVendaSelecionada"
+      (retorno)="retornoObservacaoDeve($event)"
+    ></app-produto-observacao-touch-deve>
+  </div>
+  <div
+    class="modal-footer d-flex justify-content-center align-items-center border-0"
+  >
+    <button
+      type="button"
+      class="btn-comum btn-comum-laranja"
+      (click)="produtoObservacaoTouchDeve.salvar()"
+    >
+      Salvar
+    </button>
+  </div>
+</ng-template>
+<ng-template #modalVendaSelecionada let-modal>
+  <div class="modal-header p-2 justify-content-between">
+    @if (this.tipoCaixa === 'mesa') {
+    <h4 class="modal-title">Mesa {{ venda.mesa }}</h4>
+    } @else if (this.tipoCaixa === 'entrega') {
+    <h4 class="modal-title">Entrega {{ cupomSelecionado.cupom }}</h4>
+    } @else if (this.tipoCaixa === 'retirada') {
+    <h4 class="modal-title">Retirada {{ cupomSelecionado.cupom }}</h4>
+    }
+    <div class="d-flex align-items-center gap-3">
+      @if (venda.cliente && venda.dataVenda == null && (tipoCaixa == 'retirada'
+      || tipoCaixa == 'entrega')) {
+      <div>
+        <button
+          class="btn-comum btn-comum-laranja"
+          type="button"
+          (click)="trocarCliente(modalCliente, venda)"
+        >
+          Trocar Cliente
+        </button>
+      </div>
+      } @if ( (tipoCaixa =='mesa' && !vendaAlterada() && venda.mesa &&
+      venda.dataVenda != null && venda.deletado == false) && (usuario &&
+      usuario.permissao && usuario.permissao.transferirVenda)) {
+      <button
+        class="btn-comum btn-comum-laranja"
+        type="button"
+        (click)="transferirMesa(modalTransferirNumero)"
+      >
+        Transferir
+      </button>
+      } @if ( (tipoCaixa == "mesa" && venda.mesa != null) || (tipoCaixa ==
+      "balcao" && venda.produtoVendas != null) || ((tipoCaixa == "entrega" ||
+      tipoCaixa == "retirada") && venda.cliente != null)) {
+      <button
+        class="btn-comum btn-comum-laranja"
+        type="button"
+        (click)="cancelar()"
+      >
+        Fechar
+      </button>
+      }
+    </div>
+  </div>
+  <div class="w-100 col-12 d-flex flex-column modal-body p-2">
+    <div class="w-100 col-12 d-flex align-items-center mb-2">
+      @if(tipoCaixa == 'retirada' || tipoCaixa == 'entrega'){
+      <div class="d-flex flex-column w-100">
+        @if(venda.cliente != null){
+        <h3 class="cliente">Cliente</h3>
+        <div>
+          <div class="d-flex gap-2 flex-wrap w-100">
+            <p class="dados_cliente">
+              Nome: <span>{{ venda.cliente.nome || "" }}</span>
+            </p>
+            <p class="dados_cliente">
+              Celular:
+              <span>{{
+                venda.cliente.celular || "" | mask : "(00) 0 0000-0000"
+              }}</span>
+            </p>
+          </div>
+          <div class="d-flex gap-2 flex-wrap w-100">
+            <p class="dados_cliente">
+              CPF:
+              <span>{{
+                venda.cliente.cpf || "" | mask : "000.000.000-00"
+              }}</span>
+            </p>
+            @if(tipoCaixa == 'entrega'){
+            <p class="dados_cliente">
+              Endereço:
+              <span
+                >{{ venda.endereco.rua || "" }} N°{{
+                  venda.endereco.numero || ""
+                }}</span
+              >
+            </p>
+            <p class="dados_cliente">
+              Taxa de Entrega:
+              <span
+                >{{ venda.taxaEntrega || "" }} ({{
+                  kmEntregaCalculado
+                }}
+                km)</span
+              >
+            </p>
+            }
+          </div>
+        </div>
+        }
+      </div>
+      }
+    </div>
+    @if (telaPequena) {
+    <div class="w-100 col-12 d-flex flex-column p-0 gap-2 h-100">
+      <div class="col-12 h-100">
+        <div class="lista h-100">
+          <table class="table">
+            <thead>
+              @if (tamanhoTela > 950) {
+              <th class="text-center col-1">Código</th>
+              } @if (tamanhoTela > 483) {
+              <th class="text-center col-1">N. item</th>
+              }
+              <th class="text-start col-2">Nome</th>
+              @if (tamanhoTela > 563) {
+              <th class="text-center col-1">Valor Un.</th>
+              }
+              <th class="text-center col-1">Quantidade</th>
+              @if (tamanhoTela > 635) {
+              <th class="text-center col-1">Valor It.</th>
+              } @if (tamanhoTela > 768) {
+              <th class="text-start col-2">Observação</th>
+              <th class="text-center col-1">Operador</th>
+              } @if (tamanhoTela > 825) {
+              <th class="text-center col-1">Hora</th>
+              }
+              <th class="text-center col-2">Ações</th>
+            </thead>
+            <tbody>
+              @if(produtosAntigos.length > 0) {
+              <td colspan="10" class="text-center">Produtos já lançados</td>
+              @for (produtoVenda of produtosAntigos; track $index) {
+              <tr>
+                @if (tamanhoTela > 950) {
+                <td class="text-center">
+                  {{ produtoVenda.produto.codigo }}
+                </td>
+                } @if (tamanhoTela > 483) {
+                <td class="text-center">{{ $index + 1 + "." }}</td>
+                }
+                <td class="text-start">{{ produtoVenda.produto.nome }}</td>
+                @if (tamanhoTela > 563) {
+                <td class="text-center">R${{ produtoVenda.produto.valor }}</td>
+                }
+                <td class="text-center">{{ produtoVenda.quantidade }}</td>
+                @if (tamanhoTela > 635) {
+                <td class="text-center">R${{ produtoVenda.valor }}</td>
+                } @if (tamanhoTela > 768) {
+                <td class="text-wrap" style="white-space: normal">
+                  {{ getObservacoesFormatadas(produtoVenda) }}
+                </td>
+                <td class="text-center">
+                  {{ produtoVenda?.funcionario?.nome }}
+                </td>
+                } @if (tamanhoTela > 825) {
+                <td class="text-center">
+                  {{ produtoVenda?.data | date : "HH:mm" }}
+                </td>
+                }
+                <td>
+                  <div class="col-acoes">
+                    @if (usuario && usuario.permissao &&
+                    usuario.permissao.deletarProdutoVenda || produtoVenda.id ==
+                    null) {
+                    <button
+                      type="button"
+                      (click)="
+                        deletarProduto(
+                          $index,
+                          modalDeletarProduto,
+                          modalConfirmarImpressao
+                        )
+                      "
+                      class="hover-btn"
+                    >
+                      <img
+                        src="../../../../assets/images/botao_deletar.svg"
+                        alt="Deletar"
+                      />
+                      <span class="hover-text">Deletar</span>
+                    </button>
+                    } @if (tamanhoTela < 1300) {
+                    <button
+                      type="button"
+                      class="hover-btn"
+                      (click)="
+                        abrirModalDetalhes(produtoVenda, $index, modalDetalhes)
+                      "
+                    >
+                      <img
+                        src="../../../../assets/images/mais-detalhes.png"
+                        alt="Detalhes"
+                        class="detalhes"
+                      />
+                      <span class="hover-text">Detalhes</span>
+                    </button>
+                    }@else { &nbsp; }
+                  </div>
+                </td>
+              </tr>
+              } } @if (produtosNovos.length > 0) {
+              <td colspan="10" class="text-center">
+                Novos produtos adicionados
+              </td>
+              @for (produtoVenda of produtosNovos; track $index) {
+              <tr>
+                @if (tamanhoTela > 950) {
+                <td class="text-center">
+                  {{ produtoVenda.produto.codigo }}
+                </td>
+                } @if (tamanhoTela > 483) {
+                <td class="text-center">{{ $index + 1 + "." }}</td>
+                }
+                <td class="text-start">{{ produtoVenda.produto.nome }}</td>
+                @if (tamanhoTela > 563) {
+                <td class="text-center">R${{ produtoVenda.produto.valor }}</td>
+                }
+                <td class="text-center">{{ produtoVenda.quantidade }}</td>
+                @if (tamanhoTela > 635) {
+                <td class="text-center">R${{ produtoVenda.valor }}</td>
+                } @if (tamanhoTela > 768) {
+                <td class="text-wrap" style="white-space: normal">
+                  {{ getObservacoesFormatadas(produtoVenda) }}
+                </td>
+                <td class="text-center">
+                  {{ produtoVenda?.funcionario?.nome }}
+                </td>
+                } @if (tamanhoTela > 825) {
+                <td class="text-center">
+                  {{ produtoVenda?.data | date : "HH:mm" }}
+                </td>
+                }
+                <td>
+                  <div class="col-acoes">
+                    @if (tamanhoTela < 1300) {
+                    <button
+                      type="button"
+                      class="hover-btn"
+                      (click)="
+                        abrirModalDetalhes(produtoVenda, $index, modalDetalhes)
+                      "
+                    >
+                      <img
+                        src="../../../../assets/images/mais-detalhes.png"
+                        alt="Detalhes"
+                        class="detalhes"
+                      />
+                      <span class="hover-text">Detalhes</span>
+                    </button>
+                    }
+                  </div>
+                </td>
+              </tr>
+              } }
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="col-12 h-100">
+        <div class="d-flex flex-column ps-2 w-100 h-100">
+          <div class="d-flex flex-column w-100">
+            <label for="nome">Nome Produto</label>
+            <div class="filtro-pesquisa">
+              <input
+                autocomplete="off"
+                id="nome"
+                class="form-control"
+                type="text"
+                placeholder="Pesquisar produtos..."
+                [(ngModel)]="nomeProdutoPesquisa"
+                (keydown.enter)="buscarTodosProdutos()"
+              />
+              <button
+                type="button"
+                class="botao_cep"
+                (click)="buscarTodosProdutos()"
+              >
+                <img src="../../../../assets/images/search.svg" class="busca" />
+              </button>
+            </div>
+          </div>
+          <div class="d-flex flex-column mt-3">
+            <h4>Categorias</h4>
+            <ul class="lista_categorias p-2">
+              @for (categoria of listaCategorias; track $index) {
+              <button
+                name="categoria"
+                type="button"
+                class="m-1"
+                [ngClass]="{
+                  categoriaSelecionada: categoriaSelecionada == categoria
+                }"
+                (click)="filtrarPorCategoria(categoria)"
+              >
+                {{ categoria.nome }}
+              </button>
+              }
+            </ul>
+          </div>
+          <h4 class="mt-3">Produtos</h4>
+          <div class="d-flex flex-column lista gap-3 lista_produtos p-2">
+            @for (produto of listaProdutosFiltrada; track $index) {
+            <div
+              class="d-flex align-items-center justify-content-between p-3 col-12 produto-item"
+            >
+              <p class="w-50">{{ produto.nome }}</p>
+              <div
+                class="d-flex justify-content-between align-items-center w-50"
+              >
+                <p>R${{ produto.valor }}</p>
+                <div class="d-flex align-items-center gap-3">
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-outline-success"
+                    (click)="
+                      adicionarProduto(modalObservacaoTouchDeve, produto)
+                    "
+                  >
+                    +
+                  </button>
+
+                  @if (produto.categoria.obsObrigatotio == false) {
+                  <button
+                    type="button"
+                    class="btnObs"
+                    (click)="
+                      abrirModalObservacao(modalObservacaoTouch, produto)
+                    "
+                    [disabled]="
+                      (quantidadesProdutosVenda[produto.id] || 0) === 0
+                    "
+                  >
+                    Obs
+                  </button>
+                  }
+                </div>
+              </div>
+            </div>
+            @if (getProdutoVendasDoProduto(produto.id).length > 0) {
+
+            <div class="d-flex flex-column ms-4">
+              @for (produtoVenda of getProdutoVendasDoProduto(produto.id); track
+              $index) {
+              <div
+                class="d-flex align-items-center justify-content-between p-2 px-3 mb-2 col-11 produto-venda-item"
+              >
+                <p>Qtd: {{ produtoVenda.quantidade }}</p>
+                <p class="text-wrap" style="white-space: normal">
+                  Obs:{{ getObservacoesFormatadas(produtoVenda) }}
+                </p>
+                <div class="d-flex gap-2">
+                  @if (produto.categoria.obsObrigatotio == false) {
+                  <button
+                    type="button"
+                    (click)="
+                      editarObservacaoProdutoVenda(
+                        modalObservacaoTouch,
+                        produtoVenda
+                      )
+                    "
+                    class="hover-btn"
+                  >
+                    <img
+                      src="../../../../assets/images/botao_editar.svg"
+                      alt="Editar"
+                    />
+                    <span class="hover-text">Editar</span>
+                  </button>
+                  } @else if (produto.categoria.obsObrigatotio == true) {
+                  <button
+                    type="button"
+                    (click)="
+                      editarObservacaoProdutoVendaDeve(
+                        modalObservacaoTouchDeve,
+                        produtoVenda
+                      )
+                    "
+                    class="hover-btn"
+                  >
+                    <img
+                      src="../../../../assets/images/botao_editar.svg"
+                      alt="Editar"
+                    />
+                    <span class="hover-text">Editar</span>
+                  </button>
+                  }
+                  <button
+                    type="button"
+                    (click)="removerProdutoVenda(produtoVenda)"
+                    class="hover-btn"
+                  >
+                    <img
+                      src="../../../../assets/images/botao_deletar.svg"
+                      alt="Deletar"
+                    />
+                    <span class="hover-text">Deletar</span>
+                  </button>
+                </div>
+              </div>
+              }
+            </div>
+            } }
+          </div>
+        </div>
+      </div>
+    </div>
+    } @if (!telaPequena) {
+    <div class="w-100 col-12 d-flex align-items-center modal-body p-0">
+      <div class="col-7 h-100">
+        <div class="lista h-100">
+          <table class="table">
+            <thead>
+              @if (tamanhoTela > 950) {
+              <th class="text-center col-1">Código</th>
+              } @if (tamanhoTela > 483) {
+              <th class="text-center col-1">N. item</th>
+              }
+              <th class="text-start col-2">Nome</th>
+              @if (tamanhoTela > 563) {
+              <th class="text-center col-1">Valor Un.</th>
+              }
+              <th class="text-center col-1">Quantidade</th>
+              @if (tamanhoTela > 635) {
+              <th class="text-center col-1">Valor It.</th>
+              } @if (tamanhoTela > 768) {
+              <th class="text-start col-2">Observação</th>
+              <th class="text-center col-1">Operador</th>
+              } @if (tamanhoTela > 825) {
+              <th class="text-center col-1">Hora</th>
+              }
+              <th class="text-center col-2">Ações</th>
+            </thead>
+            <tbody>
+              @if(produtosAntigos.length > 0) {
+              <td colspan="10" class="text-center">Produtos já lançados</td>
+              @for (produtoVenda of produtosAntigos; track $index) {
+              <tr>
+                @if (tamanhoTela > 950) {
+                <td class="text-center">
+                  {{ produtoVenda.produto.codigo }}
+                </td>
+                } @if (tamanhoTela > 483) {
+                <td class="text-center">{{ $index + 1 + "." }}</td>
+                }
+                <td class="text-start">{{ produtoVenda.produto.nome }}</td>
+                @if (tamanhoTela > 563) {
+                <td class="text-center">R${{ produtoVenda.produto.valor }}</td>
+                }
+                <td class="text-center">{{ produtoVenda.quantidade }}</td>
+                @if (tamanhoTela > 635) {
+                <td class="text-center">R${{ produtoVenda.valor }}</td>
+                } @if (tamanhoTela > 768) {
+                <td class="text-wrap" style="white-space: normal">
+                  {{ getObservacoesFormatadas(produtoVenda) }}
+                </td>
+                <td class="text-center">
+                  {{ produtoVenda?.funcionario?.nome }}
+                </td>
+                } @if (tamanhoTela > 825) {
+                <td class="text-center">
+                  {{ produtoVenda?.data | date : "HH:mm" }}
+                </td>
+                }
+                <td>
+                  <div class="col-acoes">
+                    @if (usuario && usuario.permissao &&
+                    usuario.permissao.deletarProdutoVenda || produtoVenda.id ==
+                    null) {
+                    <button
+                      type="button"
+                      (click)="
+                        deletarProduto(
+                          $index,
+                          modalDeletarProduto,
+                          modalConfirmarImpressao
+                        )
+                      "
+                      class="hover-btn"
+                    >
+                      <img
+                        src="../../../../assets/images/botao_deletar.svg"
+                        alt="Deletar"
+                      />
+                      <span class="hover-text">Deletar</span>
+                    </button>
+                    } @if (tamanhoTela < 1300) {
+                    <button
+                      type="button"
+                      class="hover-btn"
+                      (click)="
+                        abrirModalDetalhes(produtoVenda, $index, modalDetalhes)
+                      "
+                    >
+                      <img
+                        src="../../../../assets/images/mais-detalhes.png"
+                        alt="Detalhes"
+                        class="detalhes"
+                      />
+                      <span class="hover-text">Detalhes</span>
+                    </button>
+                    }@else { &nbsp; }
+                  </div>
+                </td>
+              </tr>
+              } } @if (produtosNovos.length > 0) {
+              <td colspan="10" class="text-center">
+                Novos produtos adicionados
+              </td>
+              @for (produtoVenda of produtosNovos; track $index) {
+              <tr class="linhaTable rounded-tr">
+                <td class="text-center">
+                  {{ produtoVenda.produto.codigo }}
+                </td>
+                <td class="text-center">{{ $index + 1 + "." }}</td>
+                <td class="text-start">{{ produtoVenda.produto.nome }}</td>
+                <td class="text-center">R${{ produtoVenda.produto.valor }}</td>
+                <td class="text-center">{{ produtoVenda.quantidade }}</td>
+                <td class="text-center">R${{ produtoVenda.valor }}</td>
+                <td class="text-wrap" style="white-space: normal">
+                  {{ getObservacoesFormatadas(produtoVenda) }}
+                </td>
+                <td class="text-center">
+                  {{ produtoVenda?.funcionario?.nome }}
+                </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+              </tr>
+              } }
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="col-5 h-100">
+        <div class="d-flex flex-column ps-2 w-100 h-100">
+          <div class="d-flex flex-column w-100">
+            <label for="nome">Nome Produto</label>
+            <div class="filtro-pesquisa">
+              <input
+                autocomplete="off"
+                id="nome"
+                class="form-control"
+                type="text"
+                placeholder="Pesquisar produtos..."
+                [(ngModel)]="nomeProdutoPesquisa"
+                (keydown.enter)="buscarTodosProdutos()"
+              />
+              <button
+                type="button"
+                class="botao_cep"
+                (click)="buscarTodosProdutos()"
+              >
+                <img src="../../../../assets/images/search.svg" class="busca" />
+              </button>
+            </div>
+          </div>
+          <div class="d-flex flex-column mt-3">
+            <h4>Categorias</h4>
+            <ul class="lista_categorias p-2">
+              @for (categoria of listaCategorias; track $index) {
+              <button
+                name="categoria"
+                type="button"
+                class="m-1"
+                [ngClass]="{
+                  categoriaSelecionada: categoriaSelecionada == categoria
+                }"
+                (click)="filtrarPorCategoria(categoria)"
+              >
+                {{ categoria.nome }}
+              </button>
+              }
+            </ul>
+          </div>
+          <h4 class="mt-3">Produtos</h4>
+          <div class="d-flex flex-column lista gap-3 lista_produtos p-2">
+            @for (produto of listaProdutosFiltrada; track $index) {
+            <div
+              class="d-flex align-items-center justify-content-between p-3 col-12 produto-item"
+            >
+              <p class="w-50">{{ produto.nome }}</p>
+              <div class="d-flex justify-content-between w-50">
+                <p>R${{ produto.valor }}</p>
+                <div class="d-flex align-items-center gap-3">
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-outline-success"
+                    (click)="
+                      adicionarProduto(modalObservacaoTouchDeve, produto)
+                    "
+                  >
+                    +
+                  </button>
+                  @if (produto.categoria.obsObrigatotio == false) {
+                  <button
+                    type="button"
+                    class="btnObs"
+                    (click)="
+                      abrirModalObservacao(modalObservacaoTouch, produto)
+                    "
+                    [disabled]="
+                      (quantidadesProdutosVenda[produto.id] || 0) === 0
+                    "
+                  >
+                    Obs
+                  </button>
+                  }
+                </div>
+              </div>
+            </div>
+            @if (getProdutoVendasDoProduto(produto.id).length > 0) {
+
+            <div class="d-flex flex-column ms-4">
+              @for (produtoVenda of getProdutoVendasDoProduto(produto.id); track
+              $index) {
+              <div
+                class="d-flex align-items-center justify-content-between p-2 px-3 mb-2 col-11 produto-venda-item"
+              >
+                <p>Qtd: {{ produtoVenda.quantidade }}</p>
+                <p class="text-wrap" style="white-space: normal">
+                  Obs:{{ getObservacoesFormatadas(produtoVenda) }}
+                </p>
+                <div class="d-flex gap-2">
+                  @if (produto.categoria.obsObrigatotio == false) {
+                  <button
+                    type="button"
+                    (click)="
+                      editarObservacaoProdutoVenda(
+                        modalObservacaoTouch,
+                        produtoVenda
+                      )
+                    "
+                    class="hover-btn"
+                  >
+                    <img
+                      src="../../../../assets/images/botao_editar.svg"
+                      alt="Editar"
+                    />
+                    <span class="hover-text">Editar</span>
+                  </button>
+                  } @else if (produto.categoria.obsObrigatotio == true) {
+                  <button
+                    type="button"
+                    (click)="
+                      editarObservacaoProdutoVendaDeve(
+                        modalObservacaoTouchDeve,
+                        produtoVenda
+                      )
+                    "
+                    class="hover-btn"
+                  >
+                    <img
+                      src="../../../../assets/images/botao_editar.svg"
+                      alt="Editar"
+                    />
+                    <span class="hover-text">Editar</span>
+                  </button>
+                  }
+                  <button
+                    type="button"
+                    (click)="removerProdutoVenda(produtoVenda)"
+                    class="hover-btn"
+                  >
+                    <img
+                      src="../../../../assets/images/botao_deletar.svg"
+                      alt="Deletar"
+                    />
+                    <span class="hover-text">Deletar</span>
+                  </button>
+                </div>
+              </div>
+              }
+            </div>
+            } }
+          </div>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+  <div
+    class="modal-footer d-flex justify-content-between align-items-center border-0 p-2 pt-0"
+  >
+    <div class="d-flex gap-2 align-items-center w-50">
+      @if (usuario && usuario.permissao && (usuario.permissao.caixa && urlString
+      === 'caixa')) {
+      <div
+        class="d-flex justify-content-between align-items-center areaPagar p-3 w-100"
+      >
+        <h3 class="m-0">VALOR TOTAL</h3>
+        <h3 class="m-0 barra">|</h3>
+        <h3 class="m-0 valorVenda">R$ {{ venda.valorTotal || 0 }}</h3>
+      </div>
+      }
+      <div>
+        @if ((((tipoCaixa == "mesa" || tipoCaixa == "retirada" || tipoCaixa ==
+        "entrega") && !vendaAlterada() && venda.dataVenda != null &&
+        venda.deletado == false ) && (usuario && usuario.permissao &&
+        (usuario.permissao.imprimir && urlString === 'caixa'))) &&
+        matriz.usarImpressora) {
+        <button
+          type="button"
+          class="hover-btn btn-imprimir"
+          (click)="abrirModalImpressao(venda, modalImpressao)"
+        >
+          <img
+            class="icon-impressora"
+            src="../../../../assets/images/impressora.svg"
+            alt="Imprimir"
+          />
+          <span class="hover-text">Imprimir</span>
+        </button>
+        }
+      </div>
+    </div>
+    <div class="d-flex justify-content-end align-items-center gap-3">
+      @if (tipoCaixa == 'mesa' && vendaAlterada() && !transferir || ((tipoCaixa
+      == 'retirada' || tipoCaixa == 'entrega') && vendaAlterada() &&
+      venda.produtoVendas)) {
+      <button
+        type="button"
+        class="btn-comum btn-comum-laranja"
+        (click)="lancarVendaTipo(modalConfirmarImpressao, modalPagamentos)"
+      >
+        Lançar
+      </button>
+      } @if ( ( ( (tipoCaixa == "mesa" || tipoCaixa == "retirada" || tipoCaixa
+      == "entrega") && !vendaAlterada() && venda.dataVenda != null &&
+      venda.deletado == false ) || (tipoCaixa == "balcao" && venda.produtoVendas
+      != null) ) && (usuario && usuario.permissao && (usuario.permissao.caixa &&
+      urlString === 'caixa')) ) {
+      <button
+        type="button"
+        class="btn-comum btn-comum-verde"
+        (click)="pagar(chaveUnico, modalPagamentos)"
+      >
+        Pagar
+      </button>
+      } @if ((tipoCaixa != "balcao" && !vendaAlterada() && venda.dataVenda !=
+      null && venda.deletado == false) && ((usuario && usuario.permissao &&
+      usuario.permissao.deletarVenda) && urlString === 'caixa' )) {
+      <button
+        type="button"
+        class="btn-comum btn-comum-vermelho"
+        (click)="
+          deletarVenda(venda, modalDeletarVenda, modalConfirmarImpressao)
+        "
+      >
+        Deletar
+      </button>
+      }
+    </div>
+  </div>
+</ng-template>
+<ng-template #modalTransferirNumero let-modal>
+  <div class="modal-header modal-style">
+    <h4 class="modal-title">Transferir Mesa</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Close click'); cancelarTransferir()"
+    ></button>
+  </div>
+  <div class="modal-body modal-style d-flex flex-column">
+    <span class="mb-2">Mesa?</span>
+    <input
+      name="transferir"
+      autocomplete="off"
+      class="form-control"
+      type="number"
+      #numeroMesaTransferir
+      (input)="validarNumero($event)"
+      placeholder="Para qual mesa"
+      (keydown.enter)="
+        abrirModalTransferir(
+          +numeroMesaTransferir.value,
+          modalTransferir,
+          venda
+        )
+      "
+    />
+  </div>
+  <div class="modal-footer modal-style d-flex justify-content-center border-0">
+    <button
+      type="button"
+      class="btn-comum btn-comum-laranja"
+      (click)="
+        abrirModalTransferir(
+          +numeroMesaTransferir.value,
+          modalTransferir,
+          venda
+        )
+      "
+    >
+      Transferir
+    </button>
+  </div>
+</ng-template>
+<ng-template #modalDetalhes let-modal>
+  <div class="modal-header modal-style">
+    <h4 class="modal-title">Linha {{ indice }}</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body modal-style">
+    <h5 class="mb-3">Detalhes do Item</h5>
+    <div class="d-flex flex-column gap-2">
+      <div><strong>N. item:</strong> {{ indice }}</div>
+      <div><strong>Codigo:</strong> {{ produtoVenda.produto.codigo }}</div>
+      <div><strong>Nome Produto:</strong> {{ produtoVenda.produto.nome }}</div>
+      <div>
+        <strong>Valor Unitário:</strong> {{ produtoVenda.produto.valor }}
+      </div>
+      <div>
+        <strong>Quantidade Produto:</strong> {{ produtoVenda.quantidade }}
+      </div>
+      <div><strong>Valor Item:</strong> {{ produtoVenda.valor }}</div>
+      <div>
+        <strong>Observação Item:</strong><br />
+        {{ getObservacoesFormatadas(produtoVenda) }}
+      </div>
+      @if (produtoVenda.funcionario != null) {
+      <div>
+        <strong>Operador:</strong><br />
+        {{ produtoVenda.funcionario.nome }}
+      </div>
+      } @if (produtoVenda.data != null) {
+      <div>
+        <strong>Hora:</strong><br />{{ produtoVenda.data | date : "HH:mm" }}
+      </div>
+      }
+    </div>
+  </div>
+</ng-template>

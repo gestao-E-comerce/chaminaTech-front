@@ -1,0 +1,109 @@
+.nome-produto-exibido {
+    color: var(--cor-white);
+    font-size: 15px;
+}
+
+.btnObs {
+    font-size: 12px;
+    padding: 3px 10px;
+    background-color: var(--cor-laranja);
+    color: var(--cor-white);
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+.btnObs:hover {
+    background-color: var(--cor-laranja-hover);
+}
+
+.espaco {
+    height: 30px;
+}
+
+.textoMesa {
+    color: var(--cor-laranja);
+    font-weight: 600;
+}
+
+.numeroMesa {
+    color: var(--cor-white);
+    font-size: large;
+}
+
+.dados_cliente {
+    color: var(--cor-laranja) !important;
+    font-size: var(--fs-button) !important;
+    font-weight: bold;
+
+    span {
+        font-size: var(--fs-button) !important;
+        font-weight: normal;
+        color: var(--cor-white) !important;
+    }
+}
+
+.cliente {
+    color: var(--cor-laranja);
+    font-weight: bold;
+}
+
+h4 {
+    color: var(--cor-white);
+}
+
+.lista_categorias {
+    display: flex;
+    flex-wrap: wrap;
+    background-color: var(--cor-cinza-escuro);
+    max-height: 20vh !important;
+    list-style: none;
+    color: var(--cor-white);
+    border: 1px solid var(--cor-laranja);
+    border-radius: 10px;
+    overflow-y: auto;
+
+    button {
+        border: none;
+        color: var(--cor-white);
+        background-color: var(--cor-cinza-fundo);
+        font-size: var(--fs-button) !important;
+        font-weight: 500 !important;
+        padding: var(--sp-input-vertical-menor) var(--sp-input-horizontal-menor) !important;
+        border-radius: 10px !important;
+    }
+
+    .categoriaSelecionada {
+        background-color: var(--cor-laranja);
+    }
+}
+
+.lista_produtos {
+    border: 1px solid var(--cor-laranja);
+    border-radius: 10px;
+
+    .produto-item {
+        font-size: var(--fs-button) !important;
+        background-color: var(--cor-cinza-fundo);
+        border-radius: 10px;
+    }
+}
+
+.btnObs:disabled {
+    background-color: var(--cor-laranja-disabled);
+    cursor: not-allowed;
+}
+
+.produto-venda-item {
+    border: 3px solid var(--cor-cinza-fundo);
+    font-size: var(--fs-button) !important;
+    border-radius: 10px;
+}
+
+@media (max-width: 480px) {
+    .produto-venda-item {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 768px) {}

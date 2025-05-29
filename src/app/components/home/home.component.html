@@ -1,0 +1,211 @@
+<div class="w-100 nav-menu">
+  <div class="d-flex align-items-center justify-content-between p-3">
+    <div class="gap-3 p-0 m-0">
+      <img src="../../../assets/images/logo-da-empresa.png" class="logo" />
+      @if (usuario != null) {
+      <div>
+        <label>Usuário Logado: {{ usuario.nome }}</label>
+      </div>
+      }
+    </div>
+    <div class="d-flex align-items-center p-0 m-0 gap-3">
+      <button type="button" class="hover-btn" (click)="alternarTema()">
+        <i class="tema bi bi-circle-half"></i>
+        <span class="hover-text">Tema</span>
+      </button>
+      <div>
+        <a
+          (click)="loginService.deslogar()"
+          class="sair d-flex align-items-center gap-2 p-2"
+          ><i class="bi bi-box-arrow-left"></i><span>Sair</span></a
+        >
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="d-flex col-12 justify-content-center main-content"
+  [ngClass]="{ 'mt-5': loginService.getUser().role === 'FUNCIONARIO' }"
+>
+  <div
+    class="col-11 d-flex justify-content-center flex-column align-items-center"
+  >
+    @if (loginService.getUser().role != "ADMIN") { @if
+    (loginService.getUser().role == "FUNCIONARIO") {
+    <div class="d-flex justify-content-between col-12 gap-3 lista-venda">
+      @if (usuario && usuario.permissao && usuario.permissao.caixa) {
+      <div
+        class="caixa d-flex flex-column justify-content-center w-100"
+        (click)="acao = 'caixa'; verificarUsuario(modalAbrirCaixa)"
+      >
+        <i class="img-caixa"
+          ><img src="../../../assets/images/caixa-gaveta.svg"
+        /></i>
+        <span>Abrir Caixa</span>
+      </div>
+      } @if (usuario && usuario.permissao && usuario.permissao.venda) {
+      <div
+        class="caixa d-flex flex-column justify-content-center w-100"
+        (click)="acao = 'lancarVenda'; verificarUsuario(modalAbrirCaixa)"
+      >
+        <i class="bi bi-clipboard-check"></i>
+        <span>Lançar Venda</span>
+      </div>
+      }
+    </div>
+    } @if (usuario && usuario.permissao && usuario.permissao.estoque || usuario
+    && usuario.permissao && usuario.permissao.materia || usuario &&
+    usuario.permissao && usuario.permissao.produto || usuario &&
+    usuario.permissao && usuario.permissao.deposito || usuario &&
+    usuario.permissao && usuario.permissao.funcionario || usuario &&
+    usuario.permissao && usuario.permissao.cliente || usuario &&
+    usuario.permissao && usuario.permissao.editarConfiguracoes || usuario &&
+    usuario.permissao && usuario.permissao.historicoCaixa) {
+
+    <div class="col-12 d-flex flex-column align-items-center">
+      <div class="d-flex flex-column align-items-center col-12">
+        <div class="col-12">
+          <p class="textoHeader mt-4">Serviços</p>
+        </div>
+        <div
+          class="d-flex justify-content-evenly col-12 flex-wrap gap-4 justify-content-start lista-servicos"
+        >
+          @if (usuario && usuario.permissao && usuario.permissao.estoque) {
+          <div
+            class="col-3 p-5 bloco d-flex flex-column justify-content-center"
+            (click)="acao = 'estoque'; verificarUsuario(modalAbrirCaixa)"
+          >
+            <i class="bi bi-box-seam"></i>
+            <span>Estoque</span>
+          </div>
+          } @if (usuario && usuario.permissao && usuario.permissao.materia) {
+          <div
+            class="col-3 p-5 bloco d-flex flex-column justify-content-center"
+            (click)="acao = 'materia'; verificarUsuario(modalAbrirCaixa)"
+          >
+            <i class="bi bi-basket2"></i>
+            <span>Materias</span>
+          </div>
+          }@if (usuario && usuario.permissao && usuario.permissao.produto) {
+          <div
+            class="col-3 p-5 bloco d-flex flex-column justify-content-center"
+            (click)="acao = 'produto'; verificarUsuario(modalAbrirCaixa)"
+          >
+            <i class="bi bi-cart2"></i>
+            <span>Produtos</span>
+          </div>
+          } @if (usuario && usuario.permissao && usuario.permissao.deposito) {
+          <div
+            class="col-3 p-5 bloco d-flex flex-column justify-content-center"
+            (click)="acao = 'deposito'; verificarUsuario(modalAbrirCaixa)"
+          >
+            <i class="bi bi-grid-3x3-gap"></i>
+            <span>Deposito</span>
+          </div>
+          } @if (usuario && usuario.permissao && usuario.permissao.funcionario)
+          {
+          <div
+            class="col-3 p-5 bloco d-flex flex-column justify-content-center"
+            (click)="acao = 'funcionario'; verificarUsuario(modalAbrirCaixa)"
+          >
+            <i class="bi bi-person-lines-fill"></i>
+            <span>Funcionários</span>
+          </div>
+          }@if (usuario && usuario.permissao && usuario.permissao.cliente) {
+          <div
+            class="col-3 p-5 bloco d-flex flex-column justify-content-center"
+            (click)="acao = 'cliente'; verificarUsuario(modalAbrirCaixa)"
+          >
+            <i class="bi bi-people-fill"></i>
+            <span>Clientes</span>
+          </div>
+          } @if (usuario && usuario.permissao &&
+          usuario.permissao.historicoCaixa) {
+          <div
+            class="col-3 p-5 bloco d-flex flex-column justify-content-center"
+            (click)="acao = 'caixaConf'; verificarUsuario(modalAbrirCaixa)"
+          >
+            <i class="img-caixa"
+              ><img src="../../../assets/images/caixa-gaveta.svg"
+            /></i>
+            <span class="Texto">Caixa Conf.</span>
+          </div>
+          } @if (usuario && usuario.permissao &&
+          usuario.permissao.editarConfiguracoes) {
+          <div
+            class="col-3 p-5 bloco d-flex flex-column justify-content-center"
+            (click)="acao = 'config'; verificarUsuario(modalAbrirCaixa)"
+          >
+            <i class="bi bi-tools"></i>
+            <span class="Texto">Configuração</span>
+          </div>
+          } @if (usuario && usuario.permissao && usuario.permissao.auditoria) {
+          <div
+            class="col-3 p-5 bloco d-flex flex-column justify-content-center"
+            (click)="acao = 'audit'; verificarUsuario(modalAbrirCaixa)"
+          >
+            <i class="bi bi-file-earmark-text"></i>
+            <span class="Texto">Auditoria</span>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+    } } @if (loginService.getUser().role == "ADMIN" ||
+    loginService.getUser().role == "ADMINFUNCIONARIO") {
+    <div
+      class="d-flex justify-content-evenly col-12 flex-wrap gap-4 justify-content-start lista-servicos mt-5"
+    >
+      <div
+        class="col-3 p-5 bloco d-flex flex-column justify-content-center"
+        (click)="acao = 'matriz'; verificarUsuarioAdmin()"
+      >
+        <i class="bi bi-grid-3x3-gap"></i>
+        <span>Matriz</span>
+      </div>
+      @if (usuario && usuario.permissao && usuario.permissao.funcionario){
+      <div
+        class="col-3 p-5 bloco d-flex flex-column justify-content-center"
+        (click)="acao = 'funcionarios'; verificarUsuarioAdmin()"
+      >
+        <i class="bi bi-person-lines-fill"></i>
+        <span>Funcionários</span>
+      </div>
+      } @if (usuario && usuario.permissao &&
+      usuario.permissao.editarConfiguracoes){
+      <div
+        class="col-3 p-5 bloco d-flex flex-column justify-content-center"
+        (click)="acao = 'configadmin'; verificarUsuarioAdmin()"
+      >
+        <i class="bi bi-tools"></i>
+        <span class="Texto">Configuração</span>
+      </div>
+      }
+       <!-- @if (usuario && usuario.permissao && usuario.permissao.auditoria) {
+      <div
+        class="col-3 p-5 bloco d-flex flex-column justify-content-center"
+        (click)="acao = 'audit'; verificarUsuario(modalAbrirCaixa)"
+      >
+        <i class="bi bi-file-earmark-text"></i>
+        <span class="Texto">Auditoria</span>
+      </div>
+      } -->
+    </div>
+    }
+  </div>
+</div>
+
+<ng-template #modalAbrirCaixa let-modal>
+  <div class="modal-header modal-style">
+    <h4 class="modal-title">{{ tituloModal }}</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body modal-style">
+    <app-abrir-caixa [usuario]="usuario"></app-abrir-caixa>
+  </div>
+</ng-template>

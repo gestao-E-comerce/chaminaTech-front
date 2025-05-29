@@ -1,0 +1,337 @@
+<div class="tela d-flex flex-column col-lg-12 w-100 p-2">
+  <div class="d-flex align-items-center justify-content-between my-2">
+    <div class="d-flex align-items-center">
+      <button type="button" class="botao_voltar me-2" routerLink="/home">
+        <i class="bi bi-arrow-left"></i>
+      </button>
+
+      <h2 class="titulo m-0">Estoques</h2>
+    </div>
+
+    <div class="d-flex justify-content-between my-2 gap-2 area-btns">
+      <div>
+        @if (usuario && usuario.permissao && usuario.permissao.cadastrarEstoque)
+        {
+        <button
+          type="button"
+          (click)="cadastrarEstoque(modalEstoque)"
+          class="btn-comum btn-comum-laranja"
+        >
+          Novo Estoque
+        </button>
+        }
+      </div>
+      <div>
+        @if (usuario && usuario.permissao && usuario.permissao.editarEstoque) {
+        <button
+          type="button"
+          (click)="descartarProduto(modalEstoqueDescartar)"
+          class="btn-comum btn-comum-laranja"
+        >
+          Descartar
+        </button>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="col-lg-12 d-flex align-items-center gap-3 pb-2 w-100 area-pesquisa"
+  >
+    <div class="d-flex flex-column w-100">
+      <label>Nome</label>
+      <div class="filtro-pesquisa">
+        <input
+          class="form-control"
+          type="text"
+          placeholder="nome"
+          [(ngModel)]="produtoNome"
+          (keydown.enter)="defenirListar()"
+        />
+        <button type="button" class="botao_cep" (click)="defenirListar()">
+          <img src="../../../../assets/images/search.svg" class="busca" />
+        </button>
+      </div>
+    </div>
+    <div class="d-flex align-items-center gap-2 tamanho-select-estoque">
+      @if (lista == 'estoques') {
+      <div class="d-flex flex-column w-100">
+        <label>Ativo</label>
+        <select
+          class="select-filtro p-1"
+          [(ngModel)]="ativo"
+          (change)="filtrarEstoques()"
+        >
+          <option value="">Todos</option>
+          <option value="true">Sim</option>
+          <option value="false">Não</option>
+        </select>
+      </div>
+      }
+      <div class="d-flex flex-column w-100">
+        <label>Listar por</label>
+        <select
+          class="select-filtro p-1"
+          [(ngModel)]="lista"
+          (change)="defenirListar()"
+        >
+          <option value="estoques">Estoques</option>
+          <option value="produtos">Produtos</option>
+          <option value="estoquesDescartados">Estoques Descartados</option>
+          <option value="produtosDescartados">Produtos Descartados</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="lista">
+    <table class="table ">
+      @if (lista === 'estoques') {
+      <thead>
+        @if (screenWidth) {
+        <th class="text-center col-1">#</th>
+        }
+        <th class="text-center col-1">Produto</th>
+        <th class="text-center col-1">Quantedade</th>
+        @if (screenWidth) {
+        <th class="text-center col-1">Quantedade Vendido</th>
+        <th class="text-center col-1">Quantedade disponível</th>
+        <th class="text-center col-2">Data Cadastro</th>
+        <th class="text-center col-2">Data Esgotar</th>
+        <th class="text-center col-1">Valor Compra</th>
+        }
+        <th class="text-center col-2">Ações</th>
+      </thead>
+      <tbody>
+        @for (estoque of listaEstoquesFiltrada; track $index) {
+        <tr>
+          @if (screenWidth) {
+          <td class="text-center">{{ $index }}</td>
+          }
+          <td class="text-center">{{ estoque.produto.nome }}</td>
+          <td class="text-center">{{ estoque.quantidade }}</td>
+          @if (screenWidth) {
+          <td class="text-center">{{ estoque.quantidadeVendido }}</td>
+          <td class="text-center">
+            {{ estoque.quantidade - estoque.quantidadeVendido }}
+          </td>
+          <td class="text-center">
+            {{ estoque.dataCadastrar | date : "dd/MM/yyyy HH:mm:ss a" }}
+          </td>
+          <td class="text-center">
+            {{ estoque.dataDesativar | date : "dd/MM/yyyy HH:mm:ss a" }}
+          </td>
+          <td class="text-center">R${{ estoque.valorTotal }}</td>
+          }
+          <td>
+            <div class="col-acoes">
+              @if (usuario && usuario.permissao &&
+              usuario.permissao.editarEstoque && estoque.valorTotal > 0) {
+              <button
+                type="button"
+                (click)="editarEstoque(modalEstoque, estoque, $index)"
+                class="hover-btn"
+                name="Editar{{ $index }}"
+              >
+                <img
+                  src="../../../../assets/images/botao_editar.svg"
+                  alt="Editar"
+                />
+                <span class="hover-text">Editar</span>
+              </button>
+              }@if (usuario && usuario.permissao &&
+              usuario.permissao.editarEstoque && (estoque.quantidade !=
+              estoque.quantidadeVendido)) {
+              <button
+                type="button"
+                (click)="ativarOuDesativarEstoque(estoque)"
+                class="hover-btn"
+                name="Desativar{{ $index }}"
+              >
+                @if (estoque.ativo == true) {
+                <img
+                  src="../../../../assets/images/pause.svg"
+                  alt="Desativar"
+                  class="icon-tamanho"
+                />
+                <span class="hover-text">Desativar</span>
+                } @if (estoque.ativo == false) {
+                <img
+                  src="../../../../assets/images/play.svg"
+                  alt="Desativar"
+                  class="icon-tamanho"
+                />
+                <span class="hover-text">Ativar</span>
+                }
+              </button>
+              } @if (!screenWidth) {
+              <button
+                type="button"
+                class="hover-btn"
+                (click)="abrirModalDetalhes(estoque, $index, modalDetalhes)"
+              >
+                <img
+                  src="../../../../assets/images/mais-detalhes.png"
+                  alt="Detalhes"
+                  class="detalhes"
+                />
+                <span class="hover-text">Detalhes</span>
+              </button>
+              }@else { &nbsp; }
+            </div>
+          </td>
+        </tr>
+        }
+      </tbody>
+      } @if (lista === 'estoquesDescartados') {
+      <thead>
+        <th class="text-center col-1">#</th>
+        <th class="text-center col-2">Produto</th>
+        <th class="text-center col-1">Quantedade</th>
+        <th class="text-center col-2">Data Descartar</th>
+        <th class="text-center col-2">Motivo</th>
+      </thead>
+      <tbody>
+        @for (estoqueDescartar of listaEstoquesDescartadosFiltrada; track
+        $index) {
+        <tr>
+          <td class="text-center">{{ $index }}</td>
+          <td class="text-center">{{ estoqueDescartar.produto.nome }}</td>
+          <td class="text-center">{{ estoqueDescartar.quantidade }}</td>
+          <td class="text-center">
+            {{
+              estoqueDescartar.dataDescartar | date : "dd/MM/yyyy HH:mm:ss a"
+            }}
+          </td>
+          <td class="text-center">{{ estoqueDescartar.motivo }}</td>
+        </tr>
+        }
+      </tbody>
+      } @if (lista === 'produtos') {
+      <thead>
+        <th class="text-center col-1">#</th>
+        <th class="text-center col-1">Produto</th>
+        <th class="text-center col-1">Quantedade disponível</th>
+      </thead>
+      <tbody>
+        @for (produto of listaProdutosFiltrada; track $index) {
+        <tr>
+          <td class="text-center">{{ $index }}</td>
+          <td class="text-center">{{ produto.nome }}</td>
+          <td class="text-center">{{ produto.quantidadeDisponivel }}</td>
+        </tr>
+        }
+      </tbody>
+      } @if (lista === 'produtosDescartados') {
+      <thead>
+        <th class="text-center col-1">#</th>
+        <th class="text-center col-1">Produto</th>
+        <th class="text-center col-1">Quantedade</th>
+      </thead>
+      <tbody>
+        @for (produto of listaProdutosFiltrada; track $index) {
+        <tr>
+          <td class="text-center">{{ $index }}</td>
+          <td class="text-center">{{ produto.nome }}</td>
+          <td class="text-center">{{ produto.quantidadeDescartada }}</td>
+        </tr>
+        }
+      </tbody>
+      }
+    </table>
+  </div>
+</div>
+
+<ng-template #modalEstoque let-modal>
+  <div class="modal-header modal-style">
+    <h4 class="modal-title">{{ tituloModal }}</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body modal-style">
+    <app-estoque-detalhes
+      #estoqueDetalhes
+      [estoque]="estoque"
+      (retorno)="atualizarListaEstoque($event)"
+    ></app-estoque-detalhes>
+  </div>
+  <div
+    class="modal-footer d-flex justify-content-center align-items-center border-0"
+  >
+    <button
+      type="button"
+      class="btn-comum btn-comum-laranja"
+      (click)="estoqueDetalhes.salvar()"
+    >
+      Salvar
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #modalEstoqueDescartar let-modal>
+  <div class="modal-header modal-style">
+    <h4 class="modal-title">{{ tituloModal }}</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body modal-style">
+    <app-estoque-descartar-detalhes
+      #estoqueDescartarDetalhes
+      [estoqueDescartar]="estoqueDescartar"
+      (retorno)="atualizarListaEstoqueDescartar($event)"
+    ></app-estoque-descartar-detalhes>
+  </div>
+  <div
+    class="modal-footer d-flex justify-content-center align-items-center border-0"
+  >
+    <button
+      type="button"
+      class="btn-comum btn-comum-laranja"
+      (click)="estoqueDescartarDetalhes.salvar()"
+    >
+      Salvar
+    </button>
+  </div>
+</ng-template>
+<ng-template #modalDetalhes let-modal>
+  <div class="modal-header modal-style">
+    <h4 class="modal-title">Linha {{ indice }}</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body modal-style">
+    <h5 class="mb-3">Detalhes do Estoque</h5>
+    <div class="d-flex flex-column gap-2">
+      <div><strong>Produto:</strong> {{ estoque.produto.nome }}</div>
+      <div><strong>Quantedade:</strong> {{ estoque.quantidade }}</div>
+      <div>
+        <strong>Quantedade Vendido:</strong> {{ estoque.quantidadeVendido }}
+      </div>
+      <div>
+        <strong>Quantedade disponível:</strong>
+        {{ estoque.quantidade - estoque.quantidadeVendido }}
+      </div>
+      <div>
+        <strong>Data Cadastro:</strong>
+        {{ estoque.dataCadastrar | date : "dd/MM/yyyy HH:mm:ss a" }}
+      </div>
+      <div>
+        <strong>Data Esgotar:</strong>
+        {{ estoque.dataDesativar | date : "dd/MM/yyyy HH:mm:ss a" }}
+      </div>
+      <div><strong>Valor Compra:</strong> R${{ estoque.valorTotal }}</div>
+    </div>
+  </div>
+</ng-template>

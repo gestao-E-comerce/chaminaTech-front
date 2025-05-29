@@ -1,0 +1,459 @@
+<div class="h-100 w-100">
+  <div class="d-flex col-12 flex-column gap-4 h-100">
+    <div class="col-12 d-flex align-items-center w-100 gap-3 inputs-wrap">
+      <div class="w-50">
+        <label for="nome" class="form-label">Nome</label>
+        <input
+          id="nome"
+          autocomplete="off"
+          type="text"
+          class="form-control"
+          name="nome"
+          [(ngModel)]="produto.nome"
+          required
+          #nome="ngModel"
+          [ngClass]="{ 'borda-vermelha': !nome.valid && nome.touched }"
+        />
+      </div>
+      <div>
+        <label class="form-label">Unidade de venda</label>
+        <div class="btn-group w-100">
+          <button
+            type="button"
+            class="btn btn-borda-laranja p-2"
+            [ngClass]="{
+              'btn-comum-laranja': produto.tipo === true,
+              'btn-borda-laranja': produto.tipo !== true
+            }"
+            (click)="produto.tipo = true"
+          >
+            Peso (KG)
+          </button>
+          <button
+            type="button"
+            class="btn btn-borda-laranja p-2"
+            [ngClass]="{
+              'btn-comum-laranja': produto.tipo === false,
+              'btn-borda-laranja': produto.tipo !== false
+            }"
+            (click)="produto.tipo = false"
+          >
+            Unidade (UN)
+          </button>
+        </div>
+      </div>
+      <div>
+        @if (produto.tipo == true) {
+        <label for="valor" class="form-label">Preço por quilo</label>
+        } @if (produto.tipo == false) {
+        <label for="valor" class="form-label">Preço por unidade</label>
+        } @if (produto.tipo == null) {
+        <label for="valor" class="form-label">Preço</label>
+        }
+        <input
+          id="valor"
+          autocomplete="off"
+          type="number"
+          inputmode="numeric"
+          min="0"
+          step="1"
+          oninput="if (this.value.length > 10) this.value = this.value.slice(0, 10)"
+          onkeydown="return !['e', 'E', '-', '+' , ','].includes(event.key)"
+          class="form-control"
+          name="valor"
+          [(ngModel)]="produto.valor"
+          [disabled]="produto.tipo == null || produto.tipo == undefined"
+          required
+          #valor="ngModel"
+          [ngClass]="{ 'borda-vermelha': !valor.valid && valor.touched }"
+        />
+      </div>
+      <div>
+        <label for="codigo" class="form-label">Codigo</label>
+        <input
+          id="codigo"
+          autocomplete="off"
+          type="number"
+          inputmode="numeric"
+          min="0"
+          step="1"
+          oninput="if (this.value.length > 10) this.value = this.value.slice(0, 10)"
+          onkeydown="return !['e', 'E', '-', '+' , ',', '.'].includes(event.key)"
+          class="form-control"
+          name="codigo"
+          [(ngModel)]="produto.codigo"
+          required
+          #codigo="ngModel"
+          [ngClass]="{ 'borda-vermelha': !codigo.valid && codigo.touched }"
+        />
+      </div>
+    </div>
+    <div class="col-12 d-flex align-items-center w-100 gap-3 inputs-wrap">
+      <div class="d-flex flex-column w-25">
+        <label for="categoria" class="form-label">Categoria</label>
+        <select
+          id="categoria"
+          [compareWith]="byId"
+          class="select-filtro p-1"
+          name="categoria"
+          required
+          #categoria="ngModel"
+          [ngClass]="{
+            'borda-vermelha': !categoria.valid && categoria.touched
+          }"
+          [(ngModel)]="produto.categoria"
+        >
+          <option [ngValue]="undefined">Selecione...</option>
+          @for (categoria of listaCategorias; track $index) {
+          <option [ngValue]="categoria">{{ categoria.nome }}</option>
+          }
+        </select>
+      </div>
+      <div>
+        <label class="form-label">Mostrar no cardápio?</label>
+        <div class="btn-group w-100">
+          <button
+            type="button"
+            class="btn btn-borda-laranja p-2"
+            [ngClass]="{
+              'btn-comum-laranja': produto.cardapio === true,
+              'btn-borda-laranja': produto.cardapio !== true
+            }"
+            (click)="produto.cardapio = true"
+          >
+            Sim
+          </button>
+          <button
+            type="button"
+            class="btn btn-borda-laranja p-2"
+            [ngClass]="{
+              'btn-comum-laranja': produto.cardapio === false,
+              'btn-borda-laranja': produto.cardapio !== false
+            }"
+            (click)="produto.cardapio = false"
+          >
+            Não
+          </button>
+        </div>
+      </div>
+    </div>
+    @if (matriz && matriz.usarImpressora) {
+    <div class="col-12 d-flex align-items-center w-100 gap-3">
+      <div>
+        <label class="form-label">Enviar para impressão ao vender?</label>
+        <div class="btn-group w-100">
+          <button
+            type="button"
+            class="btn btn-borda-laranja p-2"
+            [ngClass]="{
+              'btn-comum-laranja': produto.deveImprimir === true,
+              'btn-borda-laranja': produto.deveImprimir !== true
+            }"
+            (click)="produto.deveImprimir = true"
+          >
+            Sim
+          </button>
+          <button
+            type="button"
+            class="btn btn-borda-laranja p-2"
+            [ngClass]="{
+              'btn-comum-laranja': produto.deveImprimir === false,
+              'btn-borda-laranja': produto.deveImprimir !== false
+            }"
+            (click)="produto.deveImprimir = false"
+          >
+            Não
+          </button>
+        </div>
+      </div>
+    </div>
+    @if (produto.deveImprimir) {
+    <div class="col-12 d-flex flex-column w-100 espaco-impressoras p-2">
+      <div class="d-flex align-items-center justify-content-between w-100 mb-2">
+        <label>Lista de Impressoras:</label>
+        <button
+          type="button"
+          class="btn-comum btn-comum-laranja"
+          (click)="adicionarImpressora(modalListarImpressoras, produto)"
+        >
+          Adicionar Impressora
+        </button>
+      </div>
+      <div class="lista-curta">
+        <table class="table ">
+          <thead>
+            <th class="text-start col-1">Apelido Impressora</th>
+            <th class="text-center col-1">Ações</th>
+          </thead>
+          <tbody>
+            @for (impressora of produto.impressoras; track $index) {
+            <tr>
+              <td class="text-start">
+                {{ impressora.apelidoImpressora }}
+              </td>
+              <td>
+                <div class="col-acoes">
+                  <button
+                    type="button"
+                    (click)="deletarImpressora($index)"
+                    class="hover-btn"
+                    name="Deletar{{ impressora.apelidoImpressora }}"
+                  >
+                    <img
+                      src="../../../../../assets/images/botao_deletar.svg"
+                      alt="Deletar"
+                    />
+                    <span class="hover-text">Deletar</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+    }}
+    <div class="col-12 d-flex align-items-center w-100 gap-3 inputs-wrap">
+      <div>
+        <label class="form-label">Validar estoque antes da venda?</label>
+        <div class="btn-group w-100">
+          <button
+            type="button"
+            class="btn btn-borda-laranja p-2"
+            [ngClass]="{
+              'btn-comum-laranja': produto.validarExestencia === true,
+              'btn-borda-laranja': produto.validarExestencia !== true
+            }"
+            (click)="produto.validarExestencia = true"
+          >
+            Sim
+          </button>
+          <button
+            type="button"
+            class="btn btn-borda-laranja p-2"
+            [ngClass]="{
+              'btn-comum-laranja': produto.validarExestencia === false,
+              'btn-borda-laranja': produto.validarExestencia !== false
+            }"
+            (click)="produto.validarExestencia = false"
+          >
+            Não
+          </button>
+        </div>
+      </div>
+      @if (produto.validarExestencia == true) {
+      <div>
+        <label class="form-label">Produto é pré-pronto?</label>
+        <div class="btn-group w-100">
+          <button
+            type="button"
+            class="btn btn-borda-laranja p-2"
+            [ngClass]="{
+              'btn-comum-laranja': produto.estocavel === true,
+              'btn-borda-laranja': produto.estocavel !== true
+            }"
+            (click)="produto.estocavel = true"
+          >
+            Sim (estoque)
+          </button>
+          <button
+            type="button"
+            class="btn btn-borda-laranja p-2"
+            [ngClass]="{
+              'btn-comum-laranja': produto.estocavel === false,
+              'btn-borda-laranja': produto.estocavel !== false
+            }"
+            (click)="produto.estocavel = false"
+          >
+            Não (feito na hora)
+          </button>
+        </div>
+      </div>
+      }
+    </div>
+    @if (produto.estocavel != null && produto.validarExestencia === true) {
+    <div class="col-12 d-flex flex-column w-100 espaco-impressoras p-2">
+      <div class="d-flex align-items-center justify-content-between w-100 mb-2">
+        <label>Lista de Matérias:</label>
+        <button
+          type="button"
+          class="btn-comum btn-comum-laranja"
+          (click)="adicionarMateria(modalListarMaterias)"
+        >
+          Adicionar Matéria
+        </button>
+      </div>
+      <div class="lista-curta">
+        <table class="table ">
+          <thead>
+            <th class="text-start col-1">Nome</th>
+            <th class="text-center col-1">Quantidade gasto</th>
+            <th class="text-center col-1">Ações</th>
+          </thead>
+          <tbody>
+            @for (produtoMateria of produto.produtoMaterias; track $index) { @if
+            (produtoMateria.ativo) {
+            <tr>
+              <td class="text-start">
+                {{ produtoMateria.materia.nome }}
+              </td>
+              <td class="text-center">
+                @if (produtoMateria.quantidadeGasto) {
+                {{ produtoMateria.quantidadeGasto }} }
+              </td>
+              <td>
+                <div class="col-acoes">
+                  <button
+                    (click)="
+                      editarMateria(modalListarMaterias, produtoMateria, $index)
+                    "
+                    class="hover-btn"
+                    name="Editar{{ produtoMateria.id }}"
+                  >
+                    <img
+                      src="../../../../../assets/images/botao_editar.svg"
+                      alt="Editar"
+                    />
+                    <span class="hover-text">Editar</span>
+                  </button>
+                  <button
+                    type="button"
+                    (click)="deletarMateria($index)"
+                    class="hover-btn"
+                    name="Deletar{{ produtoMateria.id }}"
+                  >
+                    <img
+                      src="../../../../../assets/images/botao_deletar.svg"
+                      alt="Deletar"
+                    />
+                    <span class="hover-text">Deletar</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            } }
+          </tbody>
+        </table>
+      </div>
+    </div>
+    } @if (produto.estocavel != null && produto.validarExestencia === true) {
+    <div class="col-12 d-flex flex-column w-100 espaco-impressoras p-2">
+      <div class="d-flex align-items-center justify-content-between w-100 mb-2">
+        <label>Lista de Produtos:</label>
+        <button
+          type="button"
+          class="btn-comum btn-comum-laranja"
+          (click)="adicionarProduto(modalListarProdutos)"
+        >
+          Adicionar Produto
+        </button>
+      </div>
+      <div class="lista-curta">
+        <table class="table ">
+          <thead>
+            <th class="text-start col-1">Nome</th>
+            <th class="text-center col-1">Quantidade gasto</th>
+            <th class="text-center col-1">Ações</th>
+          </thead>
+          <tbody>
+            @for (produtoSegundo of produto.produtoCompostos; track $index) {
+            <tr>
+              <td class="text-start">
+                {{ produtoSegundo.produtoComposto.nome }}
+              </td>
+              <td class="text-center">
+                @if (produtoSegundo.quantidadeGasto) {
+                {{ produtoSegundo.quantidadeGasto }} }
+              </td>
+              <td>
+                <div class="col-acoes">
+                  <button
+                    (click)="
+                      editarProduto(modalListarProdutos, produtoSegundo, $index)
+                    "
+                    class="hover-btn"
+                    name="Editar{{ produtoSegundo.id }}"
+                  >
+                    <img
+                      src="../../../../../assets/images/botao_editar.svg"
+                      alt="Editar"
+                    />
+                    <span class="hover-text">Editar</span>
+                  </button>
+                  <button
+                    type="button"
+                    (click)="deletarProduto($index)"
+                    class="hover-btn"
+                    name="Deletar{{ produtoSegundo.id }}"
+                  >
+                    <img
+                      src="../../../../../assets/images/botao_deletar.svg"
+                      alt="Deletar"
+                    />
+                    <span class="hover-text">Deletar</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+    }
+  </div>
+</div>
+<ng-template #modalListarImpressoras let-modal>
+  <div class="modal-header cabecalhoModal">
+    <h4 class="modal-title">{{ tituloModal }}</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <app-impressoras
+      [produto]="produto"
+      (retorno)="retornoImpressora($event)"
+    ></app-impressoras>
+  </div>
+</ng-template>
+<ng-template #modalListarMaterias let-modal>
+  <div class="modal-header cabecalhoModal">
+    <h4 class="modal-title">{{ tituloModal }}</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <app-selecionar-materias
+      [produto]="produto"
+      [produtoMateria]="produtoMateria"
+      (retornoProdutoMateria)="atualizarListaMaterias($event)"
+    ></app-selecionar-materias>
+  </div>
+</ng-template>
+<ng-template #modalListarProdutos let-modal>
+  <div class="modal-header cabecalhoModal">
+    <h4 class="modal-title">{{ tituloModal }}</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <app-selecionar-produtos
+      [produto]="produto"
+      [produtoComposto]="produtoComposto"
+      (retornoProdutoComposto)="atualizarListaProdutos($event)"
+    ></app-selecionar-produtos>
+  </div>
+</ng-template>

@@ -1,0 +1,53 @@
+/* Estilo do Switch */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 2.5rem; /* Largura ajustada */
+    height: 1.5rem; /* Altura ajustada */
+  }
+  
+  /* Esconde o checkbox real */
+  .switch-input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  /* O "slider" que aparece como a parte visível do switch */
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--cor-cinza);
+    transition: 0.4s;
+    border-radius: 50px;
+  }
+  
+  /* A bolinha (botão interno) */
+  .slider::before {
+    position: absolute;
+    content: "";
+    height: 1.1rem;  /* Tamanho da bolinha ajustado */
+    width: 1.1rem;   /* Tamanho da bolinha ajustado */
+    border-radius: 50%;
+    left: 0.15rem;   /* Distância da borda do switch */
+    bottom: 0.21rem; /* Distância da borda do switch */
+    background-color: var(--cor-white);
+    transition: 0.4s;
+  }
+  
+  /* Estado ATIVO - quando o checkbox é marcado */
+  .switch-input:checked + .slider {
+    background-color: var(--cor-laranja);  /* Cor do switch quando ativo */
+  }
+  
+  /* Estado ATIVO - movendo a bolinha */
+  .switch-input:checked + .slider::before {
+    transform: translateX(1rem);  /* Move a bolinha para a direita */
+  }
+  .switch-input:not(:checked) + .slider {
+    background-color: var(--cor-cinza-calro);
+  }

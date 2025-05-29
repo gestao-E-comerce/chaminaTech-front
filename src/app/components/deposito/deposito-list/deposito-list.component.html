@@ -1,0 +1,339 @@
+<div class="tela d-flex flex-column col-lg-12 w-100 p-2">
+  <div class="d-flex align-items-center justify-content-between">
+    <div class="d-flex align-items-center">
+      <button type="button" class="botao_voltar me-2" routerLink="/home">
+        <i class="bi bi-arrow-left"></i>
+      </button>
+
+      <h2 class="titulo m-0">Depositos</h2>
+    </div>
+
+    <div class="d-flex justify-content-between my-2 gap-2 area-btns">
+      <div>
+        @if (usuario && usuario.permissao &&
+        usuario.permissao.cadastrarDeposito) {
+        <button
+          type="button"
+          (click)="cadastrarDeposito(modalDeposito)"
+          class="btn-comum btn-comum-laranja"
+        >
+          Novo Deposito
+        </button>
+        }
+      </div>
+      <div>
+        @if (usuario && usuario.permissao && usuario.permissao.editarDeposito) {
+        <button
+          type="button"
+          (click)="descartarMateria(modalDepositoDescartar)"
+          class="btn-comum btn-comum-laranja"
+        >
+          Descartar
+        </button>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="col-lg-12 d-flex align-items-center gap-3 pb-2 w-100 area-pesquisa"
+  >
+    <div class="d-flex flex-column w-100">
+      <label>Nome</label>
+      <div class="filtro-pesquisa">
+        <input
+          class="form-control"
+          type="text"
+          placeholder="nome"
+          [(ngModel)]="materiaNome"
+          (keydown.enter)="defenirListar()"
+        />
+        <button type="button" class="botao_cep" (click)="defenirListar()">
+          <img src="../../../../assets/images/search.svg" class="busca" />
+        </button>
+      </div>
+    </div>
+    <div class="d-flex align-items-center gap-2 tamanho-select-deposito">
+      @if (lista == 'depositos') {
+      <div class="d-flex flex-column w-100">
+        <label>Ativo</label>
+        <select
+          class="select-filtro p-1"
+          [(ngModel)]="ativo"
+          (change)="filtrarDepositos()"
+        >
+          <option value="">Todos</option>
+          <option value="true">Sim</option>
+          <option value="false">Não</option>
+        </select>
+      </div>
+      }
+      <div class="d-flex flex-column w-100">
+        <label>Listar por</label>
+        <select
+          class="select-filtro p-1"
+          [(ngModel)]="lista"
+          (change)="defenirListar()"
+        >
+          <option value="depositos">Depositos</option>
+          <option value="materias">Materias</option>
+          <option value="depositosDescartados">Depositos Descartados</option>
+          <option value="materiasDescartadas">Materias Descartadas</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="lista">
+    <table class="table ">
+      @if (lista === 'depositos') {
+      <thead>
+        @if (screenWidth) {
+        <th class="text-center col-1">#</th>
+        }
+        <th class="text-center col-2">Matéria</th>
+        <th class="text-center col-1">Quantedade</th>
+        @if (screenWidth) {
+        <th class="text-center col-2">Quantedade Vendido</th>
+        <th class="text-center col-1">Quantedade disponível</th>
+        <th class="text-center col-2">Data Cadastro</th>
+        <th class="text-center col-2">Data Esgotar</th>
+        <th class="text-center col-1">Valor Compra</th>
+        }
+        <th class="text-center col-2">Ações</th>
+      </thead>
+      <tbody>
+        @for (deposito of listaDepositosFiltrada; track $index) {
+        <tr>
+          @if (screenWidth) {
+          <td class="text-center">{{ $index }}</td>
+          }
+          <td class="text-center">{{ deposito.materia.nome }}</td>
+          <td class="text-center">{{ deposito.quantidade }}</td>
+          @if (screenWidth) {
+          <td class="text-center">{{ deposito.quantidadeVendido }}</td>
+          <td class="text-center">
+            {{ deposito.quantidade - deposito.quantidadeVendido }}
+          </td>
+          <td class="text-center">
+            {{ deposito.dataCadastrar | date : "dd/MM/yyyy HH:mm:ss a" }}
+          </td>
+          <td class="text-center">
+            {{ deposito.dataDesativar | date : "dd/MM/yyyy HH:mm:ss a" }}
+          </td>
+          <td class="text-center">R${{ deposito.valorTotal }}</td>
+          }
+          <td>
+            <div class="col-acoes">
+              @if (usuario && usuario.permissao &&
+              usuario.permissao.editarDeposito) {
+              <button
+                type="button"
+                (click)="editarDeposito(modalDeposito, deposito, $index)"
+                class="hover-btn"
+                name="Editar{{ $index }}"
+              >
+                <img
+                  src="../../../../assets/images/botao_editar.svg"
+                  alt="Editar"
+                />
+                <span class="hover-text">Editar</span>
+              </button>
+              }@if (usuario && usuario.permissao &&
+              usuario.permissao.editarDeposito && (deposito.quantidade !=
+              deposito.quantidadeVendido)) {
+              <button
+                type="button"
+                (click)="ativarOuDesativarDeposito(deposito)"
+                class="hover-btn"
+                name="Desativar{{ $index }}"
+              >
+                @if (deposito.ativo == true) {
+                <img
+                  src="../../../../assets/images/pause.svg"
+                  alt="Desativar"
+                  class="icon-tamanho"
+                />
+                <span class="hover-text">Desativar</span>
+                } @if (deposito.ativo == false) {
+                <img
+                  src="../../../../assets/images/play.svg"
+                  alt="Desativar"
+                  class="icon-tamanho"
+                />
+                <span class="hover-text">Ativar</span>
+                }
+              </button>
+              } @if (!screenWidth) {
+              <button
+                type="button"
+                class="hover-btn"
+                (click)="abrirModalDetalhes(deposito, $index, modalDetalhes)"
+              >
+                <img
+                  src="../../../../assets/images/mais-detalhes.png"
+                  alt="Detalhes"
+                  class="detalhes"
+                />
+                <span class="hover-text">Detalhes</span>
+              </button>
+              }@else { &nbsp; }
+            </div>
+          </td>
+        </tr>
+        }
+      </tbody>
+      } @if (lista === 'depositosDescartados') {
+      <thead>
+        <th class="text-center col-1">#</th>
+        <th class="text-center col-2">Matéria</th>
+        <th class="text-center col-1">Quantedade</th>
+        <th class="text-center col-2">Data Descartar</th>
+        <th class="text-center col-2">Motivo</th>
+      </thead>
+      <tbody>
+        @for (depositoDescartar of listaDepositosDescartadosFiltrada; track
+        $index) {
+        <tr>
+          <td class="text-center">{{ $index }}</td>
+          <td class="text-center">{{ depositoDescartar.materia.nome }}</td>
+          <td class="text-center">{{ depositoDescartar.quantidade }}</td>
+          <td class="text-center">
+            {{
+              depositoDescartar.dataDescartar | date : "dd/MM/yyyy HH:mm:ss a"
+            }}
+          </td>
+          <td class="text-center">{{ depositoDescartar.motivo }}</td>
+        </tr>
+        }
+      </tbody>
+      }@if (lista === 'materias') {
+      <thead>
+        <th class="text-center col-1">#</th>
+        <th class="text-center col-1">Matéria</th>
+        <th class="text-center col-1">Quantedade disponível</th>
+      </thead>
+      <tbody>
+        @for (materia of listaMateriasFiltrada; track $index) {
+        <tr>
+          <td class="text-center">{{ $index }}</td>
+          <td class="text-center">{{ materia.nome }}</td>
+          <td class="text-center">{{ materia.quantidadeDisponivel }}</td>
+        </tr>
+        }
+      </tbody>
+      } @if (lista === 'materiasDescartadas') {
+      <thead>
+        <th class="text-center col-1">#</th>
+        <th class="text-center col-1">Matéria</th>
+        <th class="text-center col-1">Quantedade</th>
+      </thead>
+      <tbody>
+        @for (materiaDescartada of listaMateriasFiltrada; track $index) {
+        <tr>
+          <td class="text-center">{{ $index }}</td>
+          <td class="text-center">{{ materiaDescartada.nome }}</td>
+          <td class="text-center">
+            {{ materiaDescartada.quantidadeDescartada }}
+          </td>
+        </tr>
+        }
+      </tbody>
+      }
+    </table>
+  </div>
+</div>
+
+<ng-template #modalDeposito let-modal>
+  <div class="modal-header modal-style">
+    <h4 class="modal-title">{{ tituloModal }}</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body modal-style">
+    <app-deposito-detalhes
+      #depositoDetalhes
+      [deposito]="deposito"
+      (retorno)="atualizarListaDeposito($event)"
+    ></app-deposito-detalhes>
+  </div>
+  <div
+    class="modal-footer d-flex justify-content-center align-items-center border-0"
+  >
+    <button
+      type="button"
+      class="btn-comum btn-comum-laranja"
+      (click)="depositoDetalhes.salvar()"
+    >
+      Salvar
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #modalDepositoDescartar let-modal>
+  <div class="modal-header modal-style">
+    <h4 class="modal-title">{{ tituloModal }}</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body modal-style">
+    <app-deposito-descartar-detalhes
+      #depositoDescartarDetalhes
+      [depositoDescartar]="depositoDescartar"
+      (retorno)="atualizarListaDepositoDescartar($event)"
+    ></app-deposito-descartar-detalhes>
+  </div>
+  <div
+    class="modal-footer d-flex justify-content-center align-items-center border-0"
+  >
+    <button
+      type="button"
+      class="btn-comum btn-comum-laranja"
+      (click)="depositoDescartarDetalhes.salvar()"
+    >
+      Salvar
+    </button>
+  </div>
+</ng-template>
+<ng-template #modalDetalhes let-modal>
+  <div class="modal-header modal-style">
+    <h4 class="modal-title">Linha {{ indice }}</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body modal-style">
+    <h5 class="mb-3">Detalhes do Deposito</h5>
+    <div class="d-flex flex-column gap-2">
+      <div><strong>Matéria:</strong> {{ deposito.materia.nome }}</div>
+      <div><strong>Quantedade:</strong> {{ deposito.quantidade }}</div>
+      <div>
+        <strong>Quantedade Vendido:</strong> {{ deposito.quantidadeVendido }}
+      </div>
+      <div>
+        <strong>Quantedade disponível:</strong>
+        {{ deposito.quantidade - deposito.quantidadeVendido }}
+      </div>
+      <div>
+        <strong>Data Cadastro:</strong>
+        {{ deposito.dataCadastrar | date : "dd/MM/yyyy HH:mm:ss a" }}
+      </div>
+      <div>
+        <strong>Data Esgotar:</strong>
+        {{ deposito.dataDesativar | date : "dd/MM/yyyy HH:mm:ss a" }}
+      </div>
+      <div><strong>Valor Compra:</strong> R${{ deposito.valorTotal }}</div>
+    </div>
+  </div>
+</ng-template>

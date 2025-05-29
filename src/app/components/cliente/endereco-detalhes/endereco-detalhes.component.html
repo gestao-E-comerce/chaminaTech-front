@@ -1,0 +1,127 @@
+<div class="mb-3">
+  <div class="d-flex flex-column p-2">
+    <div
+      class="d-flex area-pesquisa align-items-center w-100 gap-3 mb-2"
+    >
+      <div class="d-flex flex-column w-50">
+        <label for="cep" class="form-label">CEP</label>
+        <div class="filtro-pesquisa">
+          <input
+            autocomplete="off"
+            #cep="ngModel"
+            required
+            type="text"
+            inputmode="numeric"
+            class="form-control"
+            name="cep"
+            [(ngModel)]="endereco.cep"
+            mask="00000-000"
+            (keydown.Space)="buscarCEP()"
+            [ngClass]="{ 'borda-vermelha': !cep.valid && cep.touched }"
+          />
+          <button type="button" class="botao_cep" (click)="buscarCEP()">
+            <img src="../../../../assets/images/search.svg" class="busca">
+          </button>
+        </div>
+      </div>
+      <div class="w-50">
+        <label for="rua" class="form-label">Rua</label>
+        <input
+          autocomplete="off"
+          #rua="ngModel"
+          required
+          type="text"
+          class="form-control w-100"
+          name="rua"
+          [(ngModel)]="endereco.rua"
+          [ngClass]="{ 'borda-vermelha': !rua.valid && rua.touched }"
+        />
+      </div>
+      <div class="w-25">
+        <label for="numero" class="form-label">Numero</label>
+        <input
+          autocomplete="off"
+          #numero="ngModel"
+          required
+          type="number"
+          class="form-control no-spin w-100"
+          name="numero"
+          inputmode="numeric"
+          [(ngModel)]="endereco.numero"
+          min="0"
+          step="1"
+          oninput="if (this.value.length > 10) this.value = this.value.slice(0, 10)"
+          onkeydown="return !['e', 'E', '-', '+' , ',', '.'].includes(event.key)"
+          [ngClass]="{ 'borda-vermelha': !numero.valid && numero.touched }"
+        />
+      </div>
+    </div>
+    <div
+      class="d-flex flex-wrap align-items-center justify-content-between w-100 gap-3 mb-2"
+    >
+      <div>
+        <label for="bairro" class="form-label">Bairro</label>
+        <input
+          autocomplete="off"
+          #bairro="ngModel"
+          required
+          type="text"
+          class="form-control"
+          name="bairro"
+          [(ngModel)]="endereco.bairro"
+          [ngClass]="{ 'borda-vermelha': !bairro.valid && bairro.touched }"
+        />
+      </div>
+      <div>
+        <label for="cidade" class="form-label">Cidade</label>
+        <input
+          autocomplete="off"
+          #cidade="ngModel"
+          required
+          type="text"
+          class="form-control"
+          name="cidade"
+          [(ngModel)]="endereco.cidade"
+          [ngClass]="{ 'borda-vermelha': !cidade.valid && cidade.touched }"
+        />
+      </div>
+      <div>
+        <label for="estado" class="form-label">Estado</label>
+        <input
+          autocomplete="off"
+          #estado="ngModel"
+          required
+          type="text"
+          class="form-control"
+          name="estado"
+          [(ngModel)]="endereco.estado"
+          [ngClass]="{ 'borda-vermelha': !estado.valid && estado.touched }"
+        />
+      </div>
+    </div>
+    <div
+      class="d-flex align-items-center justify-content-between w-100 gap-3"
+    >
+      <div class="w-50">
+        <label for="complemento" class="form-label">Complomento</label>
+        <textarea
+          autocomplete="off"
+          type="text"
+          class="form-control"
+          name="complemento"
+          [(ngModel)]="endereco.complemento"
+        ></textarea>
+      </div>
+      <div class="w-50">
+        <label for="referencia" class="form-label">Referencia</label>
+        <textarea
+          autocomplete="off"
+          type="text"
+          class="form-control"
+          name="referencia"
+          [(ngModel)]="endereco.referencia"
+        ></textarea>
+      </div>
+    </div>
+  </div>
+</div>

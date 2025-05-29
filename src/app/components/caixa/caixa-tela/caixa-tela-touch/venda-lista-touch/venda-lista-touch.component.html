@@ -1,0 +1,108 @@
+<div class="h-100">
+  @if (tipoCaixa === 'mesa') {
+  <div
+    class="p-2 lista col-lg-12 w-100 h-75 d-flex align-content-start flex-wrap"
+    [ngClass]="{
+      'h-100': urlString !== 'caixa',
+      'h-75': urlString === 'caixa'
+    }"
+  >
+    @for (venda of listaVendas; track $index) {
+    <button
+      type="button"
+      class="m-1 botao-venda"
+      [ngClass]="{
+        'botao-amarelo': venda.statusEmAberto,
+        'botao-vermelho': venda.statusEmPagamento
+      }"
+      (click)="abrirVendaSelecionada(venda.numero)"
+    >
+      <span class="botao-text">{{ venda.numero }}</span>
+    </button>
+    }
+  </div>
+  }
+   @if (tipoCaixa != 'mesa') {
+  <div
+    class="p-2 lista col-lg-12 w-100 h-75 d-flex align-content-start flex-column"
+    [ngClass]="{
+      'h-100': urlString !== 'caixa',
+      'h-75': urlString === 'caixa'
+    }"
+  >
+    @for (venda of listaVendasCliente; track $index) {
+    <button
+      type="button"
+      class="m-1 botao-venda botao-atrasado justify-content-center"
+      [ngClass]="{
+        'botao-amarelo': venda.statusEmAberto,
+        'botao-vermelho': venda.statusEmPagamento,
+        'atrasado-mostrar botao-atrasado': venda.atrasada
+      }"
+      (click)="abrirVendaSelecionada(venda.numero)"
+    >
+      <div class="d-flex flex-column gap-2">
+        <span class="botao-text flex-wrap"
+          ><strong>Cupom </strong>({{ venda.numero }}) -
+          <strong>Cliente </strong>{{ venda.cliente }}</span
+        >
+        <strong class="atrasado text-center">ATRASADO</strong>
+      </div>
+    </button>
+    }
+  </div>
+  } 
+  @if (urlString === 'caixa') {
+  <div class="status-vendas h-25 d-flex flex-column p-2 w-100">
+    <div
+      class="d-flex flex-wrap mb-2 align-items-center justify-content-end gap-1"
+    >
+      <button
+        type="button"
+        class="btn btn-link"
+        (mousedown)="exibirTotal = true"
+        (mouseup)="exibirTotal = false"
+        (touchstart)="exibirTotal = true"
+        (touchend)="exibirTotal = false"
+      >
+        <img
+          [src]="
+            exibirTotal
+              ? '../../../../../assets/images/olho-aberto.svg'
+              : '../../../../../assets/images/olho-fechado.svg'
+          "
+          class="olho"
+        />
+      </button>
+      <div class="d-flex align-items-center gap-2">
+        <div class="status-indicator botao-amarelo">
+          <span>Em Uso</span>
+        </div>
+        @if (tipoCaixa === 'mesa') {
+        <div class="status-indicator botao-vermelho">
+          <span>Em Pagamento</span>
+        </div>
+        }
+      </div>
+    </div>
+    <div class="d-flex mb-2 justify-content-between">
+      <strong>{{ tituloTotal }}</strong>
+      <span>{{ totalVendasNumer }}</span>
+    </div>
+    <div class="d-flex mb-2 justify-content-between">
+      <strong>Total Em Aberto</strong>
+      @if (exibirTotal) {
+      <span>{{ totalVenda | currency : "BRL" }}</span>
+      } @else {
+      <span>****</span>
+      }
+    </div>
+    <div class="d-flex mb-2 justify-content-between">
+      @if (tipoCaixa === 'mesa') {
+      <strong>Tempo de Permanência</strong>
+      <span>{{ tempo || "00:00:00" }}</span>
+      }
+    </div>
+  </div>
+  }
+</div>

@@ -1,0 +1,50 @@
+<div class="w-100 h-100 d-flex flex-column">
+  <div class="lista-tamanho-60vh">
+    <table class="table ">
+      <thead>
+        <th class="text-start col-2">Nome</th>
+        <th class="text-center col-1">Quantidade</th>
+        <th class="text-start col-2">Observação</th>
+        <th class="text-start col-1">
+          <div class="col-acoes th th-todo">
+            <span>Todos</span>
+            <label class="custom-checkbox">
+              <input
+                autocomplete="off"
+                type="checkbox"
+                [checked]="tudoSelecionado"
+                (change)="marcarTodos($event)"
+              />
+              <span class="checkmark"></span>
+            </label>
+          </div>
+        </th>
+      </thead>
+      <tbody>
+        @for (produto of produtosCopia; track $index) {
+        <tr>
+          <td class="text-start">{{ produto.produto.nome }}</td>
+          <td class="text-center">{{ produto.quantidade }}</td>
+          <td class="text-wrap" style="white-space: normal">
+            {{ getObservacoesFormatadas(produto) }}
+          </td>
+          <td class="text-center">
+            <div class="col-acoes">
+              <label class="custom-checkbox">
+                <input
+                  autocomplete="off"
+                  type="checkbox"
+                  [(ngModel)]="produto.selecionado"
+                  name="produtoSelecionado{{ $index }}"
+                  (change)="atualizarQuantidade(produto)"
+                />
+                <span class="checkmark"></span>
+              </label>
+            </div>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

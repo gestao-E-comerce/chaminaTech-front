@@ -1,0 +1,19 @@
+label,
+p {
+    font-size: 30px !important;
+    color: var(--cor-white);
+}
+
+.d-flex.align-items-center {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+@media (max-width: 768px) {
+
+    label,
+    p {
+        font-size: 20px !important;
+    }
+}

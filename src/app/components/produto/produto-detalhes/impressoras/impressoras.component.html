@@ -1,0 +1,22 @@
+<form (ngSubmit)="salvar()">
+  <div class="d-flex flex-column w-100">
+    <label class="form-label">Selecione a impressora:</label>
+    <select
+      [compareWith]="byId"
+      class="select-filtro p-2 mb-2"
+      name="impressora"
+      [(ngModel)]="impressoraSelecionada"
+    >
+      <option [ngValue]="undefined">Selecione...</option>
+      @if (matriz.impressoras != null) { @for (impressora of matriz.impressoras;
+      track $index) {
+      <option [ngValue]="impressora">
+        {{ impressora.apelidoImpressora }}
+      </option>
+      } }
+    </select>
+  </div>
+  <div class="d-flex justify-content-center">
+    <button type="submit" class="btn-comum btn-comum-laranja" [disabled]="impressoraSelecionada == null">Salvar</button>
+  </div>
+</form>

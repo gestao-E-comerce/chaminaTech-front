@@ -1,0 +1,11 @@
+.select_endereco{
+    border: 2px solid var(--cor-laranja);
+    background-color: var(--cor-cinza-escuro);
+    color: var(--cor-laranja);
+}
+
+.select_endereco:disabled{
+    background-color: var(--cor-cinza-claro);
+    color: var(--cor-preto) !important;
+    cursor: not-allowed;
+}

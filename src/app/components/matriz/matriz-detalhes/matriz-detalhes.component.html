@@ -1,0 +1,222 @@
+<div class="d-flex flex-wrap gap-3">
+  <div class="d-flex flex-column w-25">
+    <label for="nome" class="form-label">Nome</label>
+    <input
+      autocomplete="off"
+      type="text"
+      class="form-control"
+      name="nome"
+      id="nome"
+      [(ngModel)]="matriz.nome"
+      required
+      #nome="ngModel"
+      [ngClass]="{ 'borda-vermelha': !nome.valid && nome.touched }"
+    />
+  </div>
+  <div class="d-flex flex-column largura">
+    <label for="cnpj" class="form-label">CNPJ</label>
+    <input
+      autocomplete="off"
+      type="text"
+      inputmode="numeric"
+      class="form-control"
+      name="cnpj"
+      id="cnpj"
+      [(ngModel)]="matriz.cnpj"
+      mask="00.000.000/0000-00"
+      [ngClass]="{ 'borda-vermelha': !cnpj.valid && cnpj.touched }"
+      #cnpj="ngModel"
+    />
+  </div>
+  <div class="d-flex flex-column largura">
+    <label for="celular" class="form-label">Celular</label>
+    <input
+      autocomplete="off"
+      type="tel"
+      inputmode="numeric"
+      class="form-control"
+      name="celular"
+      id="celular"
+      [(ngModel)]="matriz.celular"
+      required
+      mask="(00) 0 0000-0000"
+      [ngClass]="{ 'borda-vermelha': !celular.valid && celular.touched }"
+      #celular="ngModel"
+    />
+  </div>
+  <div class="d-flex flex-column w-100">
+    <label for="email" class="form-label">E-mail</label>
+    <input
+      autocomplete="off"
+      type="text"
+      class="form-control"
+      name="email"
+      id="email"
+      [(ngModel)]="matriz.email"
+      required
+      #email="ngModel"
+      [ngClass]="{ 'borda-vermelha': !email.valid && email.touched }"
+    />
+  </div>
+  <div class="d-flex flex-column largura">
+    <label for="cep" class="form-label">CEP</label>
+    <div class="filtro-pesquisa">
+      <input
+        autocomplete="off"
+        #cep="ngModel"
+        required
+        type="text"
+        inputmode="numeric"
+        class="form-control"
+        name="cep"
+        [(ngModel)]="matriz.cep"
+        mask="00000-000"
+        (keydown.Space)="buscarCEP()"
+        [ngClass]="{ 'borda-vermelha': !cep.valid && cep.touched }"
+      />
+      <button type="button" class="botao_cep" (click)="buscarCEP()">
+        <img src="../../../../assets/images/search.svg" class="busca" />
+      </button>
+    </div>
+  </div>
+  <div class="d-flex flex-column w-50">
+    <label for="rua" class="form-label">Rua</label>
+    <input
+      autocomplete="off"
+      #rua="ngModel"
+      required
+      type="text"
+      class="form-control w-100"
+      name="rua"
+      [(ngModel)]="matriz.rua"
+      [ngClass]="{ 'borda-vermelha': !rua.valid && rua.touched }"
+    />
+  </div>
+  <div class="d-flex flex-column largura">
+    <label for="numero" class="form-label">Numero</label>
+    <input
+      autocomplete="off"
+      #numero="ngModel"
+      required
+      type="number"
+      inputmode="numeric"
+      min="0"
+      step="1"
+      onkeydown="return !['e', 'E', '-', '+' , ','].includes(event.key)"
+      oninput="if (this.value.length > 10) this.value = this.value.slice(0, 10)"
+      class="form-control no-spin w-100"
+      name="numero"
+      [(ngModel)]="matriz.numero"
+      [ngClass]="{ 'borda-vermelha': !numero.valid && numero.touched }"
+    />
+  </div>
+  <div class="d-flex flex-column largura">
+    <label for="bairro" class="form-label">Bairro</label>
+    <input
+      autocomplete="off"
+      #bairro="ngModel"
+      required
+      type="text"
+      class="form-control"
+      name="bairro"
+      [(ngModel)]="matriz.bairro"
+      [ngClass]="{ 'borda-vermelha': !bairro.valid && bairro.touched }"
+    />
+  </div>
+  <div class="d-flex flex-column largura">
+    <label for="cidade" class="form-label">Cidade</label>
+    <input
+      autocomplete="off"
+      #cidade="ngModel"
+      required
+      type="text"
+      class="form-control"
+      name="cidade"
+      [(ngModel)]="matriz.cidade"
+      [ngClass]="{ 'borda-vermelha': !cidade.valid && cidade.touched }"
+    />
+  </div>
+  <div class="d-flex flex-column largura">
+    <label for="estado" class="form-label">Estado</label>
+    <input
+      autocomplete="off"
+      #estado="ngModel"
+      required
+      type="text"
+      class="form-control"
+      name="estado"
+      [(ngModel)]="matriz.estado"
+      [ngClass]="{ 'borda-vermelha': !estado.valid && estado.touched }"
+    />
+  </div>
+  <div class="d-flex align-items-center gap-3 w-100">
+    <div class="d-flex flex-column w-50">
+      <label for="username" class="form-label">UserName</label>
+      <input
+        autocomplete="off"
+        type="text"
+        class="form-control"
+        name="username"
+        [(ngModel)]="matriz.username"
+      />
+    </div>
+    <div class="d-flex flex-column w-50">
+      <label for="password" class="form-label">Password</label>
+      <input
+        autocomplete="off"
+        type="text"
+        class="form-control"
+        name="password"
+        [(ngModel)]="matriz.password"
+      />
+    </div>
+  </div>
+  <div class="d-flex flex-column w-100">
+    <label for="permissoes" class="form-label">Permissões:</label>
+    @if (matriz.permissao == null) {
+    <p
+      class="alert alert-danger d-flex justify-content-between align-items-center"
+    >
+      Permissão não vinculado!
+      <button
+        type="button"
+        (click)="buscar(modalListarPermissaos)"
+        class="btn btn-danger"
+      >
+        Buscar
+      </button>
+    </p>
+    } @if (matriz.permissao != null) {
+    <p
+      class="alert alert-success d-flex justify-content-between align-items-center"
+    >
+      {{ matriz.permissao.nome }}
+      <button
+        type="button"
+        (click)="buscar(modalListarPermissaos)"
+        class="btn btn-secondary"
+      >
+        Trocar
+      </button>
+    </p>
+    }
+  </div>
+</div>
+
+
+<ng-template #modalListarPermissaos let-modal>
+  <div class="modal-header cabecalhoModal">
+    <h4 class="modal-title">{{ tituloModal }}</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <app-permissao-lista
+      (retornoPermissao)="retornoPermissao($event)"
+    ></app-permissao-lista>
+  </div>
+</ng-template>

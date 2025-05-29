@@ -1,0 +1,35 @@
+label,
+h5,
+h4 {
+    color: var(--cor-white) !important;
+}
+
+.header-fixo {
+    position: sticky;
+    top: 0;
+    z-index: 1050;
+    background-color: var(--cor-cinza-escuro);
+    padding: 1rem;
+    border-bottom: 1px solid var(--cor-laranja);
+}
+
+.largura {
+    width: 20vw !important;
+}
+
+.usar {
+    background-color: var(--cor-laranja);
+    border: 0px;
+    padding: 5px 15px;
+    border-radius: 10px;
+    color: var(--cor-white);
+    &:hover{
+        background-color: var(--cor-laranja-hover);
+    }
+}
+
+.em_uso {
+    background-color: var(--cor-cinza-hover);
+    padding: 5px;
+    border-radius: 10px;
+}

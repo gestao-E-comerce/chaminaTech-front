@@ -1,0 +1,200 @@
+<div class="tela d-flex flex-column col-lg-12 w-100 p-2">
+  <div class="d-flex align-items-center justify-content-between">
+    <div class="d-flex align-items-center">
+      <button type="button" class="botao_voltar me-2" routerLink="/produto">
+        <i class="bi bi-arrow-left"></i>
+      </button>
+
+      <h2 class="titulo m-0">Categorias</h2>
+    </div>
+
+    <div class="d-flex justify-content-between my-2">
+      @if (usuario && usuario.permissao && usuario.permissao.cadastrarCategoria)
+      {
+      <button
+        type="button"
+        (click)="cadastrarCategoria(modalCategoria)"
+        class="btn-comum btn-comum-laranja"
+      >
+        Novo Categoria
+      </button>
+      }
+    </div>
+  </div>
+
+  <div
+    class="col-lg-12 d-flex align-items-center gap-3 pb-2 w-100 area-pesquisa"
+  >
+    <div class="d-flex flex-column w-100">
+      <label>Nome</label>
+      <div class="filtro-pesquisa">
+        <input
+          class="form-control"
+          type="text"
+          placeholder="nome"
+          [(ngModel)]="nome"
+          (keydown.enter)="filtrarCategorias()"
+        />
+        <button type="button" class="botao_cep" (click)="filtrarCategorias()">
+          <img src="../../../../assets/images/search.svg" class="busca" />
+        </button>
+      </div>
+    </div>
+    <div class="d-flex align-items-center w-25 tamanho-select">
+      <div class="d-flex flex-column w-100">
+        <label>Ativo</label>
+        <select
+          class="select-filtro p-1"
+          [(ngModel)]="ativo"
+          (change)="filtrarCategorias()"
+        >
+          <option value="">Todos</option>
+          <option value="true">Sim</option>
+          <option value="false">Não</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="lista">
+    <table class="table ">
+      <thead>
+        <th class="text-center col-1">#</th>
+        <th class="text-start col-2">Nome</th>
+        <th class="text-center col-2">Ações</th>
+      </thead>
+      <tbody>
+        @for (categoria of listaCategoriasFiltrada; track $index) {
+        <tr>
+          <td class="text-center">{{ $index }}</td>
+          <td class="text-start">{{ categoria.nome }}</td>
+          <td>
+            <div class="col-acoes">
+              @if (usuario && usuario.permissao &&
+              usuario.permissao.editarCategoria) {
+              <button
+                type="button"
+                (click)="editarCategoria(modalCategoria, categoria, $index)"
+                class="hover-btn"
+              >
+                <img
+                  src="../../../../assets/images/botao_editar.svg"
+                  alt="Editar"
+                />
+                <span class="hover-text">Editar</span>
+              </button>
+              } @if (usuario && usuario.permissao &&
+              usuario.permissao.deletarCategoria) {
+              <button
+                type="button"
+                (click)="
+                  deletarCategoria(modalExcluirCategoria, categoria, $index)
+                "
+                class="hover-btn"
+              >
+                <img
+                  src="../../../../assets/images/botao_deletar.svg"
+                  alt="Deletar"
+                />
+                <span class="hover-text">Deletar</span>
+              </button>
+              } @if (usuario && usuario.permissao &&
+              usuario.permissao.editarCategoria) {
+              <button
+                type="button"
+                (click)="ativarOuDesativarCategoria(categoria)"
+                class="hover-btn"
+              >
+                @if (categoria.ativo == true) {
+                <img
+                  src="../../../../assets/images/pause.svg"
+                  alt="Desativar"
+                  class="icon-tamanho"
+                />
+                <span class="hover-text">Desativar</span>
+                } @if (categoria.ativo == false) {
+                <img
+                  src="../../../../assets/images/play.svg"
+                  alt="Desativar"
+                  class="icon-tamanho"
+                />
+                <span class="hover-text">Ativar</span>
+                }
+              </button>
+              } @if (usuario && usuario.permissao &&
+              usuario.permissao.cadastrarCategoria) {
+              <button
+                type="button"
+                (click)="copiar(modalCategoria, categoria)"
+                class="hover-btn"
+              >
+                <img
+                  src="../../../../assets/images/copiar.svg"
+                  alt="Copiar"
+                />
+                <span class="hover-text">Copiar</span>
+              </button>
+              }@else { &nbsp; }
+            </div>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<ng-template #modalCategoria let-modal>
+  <div class="modal-header modal-style">
+    <h4 class="modal-title">{{ tituloModal }}</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body modal-style">
+    <app-categoria-detalhes
+      #categoriaDetalhes
+      [categoria]="categoria"
+      (retorno)="atualizarListaCategoria($event)"
+    ></app-categoria-detalhes>
+  </div>
+  <div
+    class="modal-footer d-flex justify-content-center align-items-center border-0"
+  >
+    <button
+      type="button"
+      class="btn-comum btn-comum-laranja"
+      (click)="categoriaDetalhes.salvar()"
+    >
+      Salvar
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #modalExcluirCategoria let-modal>
+  <div class="modal-header modal-style">
+    <h4 class="modal-title">{{ tituloModal }}</h4>
+  </div>
+  <div class="modal-body modal-style">
+    <h5>Tem certeza que deseja deletar?</h5>
+  </div>
+  <div class="modal-footer modal-style justify-content-center">
+    <button
+      type="button"
+      class="btn-comum btn-comum-vermelho"
+      (click)="confirmarExclusaoCategoria(categoria)"
+    >
+      Deletar
+    </button>
+    <button
+      type="button"
+      class="btn-comum btn-comum-cinza"
+      (click)="modal.close('Close click')"
+    >
+      Fechar
+    </button>
+  </div>
+</ng-template>

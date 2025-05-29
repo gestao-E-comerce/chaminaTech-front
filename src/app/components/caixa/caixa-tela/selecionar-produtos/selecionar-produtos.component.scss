@@ -1,0 +1,153 @@
+/* ========================== */
+/* ESTILO GERAL DO MODAL      */
+/* ========================== */
+.input-busca {
+  border-radius: 10px;
+  background-color: var(--cor-cinza-escuro);
+  color: var(--cor-laranja);
+  border: none;
+  font-size: 16px;
+  padding-left: 10px;
+  margin-bottom: 0.5rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.modal-container {
+  display: flex;
+  max-width: 100vw;
+  height: 450px;
+  margin: auto;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: var(--cor-cinza-escuro);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+/* ========================== */
+/* ÁREA DAS CATEGORIAS        */
+/* ========================== */
+
+.categories {
+  width: 30%;
+  padding: 15px;
+  border-right: 1px solid var(--cor-laranja);
+  overflow-y: auto;
+}
+
+.categories ul {
+  padding: 0;
+  margin: 0;
+}
+
+.categories li {
+  list-style: none;
+  padding: 12px;
+  margin-bottom: 5px;
+  background-color: var(--cor-cinza-fundo);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+  text-align: center;
+  font-weight: bold;
+}
+
+.categories li:hover {
+  background: var(--cor-laranja);
+}
+
+/* ========================== */
+/* ÁREA DOS PRODUTOS          */
+/* ========================== */
+
+.products {
+  width: 70%;
+  padding: 15px;
+  background: var(--cor-cinza-escuro);
+  overflow-y: auto;
+}
+
+.product-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.product-item {
+  padding: 8px;
+  background: var(--cor-cinza-fundo);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+  border: 1px solid var(--cor-white);
+}
+
+.product-item:hover {
+  background: var(--cor-laranja);
+}
+
+.product-info h6 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.product-info p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--cor-white);
+}
+
+.produto-selecionado {
+  background: var(--cor-laranja) !important;
+  color: var(--cor-white);
+  font-weight: bold;
+  border: 2px solid var(--cor-white);
+}
+
+/* ========================== */
+/* BOTÃO DE LIMPAR FILTRO     */
+/* ========================== */
+
+.clear-filter {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: var(--cor-vermelho);
+  color: var(--cor-white);
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.clear-filter:hover {
+  background: var(--cor-vermelho-hover);
+}
+
+.categories::-webkit-scrollbar,
+.products::-webkit-scrollbar {
+  width: 8px;
+}
+
+.categories::-webkit-scrollbar-track,
+.products::-webkit-scrollbar-track {
+  background: var(--cor-cinza-fundo);
+}
+
+.categories::-webkit-scrollbar-thumb,
+.products::-webkit-scrollbar-thumb {
+  cursor: pointer;
+  background: var(--cor-laranja);
+  border-radius: 10px;
+}
+
+.categories::-webkit-scrollbar-thumb:hover,
+.products::-webkit-scrollbar-thumb:hover {
+  background: var(--cor-cinza-escuro);
+  cursor: pointer;
+}

@@ -1,0 +1,13 @@
+<div class="mb-3">
+  <label for="nome" class="form-label">Nome</label>
+  <input
+    autocomplete="off"
+    type="text"
+    class="form-control"
+    name="nome"
+    [(ngModel)]="materia.nome"
+    required
+    #nome="ngModel"
+    [ngClass]="{ 'borda-vermelha': !nome.valid && nome.touched }"
+  />
+</div>

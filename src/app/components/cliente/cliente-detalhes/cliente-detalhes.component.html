@@ -1,0 +1,214 @@
+<div class="mb-3">
+  <div class="d-flex justify-content-between flex-wrap">
+    <div class="mb-3">
+      <label for="nome" class="form-label">Nome</label>
+      <input
+        autocomplete="off"
+        type="text"
+        class="form-control"
+        name="nome"
+        id="nome"
+        [(ngModel)]="cliente.nome"
+        required
+        #nome="ngModel"
+        [ngClass]="{ 'borda-vermelha': !nome.valid && nome.touched }"
+      />
+    </div>
+    <div>
+      <label class="form-label">CPF OU CNPJ?</label>
+      <div class="btn-group w-100">
+        <button
+          type="button"
+          class="btn btn-borda-laranja p-2"
+          [ngClass]="{
+            'btn-comum-laranja': documento === 1,
+            'btn-borda-laranja': documento !== 1
+          }"
+          (click)="documento = 1"
+        >
+          CPF
+        </button>
+        <button
+          type="button"
+          class="btn btn-borda-laranja p-2"
+          [ngClass]="{
+            'btn-comum-laranja': documento === 2,
+            'btn-borda-laranja': documento !== 2
+          }"
+          (click)="documento = 2"
+        >
+          CNPJ
+        </button>
+      </div>
+    </div>
+    @if (documento === 1) {
+    <div class="mb-3">
+      <label for="cpf" class="form-label">CPF</label>
+      <input
+        autocomplete="off"
+        type="text"
+        inputmode="numeric"
+        class="form-control"
+        name="cpf"
+        id="cpf"
+        [(ngModel)]="cliente.cpf"
+        mask="000.000.000-00"
+        [ngClass]="{ 'borda-vermelha': !cpf.valid && cpf.touched }"
+        #cpf="ngModel"
+      />
+    </div>
+    } @if (documento === 2) {
+    <div class="mb-3">
+      <label for="cpf" class="form-label">CNPJ</label>
+      <input
+        autocomplete="off"
+        type="text"
+        inputmode="numeric"
+        class="form-control"
+        name="cpf"
+        id="cpf"
+        [(ngModel)]="cliente.cpf"
+        mask="00.000.000/0000-00"
+        [ngClass]="{ 'borda-vermelha': !cpf.valid && cpf.touched }"
+        #cpf="ngModel"
+      />
+    </div>
+    }
+    <div class="mb-3">
+      <label for="celular" class="form-label">Celular</label>
+      <input
+        autocomplete="off"
+        type="tel"
+        inputmode="numeric"
+        class="form-control"
+        name="celular"
+        id="celular"
+        [(ngModel)]="cliente.celular"
+        required
+        mask="(00) 0 0000-0000"
+        [ngClass]="{ 'borda-vermelha': !celular.valid && celular.touched }"
+        #celular="ngModel"
+      />
+    </div>
+  </div>
+
+  <div class="mt-2 d-flex flex-column">
+    <div>
+      <button
+        type="button"
+        (click)="cadastrarEndereco(modalEndereco)"
+        class="btn-comum btn-comum-laranja"
+      >
+        Adicionar Endereço
+      </button>
+    </div>
+    <div class="lista-tamanho-50vh mt-2">
+      <table class="table ">
+        <thead>
+          <th class="text-start col-2">Rua</th>
+          <th class="text-center col-1">Numero</th>
+          <th class="text-center col-1">Bairro</th>
+          <th class="text-center col-1">Cep</th>
+          <th class="text-start col-2">Compl.</th>
+          <th class="text-start col-2">Refer.</th>
+          <th class="text-center col-2">Ações</th>
+        </thead>
+        <tbody>
+          @for (endereco of cliente.enderecos; track $index) {
+          <tr>
+            <td class="text-start">{{ endereco.rua }}</td>
+            <td class="text-center">{{ endereco.numero }}</td>
+            <td class="text-center">{{ endereco.bairro }}</td>
+            <td class="text-center">{{ endereco.cep }}</td>
+            <td class="text-start">{{ endereco.complemento }}</td>
+            <td class="text-start">{{ endereco.referencia }}</td>
+            <td>
+              <div class="col-acoes">
+                <button
+                  type="button"
+                  (click)="editarEndereco(modalEndereco, endereco, $index)"
+                  class="hover-btn"
+                >
+                  <img
+                    src="../../../../assets/images/botao_editar.svg"
+                    alt="Editar"
+                  />
+                  <span class="hover-text">Editar</span>
+                </button>
+                <button
+                  type="button"
+                  (click)="
+                    deletarEndereco(modalExcluirEndereco, endereco, $index)
+                  "
+                  class="hover-btn"
+                >
+                  <img
+                    src="../../../../assets/images/botao_deletar.svg"
+                    alt="Deletar"
+                  />
+                  <span class="hover-text">Deletar</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<ng-template #modalEndereco let-modal>
+  <div class="modal-header cabecalhoModal">
+    <h4 class="modal-title">{{ tituloModal }}</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <app-endereco-detalhes
+      #clienteEndereco
+      [endereco]="endereco"
+      (retorno)="atualizarLista($event)"
+    ></app-endereco-detalhes>
+  </div>
+  <div
+    class="modal-footer d-flex justify-content-center align-items-center border-0"
+  >
+    <button
+      type="button"
+      class="btn-comum btn-comum-laranja"
+      (click)="clienteEndereco.salvar()"
+    >
+      Salvar
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #modalExcluirEndereco let-modal>
+  <div class="modal-header modal-style">
+    <h4 class="modal-title">{{ tituloModal }}</h4>
+  </div>
+  <div class="modal-body modal-style">
+    <h5>Tem certeza de que deseja excluir este endereço?</h5>
+  </div>
+  <div class="modal-footer modal-style justify-content-center">
+    <button
+      type="button"
+      class="btn-comum btn-comum-vermelho"
+      (click)="confirmarExclusaoEndereco(indice)"
+    >
+      Deletar
+    </button>
+    <button
+      type="button"
+      class="btn-comum btn-comum-cinza"
+      (click)="modal.close('Close click')"
+    >
+      Voltar
+    </button>
+  </div>
+</ng-template>

@@ -1,0 +1,37 @@
+<body>
+  <div class="background">
+    <img
+      class="tentaIMG"
+      src="../../../assets/images/fundo-login.png"
+      alt=""
+    />
+    <form class="container" (ngSubmit)="logar()">
+      <div class="card">
+        <div class="card-body text-center">
+          <h1 class="card-title">Bem Vindo !</h1>
+          <input autocomplete="off"
+            type="text"
+            name="usuario"
+            class="form-control"
+            placeholder="Digite seu Usuario"
+            required
+            #username="ngModel"
+            [ngClass]="{'borda-vermelha': !username.valid && username.touched}"
+            [(ngModel)]="login.username"
+          />
+          <input autocomplete="off"
+            type="password"
+            name="senha"
+            class="form-control"
+            placeholder="Digite sua Senha"
+            [(ngModel)]="login.senha"
+            required
+            #senha="ngModel"
+            [ngClass]="{'borda-vermelha': !senha.valid && senha.touched}"
+          />
+          <button class="login" type="submit">Logar</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</body>

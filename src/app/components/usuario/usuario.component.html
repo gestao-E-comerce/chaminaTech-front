@@ -1,0 +1,38 @@
+<form (ngSubmit)="logar()" class="mb-3 d-flex flex-column align-items-center mt-5">
+  <h3>Logar</h3>
+  <div class="d-flex justify-content-between">
+    <div class="mb-3">
+      <label for="nome" class="form-label">UserName</label>
+      <input
+        autocomplete="off"
+        type="text"
+        name="usuario"
+        class="form-control"
+        placeholder="Digite seu Usuario"
+        required
+        #username="ngModel"
+        [ngClass]="{ 'borda-vermelha': !username.valid && username.touched }"
+        [(ngModel)]="login.username"
+      />
+    </div>
+  </div>
+  <div class="d-flex justify-content-between">
+    <div class="mb-3">
+      <label for="nome" class="form-label">Password</label>
+      <input
+        autocomplete="off"
+        type="password"
+        name="senha"
+        class="form-control"
+        placeholder="Digite sua Senha"
+        [(ngModel)]="login.senha"
+        required
+        #senha="ngModel"
+        [ngClass]="{ 'borda-vermelha': !senha.valid && senha.touched }"
+      />
+    </div>
+  </div>
+  <div class="d-flex justify-content-center">
+    <button type="submit" class="btn btn-success">Logar</button>
+  </div>
+</form>

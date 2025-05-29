@@ -1,0 +1,56 @@
+<section class="container">
+  <div class="search-bar">
+    <input autocomplete="off"
+    #campoPesquisa
+      type="text"
+      class="input-busca p-2"
+      placeholder="Pesquisar produtos..."
+      [(ngModel)]="nome"
+      (input)="filtrarProdutos()"
+      (keydown)="navegarLista($event)"
+    />
+  </div>
+
+  <div class="content">
+    <div class="modal-container">
+      @if (categoriaSelecionada) {
+        <button
+          type="button"
+          class="clear-filter"
+          (click)="removerFiltroCategoria()"
+        >
+          ✕
+        </button>
+      }
+
+      <div class="categories">
+        <h5 class="section-title">Categorias</h5>
+        <ul>
+          @for (categoria of listaCategorias; track $index) {
+            <li (click)="filtrarPorCategoria(categoria)">
+              {{ categoria.nome }}
+            </li>
+          }
+        </ul>
+      </div>
+
+      <div class="products">
+        <h5 class="section-title">Produtos</h5>
+        <div class="product-list">
+          @for (produto of listaProdutosFiltrada; track $index) {
+            <div 
+              class="product-item"
+              [ngClass]="{ 'produto-selecionado': indiceSelecionado === $index }"
+              (dblclick)="selecionarProduto(produto)"
+            >
+              <div class="product-info d-flex justify-content-between align-items-center">
+                <h6>{{ produto.nome }}</h6>
+                <p>R${{ produto.valor }}</p>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

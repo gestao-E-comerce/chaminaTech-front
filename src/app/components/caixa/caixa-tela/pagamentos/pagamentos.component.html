@@ -1,0 +1,402 @@
+@if(!telaPequena){
+<form (ngSubmit)="salvar()" class="d-flex flex-column h-100">
+  <div class="d-flex justify-content-between col-12 flex-grow-1">
+    <div class="d-flex flex-column">
+      @for (item of dinheiroLista; track $index) {
+      <div class="d-flex align-items-center justify-content-between p-2 w-100">
+        <label>Dinheiro</label>
+        <div class="d-flex align-items-center gap-2">
+          <input
+            autocomplete="off"
+            type="number"
+            #dinheiroInput
+            (keydown)="navegarInputs($event, 'dinheiro', $index)"
+            inputmode="numeric"
+            min="0"
+            step="0.01"
+            [(ngModel)]="dinheiroLista[$index]"
+            name="dinheiro{{ $index }}"
+            [attr.name]="'dinheiro' + $index"
+            class="form-control"
+          />
+
+          <div>
+            @if ($index === 0) {
+            <button
+              type="button"
+              class="botao-mais"
+              (click)="adicionarCampo('dinheiro')"
+            >
+              +
+            </button>
+            }
+          </div>
+        </div>
+      </div>
+      } @for (item of creditoLista; track $index) {
+      <div class="d-flex align-items-center justify-content-between p-2 w-100">
+        <label>Credito</label>
+        <div class="d-flex align-items-center gap-2">
+          <input
+            autocomplete="off"
+            #creditoInput
+            type="number"
+            (keydown)="navegarInputs($event, 'credito', $index)"
+            inputmode="numeric"
+            min="0"
+            step="0.01"
+            [(ngModel)]="creditoLista[$index]"
+            name="credito{{ $index }}"
+            [attr.name]="'credito' + $index"
+            class="form-control"
+          />
+
+          <div>
+            @if ($index === 0) {
+            <button
+              type="button"
+              class="botao-mais"
+              (click)="adicionarCampo('credito')"
+            >
+              +
+            </button>
+            }
+          </div>
+        </div>
+      </div>
+      } @for (item of debitoLista; track $index) {
+      <div class="d-flex align-items-center justify-content-between p-2 w-100">
+        <label>Debito</label>
+        <div class="d-flex align-items-center gap-2">
+          <input
+            autocomplete="off"
+            #debitoInput
+            type="number"
+            (keydown)="navegarInputs($event, 'debito', $index)"
+            inputmode="numeric"
+            min="0"
+            step="0.01"
+            [(ngModel)]="debitoLista[$index]"
+            name="debito{{ $index }}"
+            [attr.name]="'debito' + $index"
+            class="form-control"
+          />
+
+          <div>
+            @if ($index === 0) {
+            <button
+              type="button"
+              class="botao-mais"
+              (click)="adicionarCampo('debito')"
+            >
+              +
+            </button>
+            }
+          </div>
+        </div>
+      </div>
+      } @for (item of pixLista; track $index) {
+      <div class="d-flex align-items-center justify-content-between p-2 w-100">
+        <label>Pix</label>
+        <div class="d-flex align-items-center gap-2">
+          <input
+            autocomplete="off"
+            #pixInput
+            type="number"
+            (keydown)="navegarInputs($event, 'pix', $index)"
+            inputmode="numeric"
+            min="0"
+            step="0.01"
+            [(ngModel)]="pixLista[$index]"
+            name="pix{{ $index }}"
+            [attr.name]="'pix' + $index"
+            class="form-control"
+          />
+
+          <div>
+            @if ($index === 0) {
+            <button
+              type="button"
+              class="botao-mais"
+              (click)="adicionarCampo('pix')"
+            >
+              +
+            </button>
+            }
+          </div>
+        </div>
+      </div>
+      }
+    </div>
+    <div class="d-flex flex-column gap-2 p-2">
+      <div class="d-flex justify-content-between gap-2 col-12">
+        <label>Subtotal </label>
+        <p>R$ {{ venda.valorTotal }}</p>
+      </div>
+      <div class="d-flex justify-content-between gap-2 col-12">
+        <label>Desconto </label>
+        <p>R$ 0.00</p>
+      </div>
+      <div class="d-flex justify-content-between gap-2 col-12">
+        <label>Total </label>
+        <p>R$ {{ venda.valorTotal }}</p>
+      </div>
+      <div class="d-flex justify-content-between gap-2 col-12">
+        <label>{{ tipoTrocoOuDiferenca }}</label>
+        <p>R$ {{ valorTrocoOuDiferenca }}</p>
+      </div>
+    </div>
+  </div>
+</form>
+} @if (telaPequena) {
+<form (ngSubmit)="salvar()" class="d-flex flex-column h-100">
+  <div class="d-flex flex-column col-12 flex-grow-1">
+    <div class="d-flex justify-content-between gap-2 p-2">
+      <div>
+        <div class="d-flex justify-content-between gap-2 col-12">
+          <label>Subtotal </label>
+          <p>R$ {{ venda.valorTotal }}</p>
+        </div>
+        <div class="d-flex justify-content-between gap-2 col-12">
+          <label>Desconto </label>
+          <p>R$ 0.00</p>
+        </div>
+      </div>
+      <div>
+        <div class="d-flex justify-content-between gap-2 col-12">
+          <label>Total </label>
+          <p>R$ {{ venda.valorTotal }}</p>
+        </div>
+        <div class="d-flex justify-content-between gap-2 col-12">
+          <label>{{ tipoTrocoOuDiferenca }}</label>
+          <p>R$ {{ valorTrocoOuDiferenca }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex flex-column">
+      @for (item of dinheiroLista; track $index) {
+      <div class="d-flex align-items-center justify-content-between p-2 w-100">
+        <label>Dinheiro</label>
+        <div class="d-flex align-items-center gap-2">
+          <input
+            autocomplete="off"
+            type="number"
+            #dinheiroInput
+            (keydown)="navegarInputs($event, 'dinheiro', $index)"
+            inputmode="numeric"
+            min="0"
+            step="0.01"
+            [(ngModel)]="dinheiroLista[$index]"
+            name="dinheiro{{ $index }}"
+            [attr.name]="'dinheiro' + $index"
+            class="form-control"
+          />
+
+          <div>
+            @if ($index === 0) {
+            <button
+              type="button"
+              class="botao-mais"
+              (click)="adicionarCampo('dinheiro')"
+            >
+              +
+            </button>
+            }
+          </div>
+        </div>
+      </div>
+      } @for (item of creditoLista; track $index) {
+      <div class="d-flex align-items-center justify-content-between p-2 w-100">
+        <label>Credito</label>
+        <div class="d-flex align-items-center gap-2">
+          <input
+            autocomplete="off"
+            #creditoInput
+            type="number"
+            (keydown)="navegarInputs($event, 'credito', $index)"
+            inputmode="numeric"
+            min="0"
+            step="0.01"
+            [(ngModel)]="creditoLista[$index]"
+            name="credito{{ $index }}"
+            [attr.name]="'credito' + $index"
+            class="form-control"
+          />
+
+          <div>
+            @if ($index === 0) {
+            <button
+              type="button"
+              class="botao-mais"
+              (click)="adicionarCampo('credito')"
+            >
+              +
+            </button>
+            }
+          </div>
+        </div>
+      </div>
+      } @for (item of debitoLista; track $index) {
+      <div class="d-flex align-items-center justify-content-between p-2 w-100">
+        <label>Debito</label>
+        <div class="d-flex align-items-center gap-2">
+          <input
+            autocomplete="off"
+            #debitoInput
+            type="number"
+            (keydown)="navegarInputs($event, 'debito', $index)"
+            inputmode="numeric"
+            min="0"
+            step="0.01"
+            [(ngModel)]="debitoLista[$index]"
+            name="debito{{ $index }}"
+            [attr.name]="'debito' + $index"
+            class="form-control"
+          />
+
+          <div>
+            @if ($index === 0) {
+            <button
+              type="button"
+              class="botao-mais"
+              (click)="adicionarCampo('debito')"
+            >
+              +
+            </button>
+            }
+          </div>
+        </div>
+      </div>
+      } @for (item of pixLista; track $index) {
+      <div class="d-flex align-items-center justify-content-between p-2 w-100">
+        <label>Pix</label>
+        <div class="d-flex align-items-center gap-2">
+          <input
+            autocomplete="off"
+            #pixInput
+            type="number"
+            (keydown)="navegarInputs($event, 'pix', $index)"
+            inputmode="numeric"
+            min="0"
+            step="0.01"
+            [(ngModel)]="pixLista[$index]"
+            name="pix{{ $index }}"
+            [attr.name]="'pix' + $index"
+            class="form-control"
+          />
+
+          <div>
+            @if ($index === 0) {
+            <button
+              type="button"
+              class="botao-mais"
+              (click)="adicionarCampo('pix')"
+            >
+              +
+            </button>
+            }
+          </div>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+</form>
+}
+
+<ng-template #modalSelecionarProdutos let-modal>
+  <div class="modal-header modal-style">
+    <h4 class="modal-title">{{ tituloModal }}</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="
+        modal.dismiss('Cross click'); fecharModalPagamentoERestaurarVenda()
+      "
+    ></button>
+  </div>
+  <div class="modal-body modal-style">
+    <app-pagar-parcial
+      #pagarParcial
+      [venda]="venda"
+      [vendaParcial]="vendaParcial"
+      (retorno)="retornoProdutosParcial(vendaParcial, modalPagamentosParcial)"
+    ></app-pagar-parcial>
+  </div>
+  <div
+    class="modal-footer d-flex justify-content-center align-items-center border-0"
+  >
+    <button
+      type="button"
+      class="btn-comum btn-comum-laranja"
+      [disabled]="pagarParcial.vendaParcial.produtoVendas"
+      (click)="pagarParcial.salvar()"
+    >
+      Salvar
+    </button>
+  </div>
+</ng-template>
+<ng-template #modalPagamentosParcial let-modal>
+  <div class="modal-header modal-style">
+    <h4 class="modal-title">{{ tituloModal }} Mesa {{ this.venda.mesa }}</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="
+        modal.dismiss('Cross click'); fecharModalPagamentoERestaurarVenda()
+      "
+    ></button>
+  </div>
+  <div class="modal-body p-0 modal-style">
+    <app-pagamento-parcial
+      #pagamentoParcial
+      [vendaParcial]="vendaParcial"
+      (retorno)="retornoVendaPagamentoParcial($event, modalConfirmarImpressao)"
+    ></app-pagamento-parcial>
+  </div>
+  <div
+    class="modal-footer d-flex justify-content-center align-items-center border-0"
+  >
+    <button
+      type="button"
+      class="btn-comum btn-comum-verde"
+      (click)="pagamentoParcial.salvar()"
+    >
+      Salvar
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #modalConfirmarImpressao let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">{{ tituloModal }}</h4>
+  </div>
+  <div class="modal-body">
+    <h5>{{ modalMessage }}</h5>
+  </div>
+  <div class="modal-footer d-flex justify-content-start align-items-center">
+    <button
+      type="button"
+      class="botaoModal btn-voltar"
+      (click)="modalRef.dismiss()"
+    >
+      Voltar
+    </button>
+    <button
+      type="button"
+      class="botaoModal btn-nao"
+      (click)="modalRef.close('naoImprimir')"
+    >
+      Não
+    </button>
+    <button
+      type="button"
+      class="botaoModal btn-imprimir-geral"
+      (click)="modalRef.close('imprimir')"
+    >
+      Sim
+    </button>
+  </div>
+</ng-template>

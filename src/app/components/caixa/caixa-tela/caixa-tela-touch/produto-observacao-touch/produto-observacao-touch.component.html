@@ -1,0 +1,89 @@
+<div>
+  <div class="form-group">
+    <label class="form-label">Adicionais</label>
+    <div class="obs-container">
+      <div class="obs-scroll">
+        @for (observacao of categoria.observacoesCategoria; track $index) { @if
+        (observacao.valor != null) {
+        <input
+          autocomplete="off"
+          type="button"
+          name="obs_{{ observacao.observacao }}"
+          (click)="selecionarObservacao(observacao)"
+          [ngClass]="{
+            'btn btn-outline-secondary mx-1 mb-1': true,
+            ativo: isObservacaoSelecionada(observacao)
+          }"
+          [value]="observacao.observacao + ' - R$ ' + observacao.valor"
+        />
+        } }
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="form-label">Recomendações</label>
+    <div class="obs-container">
+      <div class="obs-scroll">
+        @for (observacao of categoria.observacoesCategoria; track $index) { @if
+        (observacao.valor == null) {
+        <input
+          autocomplete="off"
+          type="button"
+          name="obs_{{ observacao.observacao }}"
+          (click)="selecionarObservacao(observacao)"
+          [ngClass]="{
+            'btn btn-outline-secondary mx-1 mb-1': true,
+            ativo: isObservacaoSelecionada(observacao)
+          }"
+          [value]="observacao.observacao"
+        />
+        } }
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="nome" class="form-label">Observação</label>
+    <input
+      autocomplete="off"
+      type="text"
+      placeholder="Obs"
+      [(ngModel)]="observacaoManual"
+      name="obs"
+      class="form-control"
+    />
+  </div>
+
+  @if (produtosVendas.length > 1) {
+  <div class="form-group mt-2">
+    <label class="form-label">Seleciona Produtos</label>
+    <div class="obs-container">
+      <div class="obs-scroll">
+        @for (produtoVenda of produtosVendas; track $index) {
+        <button
+          type="button"
+          name="{{ $index }}"
+          (click)="selecionarProdutoVenda(produtoVenda)"
+          [ngClass]="{
+            'btn-selecionar mx-1 mb-1 d-flex align-items-start align-items-center gap-3 text-start w-100': true,
+            'btn-selecionar-foco': isProdutoSelecionado(produtoVenda)
+          }"
+        >
+          <p class="m-0">{{ produtoVenda.produto.nome }}</p>
+
+          @if (getObservacoesFormatadas(produtoVenda)) {
+          <p
+            class="m-0 text-wrap"
+            style="white-space: normal"
+          >
+            Obs: {{ getObservacoesFormatadas(produtoVenda) }}
+          </p>
+          }
+        </button>
+        }
+      </div>
+    </div>
+  </div>
+  }
+</div>

@@ -1,0 +1,165 @@
+@if (produto != null) {
+<div>
+  <div>
+    <div class="mb-3">
+      <label for="client" class="form-label">Produto:</label>
+      @if (produtoCompostoLocal.produtoComposto == null) {
+      <p
+        class="alert alert-danger d-flex justify-content-between align-items-center"
+      >
+        Produto não vinculado, é obrigatório!
+        <button
+          type="button"
+          (click)="buscar(modalProdutoSelecionar)"
+          class="btn-comum btn-comum-vermelho"
+        >
+          Buscar
+        </button>
+      </p>
+      } @if (produtoCompostoLocal.produtoComposto != null) {
+      <p
+        class="alert alert-success d-flex justify-content-between align-items-center"
+      >
+        {{ produtoCompostoLocal.produtoComposto.nome }}
+        <button
+          type="button"
+          (click)="buscar(modalProdutoSelecionar)"
+          class="btn-comum btn-comum-cinza"
+        >
+          Trocar
+        </button>
+      </p>
+      }
+    </div>
+    @if (produto.estocavel == false) {
+    <div class="mt-3">
+      <label for="quantedadeProdutoComposto" class="form-label"
+        >Quantidade Gasto</label
+      >
+      <input
+        id="quantedadeProdutoComposto"
+        autocomplete="off"
+        required
+        #quantedadeProdutoComposto="ngModel"
+        [ngClass]="{
+          'borda-vermelha':
+            !quantedadeProdutoComposto.valid &&
+            quantedadeProdutoComposto.touched
+        }"
+        inputmode="numeric"
+        min="0"
+        step="1"
+        oninput="if (this.value.length > 10) this.value = this.value.slice(0, 10)"
+        onkeydown="return !['e', 'E', '-', '+' , ','].includes(event.key)"
+        type="number"
+        class="form-control"
+        name="quantedadeProdutoComposto"
+        [(ngModel)]="produtoCompostoLocal.quantidadeGasto"
+      />
+    </div>
+    }
+  </div>
+
+  <div class="d-flex justify-content-center mt-3">
+    <button
+      name="produtoComposto"
+      type="button"
+      class="btn-comum btn-comum-laranja"
+      (click)="salvarProdutoComposto()"
+    >
+      Salvar
+    </button>
+  </div>
+</div>
+} @if (observacoes != null) {
+<div>
+  <div>
+    <div class="mb-3">
+      <label for="client" class="form-label">Produto:</label>
+      @if (obcervacaoProdutoLocal.produto == null) {
+      <p
+        class="alert alert-danger d-flex justify-content-between align-items-center"
+      >
+        Produto não vinculado, é obrigatório!
+        <button
+          type="button"
+          (click)="buscar(modalProdutoSelecionar)"
+          class="btn-comum btn-comum-vermelho"
+        >
+          Buscar
+        </button>
+      </p>
+      } @if (obcervacaoProdutoLocal.produto != null) {
+      <p
+        class="alert alert-success d-flex justify-content-between align-items-center"
+      >
+        {{ obcervacaoProdutoLocal.produto.nome }}
+        <button
+          type="button"
+          (click)="buscar(modalProdutoSelecionar)"
+          class="btn-comum btn-comum-cinza"
+        >
+          Trocar
+        </button>
+      </p>
+      }
+    </div>
+    @if (observacoes.extra == true) {
+    <div class="mt-3">
+      <label for="quantedadeObservacaoProduto" class="form-label"
+        >Quantidade Gasto</label
+      >
+      <input
+        autocomplete="off"
+        required
+        #quantedadeObservacaoProduto="ngModel"
+        [ngClass]="{
+          'borda-vermelha':
+            !quantedadeObservacaoProduto.valid &&
+            quantedadeObservacaoProduto.touched
+        }"
+        inputmode="numeric"
+        min="0"
+        step="1"
+        oninput="if (this.value.length > 10) this.value = this.value.slice(0, 10)"
+        onkeydown="return !['e', 'E', '-', '+' , ','].includes(event.key)"
+        type="number"
+        class="form-control"
+        name="quantedadeObservacaoProduto"
+        [(ngModel)]="obcervacaoProdutoLocal.quantidadeGasto"
+      />
+    </div>
+    }
+  </div>
+
+  <div class="d-flex justify-content-center mt-3">
+    <button
+      name="obcervacaoProduto"
+      type="button"
+      class="btn-comum btn-comum-laranja"
+      (click)="salvarObservacaoProduto()"
+    >
+      Salvar
+    </button>
+  </div>
+</div>
+}
+
+<ng-template #modalProdutoSelecionar let-modal>
+  <div class="modal-header cabecalhoModal">
+    <h4 class="modal-title">Buscar Produto</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="badyModal">
+    <app-lista-produtos-selecionar
+      [observacoes]="observacoes"
+      [produto]="produto"
+      (retorno)="retornoProduto($event)"
+    ></app-lista-produtos-selecionar>
+  </div>
+</ng-template>

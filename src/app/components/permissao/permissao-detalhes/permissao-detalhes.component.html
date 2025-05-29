@@ -1,0 +1,1109 @@
+<div class="d-flex col-12 h-100 flex-column w-100">
+  <div class="mb-3">
+    <label for="nome" class="form-label">Nome do Permissão</label>
+    <input
+      autocomplete="off"
+      type="text"
+      id="nome"
+      class="form-control"
+      name="nome"
+      [(ngModel)]="permissao.nome"
+      required
+    />
+  </div>
+  <div class="d-flex align-items-center gap-3 col-12 w-100 mb-2">
+    <button
+      type="button"
+      (click)="desmarcarTodos()"
+      class="btn-comum btn-comum-cinza w-100"
+    >
+      Desmarcar todos
+    </button>
+    <button
+      type="button"
+      (click)="toggleTodos()"
+      class="btn-comum btn-comum-laranja w-100"
+    >
+      Marcar todos
+    </button>
+  </div>
+  <div class="lista">
+    <table class="table">
+      <thead>
+        <th class="text-start col-2">Permissão</th>
+        <th class="text-start col-3">Descrição</th>
+        <th class="text-center col-1">Ativar</th>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="text-start">CADASTRAR</td>
+          <td class="text-start">Permite criar novos registros em geral</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="cadastrar"
+                [(ngModel)]="permissao.cadastrar"
+                (click)="toggleCadastrar()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">EDITAR</td>
+          <td class="text-start">Permite editar registros em geral</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="editar"
+                [(ngModel)]="permissao.editar"
+                (click)="toggleEditar()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">DELETAR</td>
+          <td class="text-start">Permite deletar registros em geral</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="deletar"
+                [(ngModel)]="permissao.deletar"
+                (click)="toggleDeletar()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">VENDA</td>
+          <td class="text-start">Permite acessar área venda</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="venda"
+                [(ngModel)]="permissao.venda"
+                (click)="toggleVenda()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">TRANSFERIR VENDA</td>
+          <td class="text-start">Permite transferir venda</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="vendaTransferir"
+                [(ngModel)]="permissao.transferirVenda"
+                (ngModelChange)="verificarVenda()"
+                (click)="transferirVenda()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">CADASTRAR VENDA</td>
+          <td class="text-start">Permite cadastrar venda</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="vendaCadastrar"
+                [(ngModel)]="permissao.cadastrarVenda"
+                (ngModelChange)="verificarVenda()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">DELETAR VENDA</td>
+          <td class="text-start">Permite deletar venda</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="vendaDeletar"
+                [(ngModel)]="permissao.deletarVenda"
+                (ngModelChange)="verificarVenda()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">LIBERAR VENDA</td>
+          <td class="text-start">Permite liberar de venda</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="vendaLiberar"
+                [(ngModel)]="permissao.liberarVenda"
+                (ngModelChange)="verificarVenda()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">HISTÓRICO VENDAS</td>
+          <td class="text-start">Permite acessar histórico de vendas</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="vendaHistorico"
+                [(ngModel)]="permissao.historicoVenda"
+                (ngModelChange)="verificarVenda()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        @if (matriz && matriz.usarImpressora == true || usuario.role ===
+        'ADMIN') {
+        <tr>
+          <td class="text-start">IMPRIMIR</td>
+          <td class="text-start">Permite ação de imprimir</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="imprimir"
+                [(ngModel)]="permissao.imprimir"
+                (ngModelChange)="verificarVenda()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+        } @if (matriz && matriz.permissao && matriz.permissao.vendaBalcao ||
+        usuario.role === 'ADMIN') {
+        <tr>
+          <td class="text-start">VENDA BALCAO</td>
+          <td class="text-start">Permite acesso ao balcao</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="vendaBalcao"
+                [(ngModel)]="permissao.vendaBalcao"
+                (ngModelChange)="verificarVenda()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+        } @if (matriz && matriz.permissao && matriz.permissao.vendaMesa ||
+        usuario.role === 'ADMIN') {
+        <tr>
+          <td class="text-start">VENDA MESA</td>
+          <td class="text-start">Permite acesso ao mesas</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="vendaMesa"
+                [(ngModel)]="permissao.vendaMesa"
+                (ngModelChange)="verificarVenda()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+        } @if (matriz && matriz.permissao && matriz.permissao.vendaRetirada ||
+        usuario.role === 'ADMIN') {
+        <tr>
+          <td class="text-start">VENDA RETIRADA</td>
+          <td class="text-start">Permite acesso ao retiradas</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="vendaRetirada"
+                [(ngModel)]="permissao.vendaRetirada"
+                (ngModelChange)="verificarVenda()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+        } @if (matriz && matriz.permissao && matriz.permissao.vendaEntrega ||
+        usuario.role === 'ADMIN') {
+        <tr>
+          <td class="text-start">VENDA ENTREGA</td>
+          <td class="text-start">Permite acesso ao entregas</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="vendaEntrega"
+                [(ngModel)]="permissao.vendaEntrega"
+                (ngModelChange)="verificarVenda()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+        }
+
+        <tr>
+          <td class="text-start">EDITAR ITEM DA VENDA</td>
+          <td class="text-start">Permite editar item da venda</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="produtoVendaEditar"
+                [(ngModel)]="permissao.editarProdutoVenda"
+                (ngModelChange)="verificarVenda()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">DELETAR ITEM DA VENDA</td>
+          <td class="text-start">Permite deletar item da venda</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="produtoVendaDeletar"
+                [(ngModel)]="permissao.deletarProdutoVenda"
+                (ngModelChange)="verificarVenda()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">CAIXA</td>
+          <td class="text-start">Permite acessar área caixa</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="caixa"
+                [(ngModel)]="permissao.caixa"
+                (click)="toggleCaixa()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">EDITAR CAIXA</td>
+          <td class="text-start">Permite editar caixa</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="editarCaixa"
+                [(ngModel)]="permissao.editarCaixa"
+                (ngModelChange)="verificarCaixa()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">DELETAR CAIXA</td>
+          <td class="text-start">Permite deletar caixa</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="deletarCaixa"
+                [(ngModel)]="permissao.deletarCaixa"
+                (ngModelChange)="verificarCaixa()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">HISTÓRICO CAIXAS</td>
+          <td class="text-start">Permite acessar histórico de caixas</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="historicoCaixa"
+                [(ngModel)]="permissao.historicoCaixa"
+                (ngModelChange)="verificarCaixa()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">CADASTRAR SANGRIA</td>
+          <td class="text-start">Permite emissão de sangria</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="cadastrarSangria"
+                [(ngModel)]="permissao.cadastrarSangria"
+                (ngModelChange)="verificarCaixa()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">EDITAR SANGRIA</td>
+          <td class="text-start">Permite editar sangria</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="editarSangria"
+                [(ngModel)]="permissao.editarSangria"
+                (ngModelChange)="verificarCaixa()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">DELETAR SANGRIA</td>
+          <td class="text-start">Permite deletar sangria</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="deletarSangria"
+                [(ngModel)]="permissao.deletarSangria"
+                (ngModelChange)="verificarCaixa()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">CADASTRAR SUPRIMENTO</td>
+          <td class="text-start">Permite emissão de suprimento</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="cadastrarSuprimento"
+                [(ngModel)]="permissao.cadastrarSuprimento"
+                (ngModelChange)="verificarCaixa()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">EDITAR SUPRIMENTO</td>
+          <td class="text-start">Permite editar suprimento</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="editarSuprimento"
+                [(ngModel)]="permissao.editarSuprimento"
+                (ngModelChange)="verificarCaixa()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">DELETAR SANGRIA</td>
+          <td class="text-start">Permite deletar suprimento</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="deletarSuprimento"
+                [(ngModel)]="permissao.deletarSuprimento"
+                (ngModelChange)="verificarCaixa()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">CATEGORIA</td>
+          <td class="text-start">Permite acessar área categoria</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="categoria"
+                [(ngModel)]="permissao.categoria"
+                (click)="toggleCategoria()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">CADASTRAR CATEGORIA</td>
+          <td class="text-start">Permite cadastrar categoria</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="categoriaCadastrar"
+                [(ngModel)]="permissao.cadastrarCategoria"
+                (ngModelChange)="verificarCategoria()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">EDITAR CATEGORIA</td>
+          <td class="text-start">Permite editar categoria</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="categoriaEditar"
+                [(ngModel)]="permissao.editarCategoria"
+                (ngModelChange)="verificarCategoria()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">DELETAR CATEGORIA</td>
+          <td class="text-start">Permite deletar categoria</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="categoriaDeletar"
+                [(ngModel)]="permissao.deletarCategoria"
+                (ngModelChange)="verificarCategoria()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">CLIENTE</td>
+          <td class="text-start">Permite acessar área cliente</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="cliente"
+                [(ngModel)]="permissao.cliente"
+                (click)="toggleCliente()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">CADASTRAR CLIENTE</td>
+          <td class="text-start">Permite cadastrar cliente</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="clienteCadastrar"
+                [(ngModel)]="permissao.cadastrarCliente"
+                (ngModelChange)="verificarCliente()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">EDITAR CLIENTE</td>
+          <td class="text-start">Permite editar cliente</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="clienteEditar"
+                [(ngModel)]="permissao.editarCliente"
+                (ngModelChange)="verificarCliente()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">DELETAR CLIENTE</td>
+          <td class="text-start">Permite deletar cliente</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="clienteDeletar"
+                [(ngModel)]="permissao.deletarCliente"
+                (ngModelChange)="verificarCliente()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        @if (matriz && matriz.permissao && matriz.permissao.estoque ||
+        usuario.role === 'ADMIN') {
+        <tr>
+          <td class="text-start">ESTOQUE</td>
+          <td class="text-start">Permite acessar área estoque</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="estoque"
+                [(ngModel)]="permissao.estoque"
+                (click)="toggleEstoque()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">CADASTRAR ESTOQUE</td>
+          <td class="text-start">Permite cadastrar estoque</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="estoqueCadastrar"
+                [(ngModel)]="permissao.cadastrarEstoque"
+                (ngModelChange)="verificarEstoque()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">EDITAR ESTOQUE</td>
+          <td class="text-start">Permite editar estoque</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="estoqueEditar"
+                [(ngModel)]="permissao.editarEstoque"
+                (ngModelChange)="verificarEstoque()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+        } @if (matriz && matriz.permissao && matriz.permissao.deposito ||
+        usuario.role === 'ADMIN') {
+        <tr>
+          <td class="text-start">DEPOSITO</td>
+          <td class="text-start">Permite acessar área deposito</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="deposito"
+                [(ngModel)]="permissao.deposito"
+                (click)="toggleDeposito()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">CADASTRAR DEPOSITO</td>
+          <td class="text-start">Permite cadastrar deposito</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="depositoCadastrar"
+                [(ngModel)]="permissao.cadastrarDeposito"
+                (ngModelChange)="verificarDeposito()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">EDITAR DEPOSITO</td>
+          <td class="text-start">Permite editar deposito</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="depositoEditar"
+                [(ngModel)]="permissao.editarDeposito"
+                (ngModelChange)="verificarDeposito()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+        }
+
+        <tr>
+          <td class="text-start">FUNCIONÁRIO</td>
+          <td class="text-start">Permite acessar área funcionário</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="funcionario"
+                [(ngModel)]="permissao.funcionario"
+                (click)="toggleFuncionario()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">CADASTRAR FUNCIONÁRIO</td>
+          <td class="text-start">Permite cadastrar funcionário</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="funcionario-cadastrar"
+                [(ngModel)]="permissao.cadastrarFuncionario"
+                (ngModelChange)="verificarFuncionario()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">EDITAR FUNCIONÁRIO</td>
+          <td class="text-start">Permite editar funcionário</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="funcionario-editar"
+                [(ngModel)]="permissao.editarFuncionario"
+                (ngModelChange)="verificarFuncionario()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">DELETAR FUNCIONÁRIO</td>
+          <td class="text-start">Permite deletar funcionário</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="funcionario-deletar"
+                [(ngModel)]="permissao.deletarFuncionario"
+                (ngModelChange)="verificarFuncionario()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">PERMISSAO</td>
+          <td class="text-start">Permite acessar área permissao</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="permissao"
+                [(ngModel)]="permissao.permissao"
+                (click)="togglePermissao()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">CADASTRAR PERMISSAO</td>
+          <td class="text-start">Permite cadastrar permissao</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="permissao-cadastrar"
+                [(ngModel)]="permissao.cadastrarPermissao"
+                (ngModelChange)="verificarPermissao()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">EDITAR PERMISSAO</td>
+          <td class="text-start">Permite editar permissao</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="permissao-editar"
+                [(ngModel)]="permissao.editarPermissao"
+                (ngModelChange)="verificarPermissao()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">DELETAR PERMISSAO</td>
+          <td class="text-start">Permite deletar permissao</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="permissao-deletar"
+                [(ngModel)]="permissao.deletarPermissao"
+                (ngModelChange)="verificarPermissao()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        @if (matriz && matriz.permissao && matriz.permissao.materia ||
+        usuario.role === 'ADMIN') {
+        <tr>
+          <td class="text-start">MATERIA</td>
+          <td class="text-start">Permite acessar área materia</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="materia"
+                [(ngModel)]="permissao.materia"
+                (click)="toggleMateria()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">CADASTRAR MATERIA</td>
+          <td class="text-start">Permite cadastrar materia</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="materia-cadastrar"
+                [(ngModel)]="permissao.cadastrarMateria"
+                (ngModelChange)="verificarMateria()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">EDITAR MATERIA</td>
+          <td class="text-start">Permite editar materia</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="materia-editar"
+                [(ngModel)]="permissao.editarMateria"
+                (ngModelChange)="verificarMateria()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">DELETAR MATERIA</td>
+          <td class="text-start">Permite deletar materia</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="materia-deletar"
+                [(ngModel)]="permissao.deletarMateria"
+                (ngModelChange)="verificarMateria()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+        }
+
+        <tr>
+          <td class="text-start">PRODUTO</td>
+          <td class="text-start">Permite acessar área produto</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="produto"
+                [(ngModel)]="permissao.produto"
+                (click)="toggleProduto()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">CADASTRAR PRODUTO</td>
+          <td class="text-start">Permite cadastrar produto</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="produto-cadastrar"
+                [(ngModel)]="permissao.cadastrarProduto"
+                (ngModelChange)="verificarProduto()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">EDITAR PRODUTO</td>
+          <td class="text-start">Permite editar produto</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="produto-editar"
+                [(ngModel)]="permissao.editarProduto"
+                (ngModelChange)="verificarProduto()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">DELETAR PRODUTO</td>
+          <td class="text-start">Permite deletar produto</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="produto-deletar"
+                [(ngModel)]="permissao.deletarProduto"
+                (ngModelChange)="verificarProduto()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        @if (matriz && matriz.permissao && matriz.permissao.filho ||
+        usuario.role === 'ADMIN') {
+        <tr>
+          <td class="text-start">FILHO</td>
+          <td class="text-start">Permite acessar área filho</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="filho"
+                [(ngModel)]="permissao.filho"
+                (click)="toggleFilho()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">CADASTRAR FILHO</td>
+          <td class="text-start">Permite cadastrar filho</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="filho-cadastrar"
+                [(ngModel)]="permissao.cadastrarFilho"
+                (ngModelChange)="verificarFilho()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">EDITAR FILHO</td>
+          <td class="text-start">Permite editar filho</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="filho-editar"
+                [(ngModel)]="permissao.editarFilho"
+                (ngModelChange)="verificarFilho()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">DELETAR FILHO</td>
+          <td class="text-start">Permite deletar filho</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="filho-deletar"
+                [(ngModel)]="permissao.deletarFilho"
+                (ngModelChange)="verificarFilho()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+        }
+
+        <tr>
+          <td class="text-start">CONFIGURAÇÃOES</td>
+          <td class="text-start">Permite editar configuraçãoes</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="config"
+                [(ngModel)]="permissao.editarConfiguracoes"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+        <tr>
+          <td class="text-start">AUDITORIA</td>
+          <td class="text-start">Permite acessar área auditoria</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="config"
+                [(ngModel)]="permissao.auditoria"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

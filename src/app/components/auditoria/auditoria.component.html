@@ -1,0 +1,183 @@
+<div class="tela d-flex flex-column col-lg-12 w-100 p-2">
+  <div class="d-flex align-items-center justify-content-between my-2">
+    <div class="d-flex align-items-center">
+      <button type="button" class="botao_voltar me-2" routerLink="/home">
+        <i class="bi bi-arrow-left"></i>
+      </button>
+      <h2 class="titulo m-0">Auditoria</h2>
+    </div>
+  </div>
+
+  <div
+    class="col-lg-12 d-flex align-items-center gap-3 pb-2 w-100 area-pesquisa flex-wrap"
+  >
+    <div class="d-flex align-items-center w-25 tamanho-select">
+      <div class="d-flex flex-column w-100">
+        <label>Operação</label>
+        <select
+          class="select-filtro p-1"
+          [(ngModel)]="operacao"
+          (change)="filtrarAuditoria()"
+        >
+          <option value="">Todos</option>
+          <option value="CADASTRAR">Cadastrar</option>
+          <option value="EDITAR">Editar</option>
+          <option value="TRANSFERIR">Transferir</option>
+          <option value="DELETAR">Deletar</option>
+          <option value="ATIVAR">Ativar</option>
+          <option value="DESATIVAR">Desativar</option>
+          <option value="DESCARTAR">Descartar</option>
+          <option value="IMPRIMIR">Imprimir</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="d-flex align-items-center w-25 tamanho-select">
+      <div class="d-flex flex-column w-100">
+        <label>Tipo de objeto</label>
+        <select
+          class="select-filtro p-1"
+          [(ngModel)]="tipo"
+          (change)="filtrarAuditoria()"
+        >
+          <option value="">Todos</option>
+          <option value="CATEGORIA">Categoria</option>
+          <option value="PRODUTO">Produto</option>
+          <option value="CLIENTE">Cliente</option>
+          <option value="VENDA">Venda</option>
+          <option value="CAIXA">Caixa</option>
+          <option value="FUNCIONARIO">Funcionário</option>
+          <option value="PERMISSAO">Permissão</option>
+          <option value="ESTOQUE">Estoque</option>
+          <option value="DEPOSITO">Depósito</option>
+          <option value="MATERIA">Matéria</option>
+          <option value="CONFIGURACAO">Configuração</option>
+          <option value="SANGRIA">Sangria</option>
+          <option value="SUPRIMENTO">Suprimento</option>
+          <option value="IMPRESSAO">Impressão</option>
+          @if (usuarioLogado && (usuarioLogado.role == 'ADMIN' ||
+          usuarioLogado.role == 'ADMINFUNCIONARIO')) {
+          <option value="MATRIZ">Matriz</option>
+          <option value="SUBFUNCIONARIO">Sub Funcioanrio</option>
+          }
+        </select>
+      </div>
+    </div>
+
+    <div class="d-flex align-items-center w-25 tamanho-select">
+      <div class="d-flex flex-column w-100">
+        <label>Usuário</label>
+        <select
+          class="select-filtro p-1"
+          [(ngModel)]="usuario"
+          (change)="filtrarAuditoria()"
+        >
+          <option value="">Todos</option>
+          @for (funcionario of funcionarios; track funcionario.id) {
+          <option [value]="funcionario.nome">{{ funcionario.nome }}</option>
+          }
+        </select>
+      </div>
+    </div>
+
+    <div class="d-flex align-items-center tamanho-select">
+      <div class="d-flex flex-column w-100">
+        <label>Itens por página</label>
+        <select class="select-filtro p-1" (change)="alterarTamanho($event)">
+          <option [value]="10">10</option>
+          <option [value]="20">20</option>
+          <option [value]="50">50</option>
+          <option [value]="100">100</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="w-100 d-flex align-items-center">
+      <div class="d-flex flex-column w-100">
+        <label>Data Início</label>
+        <input
+          type="text"
+          inputmode="numeric"
+          class="form-control dataInicio"
+          [(ngModel)]="dataInicio"
+          mask="00/00/0000 00:00"
+          placeholder="dd/MM/aaaa hh:mm"
+        />
+      </div>
+      <div class="d-flex flex-column w-100">
+        <label>Data Fim</label>
+        <div class="filtro-pesquisa">
+          <input
+            type="text"
+            inputmode="numeric"
+            class="form-control dataFim"
+            [(ngModel)]="dataFim"
+            mask="00/00/0000 00:00"
+            placeholder="dd/MM/aaaa hh:mm"
+          />
+          <button type="button" class="botao_cep" (click)="filtrarAuditoria()">
+            <img src="../../../assets/images/search.svg" class="busca" />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lista">
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="text-center col-1">#</th>
+          <th class="text-center col-1">Operação</th>
+          <th class="text-center col-1">Tipo</th>
+          <th class="text-start col-3">Descrição</th>
+          <th class="text-center col-1">Usuário</th>
+          <th class="text-center col-2">Data e hora</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (auditoria of listaAuditorias; track $index) {
+        <tr>
+          <td class="text-center">{{ $index + 1 + page * size }}</td>
+          <td class="text-center">{{ auditoria.operacao }}</td>
+          <td class="text-center">{{ auditoria.tipo }}</td>
+          <td class="text-start">{{ auditoria.descricao }}</td>
+          <td class="text-center">{{ auditoria.usuario }}</td>
+          <td class="text-center">
+            {{ auditoria.dataHora | date : "dd/MM/yyyy HH:mm:ss" }}
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="paginacao-container mt-2">
+    <button
+      class="paginacao-botao"
+      [disabled]="page === 0"
+      (click)="setPage(page - 1)"
+    >
+      <i class="bi bi-chevron-left"></i>
+    </button>
+
+    @for (i of pagesVisiveis(); track i) {
+    <button
+      class="paginacao-botao"
+      [class.ativo]="i === page"
+      [disabled]="i === page"
+      (click)="setPage(i)"
+    >
+      {{ i + 1 }}
+    </button>
+    }
+
+    <button
+      class="paginacao-botao"
+      [disabled]="page + 1 >= totalPages"
+      (click)="setPage(page + 1)"
+    >
+      <i class="bi bi-chevron-right"></i>
+    </button>
+  </div>
+</div>

@@ -1,0 +1,140 @@
+<div class="w-100 h-100 d-flex flex-column">
+  <div>
+    @if (usuario && usuario.permissao && usuario.permissao.cadastrarPermissao) {
+    <input
+      autocomplete="off"
+      type="button"
+      value="Cadastrar Permissão"
+      (click)="cadastrarPermissao(modalPermissao)"
+      class="btn-comum btn-comum-laranja mb-2"
+    />
+    }
+  </div>
+  <div class="lista-tamanho-60vh">
+    <table class="table ">
+      <thead>
+        <th class="text-center col-1">Nome</th>
+        <th class="text-center col-1">Ações</th>
+      </thead>
+      <tbody>
+        @for (permissao of listaPermissaos; track $index) {
+        <tr>
+          <td class="text-center">{{ permissao.nome }}</td>
+          <td>
+            <div class="col-acoes">
+              @if (usuario && usuario.permissao &&
+              usuario.permissao.editarPermissao) {
+              <button
+                type="button"
+                (click)="editarPermissao(modalPermissao, permissao, $index)"
+                class="hover-btn"
+              >
+                <img
+                  src="../../../../../assets/images/botao_editar.svg"
+                  alt="Editar"
+                />
+                <span class="hover-text">Editar</span>
+              </button>
+              } @if (usuario && usuario.permissao &&
+              usuario.permissao.deletarPermissao) {
+              <button
+                type="button"
+                (click)="
+                  deletarPermissao(modalExcluirPermissao, permissao, $index)
+                "
+                class="hover-btn"
+              >
+                <img
+                  src="../../../../../assets/images/botao_deletar.svg"
+                  alt="Deletar"
+                />
+                <span class="hover-text">Deletar</span>
+              </button>
+              }
+              <button
+                type="button"
+                (click)="vincular(permissao)"
+                class="hover-btn"
+              >
+                <img
+                  src="../../../../../assets/images/link-vincular.svg"
+                  alt="Vincular"
+                />
+                <span class="hover-text">Vincular</span>
+              </button>
+              @if (usuario && usuario.permissao &&
+              usuario.permissao.cadastrarPermissao) {
+              <button
+                type="button"
+                (click)="copiar(modalPermissao, permissao)"
+                class="hover-btn"
+              >
+                <img
+                  src="../../../../../assets/images/copiar.svg"
+                  alt="Copiar"
+                />
+                <span class="hover-text">Copiar</span>
+              </button>
+              }
+            </div>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<ng-template #modalPermissao let-modal>
+  <div class="modal-header modal-style">
+    <h4 class="modal-title">{{ tituloModal }}</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body modal-style">
+    <app-permissao-detalhes
+      #permissaoDetalhes
+      [permissao]="permissao"
+      (retorno)="atualizarListaPermissaos($event)"
+    ></app-permissao-detalhes>
+  </div>
+  <div
+    class="modal-footer d-flex justify-content-center align-items-center border-0"
+  >
+    <button
+      type="button"
+      class="btn-comum btn-comum-laranja"
+      (click)="permissaoDetalhes.salvar()"
+    >
+      Salvar
+    </button>
+  </div>
+</ng-template>
+<ng-template #modalExcluirPermissao let-modal>
+  <div class="modal-header modal-style">
+    <h4 class="modal-title">{{ tituloModal }}</h4>
+  </div>
+  <div class="modal-body modal-style">
+    <h5>Tem certeza que deseja deletar?</h5>
+  </div>
+  <div class="modal-footer modal-style justify-content-center">
+    <button
+      type="button"
+      class="btn-comum btn-comum-vermelho"
+      (click)="confirmarExclusaoPermissao(permissao)"
+    >
+      Deletar
+    </button>
+    <button
+      type="button"
+      class="btn-comum btn-comum-cinza"
+      (click)="modal.close('Close click')"
+    >
+      Fechar
+    </button>
+  </div>
+</ng-template>

@@ -1,0 +1,69 @@
+<div class="d-flex flex-column">
+  <div class="d-flex justify-content-between gap-2">
+    <div class="mb-3">
+      <label for="dinheiro" class="form-label">Dinheiro</label>
+      <input
+        autocomplete="off"
+        type="number"
+        inputmode="numeric"
+        min="0"
+        step="1"
+        oninput="if (this.value.length > 10) this.value = this.value.slice(0, 10)"
+        onkeydown="return !['e', 'E', '-', '+' , ','].includes(event.key)"
+        class="form-control"
+        name="dinheiro"
+        [(ngModel)]="caixa.saldoDinheiro"
+      />
+    </div>
+    <div class="mb-3">
+      <label for="credito" class="form-label">Credito</label>
+      <input
+        autocomplete="off"
+        type="number"
+        inputmode="numeric"
+        min="0"
+        step="1"
+        oninput="if (this.value.length > 10) this.value = this.value.slice(0, 10)"
+        onkeydown="return !['e', 'E', '-', '+' , ','].includes(event.key)"
+        class="form-control"
+        name="credito"
+        [(ngModel)]="caixa.saldoCredito"
+      />
+    </div>
+  </div>
+  <div class="d-flex justify-content-between gap-2">
+    <div class="mb-3">
+      <label for="debito" class="form-label">Debito</label>
+      <input
+        autocomplete="off"
+        type="number"
+        inputmode="numeric"
+        min="0"
+        step="1"
+        oninput="if (this.value.length > 10) this.value = this.value.slice(0, 10)"
+        onkeydown="return !['e', 'E', '-', '+' , ','].includes(event.key)"
+        class="form-control"
+        name="debito"
+        [(ngModel)]="caixa.saldoDebito"
+      />
+    </div>
+    <div class="mb-3">
+      <label for="pix" class="form-label">Pix</label>
+      <input
+        autocomplete="off"
+        type="number"
+        inputmode="numeric"
+        min="0"
+        step="1"
+        oninput="if (this.value.length > 10) this.value = this.value.slice(0, 10)"
+        onkeydown="return !['e', 'E', '-', '+' , ','].includes(event.key)"
+        class="form-control"
+        name="pix"
+        [(ngModel)]="caixa.saldoPix"
+      />
+    </div>
+  </div>
+  <div class="d-flex justify-content-center mt-3">
+    <button type="button" class="btn-comum btn-comum-laranja" (click)="fechar()">Salvar</button>
+  </div>
+</div>

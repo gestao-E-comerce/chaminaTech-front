@@ -1,0 +1,1053 @@
+<form #formulario="ngForm" (ngSubmit)="salvar(formulario)">
+  <div class="d-flex align-items-center justify-content-between header-fixo">
+    <div class="d-flex align-items-center">
+      <button type="button" class="botao_voltar me-2" routerLink="/home">
+        <i class="bi bi-arrow-left"></i>
+      </button>
+
+      <h2 class="titulo m-0">Configuração</h2>
+    </div>
+    <div class="d-flex align-items-center flex-wrap gap-3">
+      <button
+        id="zerarCupons"
+        type="button"
+        class="btn-comum btn-comum-laranja"
+        (click)="zerarCupons()"
+      >
+        Zerar Cupons
+      </button>
+
+      <button
+        type="button"
+        class="btn-comum btn-comum-laranja"
+        (click)="abrirModalEntregaConf(modalEntregaConf)"
+      >
+        Configurar Entrega
+      </button>
+      <button
+        type="submit"
+        class="btn-comum btn-comum-laranja"
+        [disabled]="!isModified()"
+      >
+        Salvar
+      </button>
+    </div>
+  </div>
+  <div class="p-2 d-flex flex-column gap-3">
+    <div class="d-flex flex-column">
+      <div
+        class="col-lg-12 d-flex align-items-center gap-3 pb-2 w-100 area-pesquisa"
+      >
+        <div class="d-flex flex-column w-50">
+          <label for="cep" class="form-label">CEP</label>
+          <div class="filtro-pesquisa">
+            <input
+              autocomplete="off"
+              #cep="ngModel"
+              required
+              type="text"
+              inputmode="numeric"
+              class="form-control"
+              name="cep"
+              [(ngModel)]="matrizOriginal.cep"
+              mask="00000-000"
+              (keydown.Space)="buscarCEP()"
+              [ngClass]="{ 'borda-vermelha': !cep.valid && cep.touched }"
+            />
+            <button type="button" class="botao_cep" (click)="buscarCEP()">
+              <img src="../../../../assets/images/search.svg" class="busca" />
+            </button>
+          </div>
+        </div>
+        <div class="w-50">
+          <label for="rua" class="form-label">Rua</label>
+          <input
+            autocomplete="off"
+            #rua="ngModel"
+            required
+            type="text"
+            class="form-control w-100"
+            name="rua"
+            [(ngModel)]="matrizOriginal.rua"
+            [ngClass]="{ 'borda-vermelha': !rua.valid && rua.touched }"
+          />
+        </div>
+        <div class="w-25">
+          <label for="numero" class="form-label">Numero</label>
+          <input
+            autocomplete="off"
+            #numero="ngModel"
+            required
+            type="number"
+            inputmode="numeric"
+            min="0"
+            step="1"
+            onkeydown="return !['e', 'E', '-', '+' , ',' , '.'].includes(event.key)"
+            oninput="if (this.value.length > 10) this.value = this.value.slice(0, 10)"
+            class="form-control no-spin w-100"
+            name="numero"
+            [(ngModel)]="matrizOriginal.numero"
+            [ngClass]="{ 'borda-vermelha': !numero.valid && numero.touched }"
+          />
+        </div>
+      </div>
+      <div
+        class="d-flex align-items-center justify-content-between w-100 gap-3 mb-2"
+      >
+        <div>
+          <label for="bairro" class="form-label">Bairro</label>
+          <input
+            autocomplete="off"
+            #bairro="ngModel"
+            required
+            type="text"
+            class="form-control"
+            name="bairro"
+            [(ngModel)]="matrizOriginal.bairro"
+            [ngClass]="{ 'borda-vermelha': !bairro.valid && bairro.touched }"
+          />
+        </div>
+        <div>
+          <label for="cidade" class="form-label">Cidade</label>
+          <input
+            autocomplete="off"
+            #cidade="ngModel"
+            required
+            type="text"
+            class="form-control"
+            name="cidade"
+            [(ngModel)]="matrizOriginal.cidade"
+            [ngClass]="{ 'borda-vermelha': !cidade.valid && cidade.touched }"
+          />
+        </div>
+        <div>
+          <label for="estado" class="form-label">Estado</label>
+          <input
+            autocomplete="off"
+            #estado="ngModel"
+            required
+            type="text"
+            class="form-control"
+            name="estado"
+            [(ngModel)]="matrizOriginal.estado"
+            [ngClass]="{ 'borda-vermelha': !estado.valid && estado.touched }"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="d-flex flex-column gap-3">
+      <div class="d-flex flex-column">
+        <label class="form-label">Trabalhar Com Impressão?</label>
+        <div class="btn-group w-50">
+          <button
+            type="button"
+            class="btn btn-borda-laranja p-2"
+            [ngClass]="{
+              'btn-comum-laranja': matrizOriginal.usarImpressora === true,
+              'btn-borda-laranja': matrizOriginal.usarImpressora !== true
+            }"
+            (click)="matrizOriginal.usarImpressora = true"
+          >
+            Sim
+          </button>
+          <button
+            type="button"
+            class="btn btn-borda-laranja p-2"
+            [ngClass]="{
+              'btn-comum-laranja': matrizOriginal.usarImpressora === false,
+              'btn-borda-laranja': matrizOriginal.usarImpressora !== false
+            }"
+            (click)="matrizOriginal.usarImpressora = false"
+          >
+            Não
+          </button>
+        </div>
+      </div>
+      @if (matrizOriginal && matrizOriginal.usarImpressora) {
+      <div>
+        <h4>Instalar Serviço de Impressão</h4>
+        <button
+          class="btn-comum btn-comum-laranja"
+          type="button"
+          (click)="downloadInstaller()"
+        >
+          Instalar Serviço
+        </button>
+      </div>
+      <h4>Impressoras</h4>
+      <div class="col-12 d-flex flex-column w-100 espaco-impressoras p-2">
+        <div class="d-flex align-items-center justify-content-between w-100">
+          <label>Lista de Impressoras dos produtos:</label>
+          <button
+            type="button"
+            class="btn-comum btn-comum-laranja"
+            (click)="adicionarImpressora(modalListarImpressoras)"
+          >
+            Adicionar Impressora
+          </button>
+        </div>
+        <div class="lista-curta">
+          <table class="table">
+            <thead>
+              <th class="text-start col-1">Apelido Impressora</th>
+              <th class="text-start col-1">Nome Impressora</th>
+              <th class="text-center col-1">Ações</th>
+            </thead>
+            <tbody>
+              @for (impressora of matrizOriginal.impressoras; track $index) {
+              <tr>
+                <td class="text-start">
+                  {{ impressora.apelidoImpressora }}
+                </td>
+                <td class="text-start">
+                  {{ impressora.nomeImpressora }}
+                </td>
+                <td>
+                  <div class="col-acoes">
+                    <button
+                      type="button"
+                      (click)="
+                        editarImpressora(
+                          modalListarImpressoras,
+                          impressora,
+                          $index
+                        )
+                      "
+                      class="hover-btn"
+                      name="Editar{{ $index }}"
+                    >
+                      <img
+                        src="../../../../assets/images/botao_editar.svg"
+                        alt="Editar"
+                      />
+                      <span class="hover-text">Editar</span>
+                    </button>
+                    <button
+                      type="button"
+                      (click)="deletarImpressora($index)"
+                      class="hover-btn"
+                      name="Deletar{{ impressora.apelidoImpressora }}"
+                    >
+                      <img
+                        src="../../../../../assets/images/botao_deletar.svg"
+                        alt="Deletar"
+                      />
+                      <span class="hover-text">Deletar</span>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="col-12 d-flex flex-column w-100 espaco-impressoras p-2">
+        <div class="d-flex align-items-center justify-content-between w-100">
+          <label>Lista de Impressoras dos Caixa:</label>
+          <button
+            type="button"
+            class="btn-comum btn-comum-laranja"
+            (click)="adicionarIdentificador(modalListarImpressoras)"
+          >
+            Adicionar Impressora
+          </button>
+        </div>
+        <div class="lista-curta">
+          <table class="table">
+            <thead>
+              <th class="text-start col-1">Apelido Caixa</th>
+              <th class="text-start col-1">Nome Impressora</th>
+              <th class="text-center col-1">Ações</th>
+            </thead>
+            <tbody>
+              @for (impressora of matrizOriginal.identificador; track $index) {
+              <tr>
+                <td class="text-start">
+                  {{ impressora.identificadorNome }}
+                </td>
+                <td class="text-start">
+                  {{ impressora.impressoraNome }}
+                </td>
+                <td>
+                  <div class="col-acoes">
+                    <button
+                      type="button"
+                      (click)="
+                        editarIdentificador(
+                          modalListarImpressoras,
+                          impressora,
+                          $index
+                        )
+                      "
+                      class="hover-btn"
+                      name="Editar{{ $index }}"
+                    >
+                      <img
+                        src="../../../../assets/images/botao_editar.svg"
+                        alt="Editar"
+                      />
+                      <span class="hover-text">Editar</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      (click)="deletarImpressoraCaixa($index)"
+                      class="hover-btn"
+                      name="Deletar{{ $index }}"
+                    >
+                      <img
+                        src="../../../../assets/images/botao_deletar.svg"
+                        alt="Deletar"
+                      />
+                      <span class="hover-text">Deletar</span>
+                    </button>
+                    @if (isImpressoraEmUso(impressora)) {
+                    <p class="em_uso m-0">Em uso</p>
+                    } @else {
+                    <button
+                      type="button"
+                      class="usar"
+                      [disabled]="isModified()"
+                      (click)="usarImpressora(impressora)"
+                    >
+                      Usar
+                    </button>
+                    }
+                  </div>
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <h5>Opções de Impressão Automático</h5>
+      <div class="d-flex flex-column gap-3 w-100">
+        <div
+          class="d-flex flex-wrap justify-content-start align-items-center gap-5"
+        >
+          <div class="d-flex flex-column">
+            <label class="form-label"
+              >Imprimir comprovante de recebimento Balcão?</label
+            >
+            <div class="btn-group largura">
+              <button
+                type="button"
+                class="btn btn-borda-laranja p-2"
+                [ngClass]="{
+                  'btn-comum-laranja':
+                    matrizOriginal.imprimirComprovanteRecebementoBalcao ===
+                    true,
+                  'btn-borda-laranja':
+                    matrizOriginal.imprimirComprovanteRecebementoBalcao !== true
+                }"
+                (click)="
+                  matrizOriginal.imprimirComprovanteRecebementoBalcao = true
+                "
+              >
+                Sim
+              </button>
+              <button
+                type="button"
+                class="btn btn-borda-laranja p-2"
+                [ngClass]="{
+                  'btn-comum-laranja':
+                    matrizOriginal.imprimirComprovanteRecebementoBalcao ===
+                    false,
+                  'btn-borda-laranja':
+                    matrizOriginal.imprimirComprovanteRecebementoBalcao !==
+                    false
+                }"
+                (click)="
+                  matrizOriginal.imprimirComprovanteRecebementoBalcao = false
+                "
+              >
+                Não
+              </button>
+            </div>
+          </div>
+          <div class="d-flex flex-column">
+            <label class="form-label"
+              >Imprimir comprovante de recebimento Mesa?</label
+            >
+            <div class="btn-group largura">
+              <button
+                type="button"
+                class="btn btn-borda-laranja p-2"
+                [ngClass]="{
+                  'btn-comum-laranja':
+                    matrizOriginal.imprimirComprovanteRecebementoMesa === true,
+                  'btn-borda-laranja':
+                    matrizOriginal.imprimirComprovanteRecebementoMesa !== true
+                }"
+                (click)="
+                  matrizOriginal.imprimirComprovanteRecebementoMesa = true
+                "
+              >
+                Sim
+              </button>
+              <button
+                type="button"
+                class="btn btn-borda-laranja p-2"
+                [ngClass]="{
+                  'btn-comum-laranja':
+                    matrizOriginal.imprimirComprovanteRecebementoMesa === false,
+                  'btn-borda-laranja':
+                    matrizOriginal.imprimirComprovanteRecebementoMesa !== false
+                }"
+                (click)="
+                  matrizOriginal.imprimirComprovanteRecebementoMesa = false
+                "
+              >
+                Não
+              </button>
+            </div>
+          </div>
+          <div class="d-flex flex-column">
+            <label class="form-label"
+              >Imprimir comprovante de recebimento Retirada</label
+            >
+            <div class="btn-group largura">
+              <button
+                type="button"
+                class="btn btn-borda-laranja p-2"
+                [ngClass]="{
+                  'btn-comum-laranja':
+                    matrizOriginal.imprimirComprovanteRecebementoRetirada ===
+                    true,
+                  'btn-borda-laranja':
+                    matrizOriginal.imprimirComprovanteRecebementoRetirada !==
+                    true
+                }"
+                (click)="
+                  matrizOriginal.imprimirComprovanteRecebementoRetirada = true
+                "
+              >
+                Sim
+              </button>
+              <button
+                type="button"
+                class="btn btn-borda-laranja p-2"
+                [ngClass]="{
+                  'btn-comum-laranja':
+                    matrizOriginal.imprimirComprovanteRecebementoRetirada ===
+                    false,
+                  'btn-borda-laranja':
+                    matrizOriginal.imprimirComprovanteRecebementoRetirada !==
+                    false
+                }"
+                (click)="
+                  matrizOriginal.imprimirComprovanteRecebementoRetirada = false
+                "
+              >
+                Não
+              </button>
+            </div>
+          </div>
+          <div class="d-flex flex-column">
+            <label class="form-label"
+              >Imprimir comprovante de recebimento Entrega?</label
+            >
+            <div class="btn-group largura">
+              <button
+                type="button"
+                class="btn btn-borda-laranja p-2"
+                [ngClass]="{
+                  'btn-comum-laranja':
+                    matrizOriginal.imprimirComprovanteRecebementoEntrega ===
+                    true,
+                  'btn-borda-laranja':
+                    matrizOriginal.imprimirComprovanteRecebementoEntrega !==
+                    true
+                }"
+                (click)="
+                  matrizOriginal.imprimirComprovanteRecebementoEntrega = true
+                "
+              >
+                Sim
+              </button>
+              <button
+                type="button"
+                class="btn btn-borda-laranja p-2"
+                [ngClass]="{
+                  'btn-comum-laranja':
+                    matrizOriginal.imprimirComprovanteRecebementoEntrega ===
+                    false,
+                  'btn-borda-laranja':
+                    matrizOriginal.imprimirComprovanteRecebementoEntrega !==
+                    false
+                }"
+                (click)="
+                  matrizOriginal.imprimirComprovanteRecebementoEntrega = false
+                "
+              >
+                Não
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          class="d-flex flex-wrap justify-content-start align-items-center gap-5"
+        >
+          <div class="d-flex flex-column">
+            <label class="form-label"
+              >Imprimir comprovante de deletar Venda?</label
+            >
+            <div class="btn-group largura">
+              <button
+                type="button"
+                class="btn btn-borda-laranja p-2"
+                [ngClass]="{
+                  'btn-comum-laranja':
+                    matrizOriginal.imprimirComprovanteDeletarVenda === true,
+                  'btn-borda-laranja':
+                    matrizOriginal.imprimirComprovanteDeletarVenda !== true
+                }"
+                (click)="matrizOriginal.imprimirComprovanteDeletarVenda = true"
+              >
+                Sim
+              </button>
+              <button
+                type="button"
+                class="btn btn-borda-laranja p-2"
+                [ngClass]="{
+                  'btn-comum-laranja':
+                    matrizOriginal.imprimirComprovanteDeletarVenda === false,
+                  'btn-borda-laranja':
+                    matrizOriginal.imprimirComprovanteDeletarVenda !== false
+                }"
+                (click)="matrizOriginal.imprimirComprovanteDeletarVenda = false"
+              >
+                Não
+              </button>
+            </div>
+          </div>
+          <div class="d-flex flex-column">
+            <label class="form-label"
+              >Imprimir comprovante de deletar Produto?</label
+            >
+            <div class="btn-group largura">
+              <button
+                type="button"
+                class="btn btn-borda-laranja p-2"
+                [ngClass]="{
+                  'btn-comum-laranja':
+                    matrizOriginal.imprimirComprovanteDeletarProduto === true,
+                  'btn-borda-laranja':
+                    matrizOriginal.imprimirComprovanteDeletarProduto !== true
+                }"
+                (click)="
+                  matrizOriginal.imprimirComprovanteDeletarProduto = true
+                "
+              >
+                Sim
+              </button>
+              <button
+                type="button"
+                class="btn btn-borda-laranja p-2"
+                [ngClass]="{
+                  'btn-comum-laranja':
+                    matrizOriginal.imprimirComprovanteDeletarProduto === false,
+                  'btn-borda-laranja':
+                    matrizOriginal.imprimirComprovanteDeletarProduto !== false
+                }"
+                (click)="
+                  matrizOriginal.imprimirComprovanteDeletarProduto = false
+                "
+              >
+                Não
+              </button>
+            </div>
+          </div>
+          <div class="d-flex flex-column">
+            <label class="form-label">Imprimir conferencia de Entregas?</label>
+            <div class="btn-group largura">
+              <button
+                type="button"
+                class="btn btn-borda-laranja p-2"
+                [ngClass]="{
+                  'btn-comum-laranja':
+                    matrizOriginal.imprimirConferenciaEntrega === true,
+                  'btn-borda-laranja':
+                    matrizOriginal.imprimirConferenciaEntrega !== true
+                }"
+                (click)="matrizOriginal.imprimirConferenciaEntrega = true"
+              >
+                Sim
+              </button>
+              <button
+                type="button"
+                class="btn btn-borda-laranja p-2"
+                [ngClass]="{
+                  'btn-comum-laranja':
+                    matrizOriginal.imprimirConferenciaEntrega === false,
+                  'btn-borda-laranja':
+                    matrizOriginal.imprimirConferenciaEntrega !== false
+                }"
+                (click)="matrizOriginal.imprimirConferenciaEntrega = false"
+              >
+                Não
+              </button>
+            </div>
+          </div>
+          <div class="d-flex flex-column">
+            <label class="form-label">Imprimir conferencia de Retiradas?</label>
+            <div class="btn-group largura">
+              <button
+                type="button"
+                class="btn btn-borda-laranja p-2"
+                [ngClass]="{
+                  'btn-comum-laranja':
+                    matrizOriginal.imprimirConferenciaRetirada === true,
+                  'btn-borda-laranja':
+                    matrizOriginal.imprimirConferenciaRetirada !== true
+                }"
+                (click)="matrizOriginal.imprimirConferenciaRetirada = true"
+              >
+                Sim
+              </button>
+              <button
+                type="button"
+                class="btn btn-borda-laranja p-2"
+                [ngClass]="{
+                  'btn-comum-laranja':
+                    matrizOriginal.imprimirConferenciaRetirada === false,
+                  'btn-borda-laranja':
+                    matrizOriginal.imprimirConferenciaRetirada !== false
+                }"
+                (click)="matrizOriginal.imprimirConferenciaRetirada = false"
+              >
+                Não
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row g-3 h-100">
+        <div class="col-md-6 d-flex flex-column gap-2 h-100">
+          <h5>Imprimir Produtos Novos</h5>
+          <label class="radio-personalizado">
+            <input
+              type="radio"
+              id="cadastrarSim"
+              name="imprimirCadastrar"
+              [(ngModel)]="matrizOriginal.imprimirCadastrar"
+              [value]="0"
+            />
+            <span class="bolinha"></span>
+            <span>Sim</span>
+          </label>
+          <label class="radio-personalizado">
+            <input
+              type="radio"
+              id="cadastrarNao"
+              name="imprimirCadastrar"
+              [(ngModel)]="matrizOriginal.imprimirCadastrar"
+              [value]="1"
+            />
+            <span class="bolinha"></span>
+            <span>Não</span>
+          </label>
+          <label class="radio-personalizado">
+            <input
+              type="radio"
+              id="cadastrarPerguntar"
+              name="imprimirCadastrar"
+              [(ngModel)]="matrizOriginal.imprimirCadastrar"
+              [value]="2"
+            />
+            <span class="bolinha"></span>
+            <span>Personalizar</span>
+          </label>
+
+          @if (matrizOriginal.imprimirCadastrar === 2) {
+          <div class="d-flex flex-column espaco-impressoras p-2">
+            <h5>Personalizar Impressão por Funcionário (Produtos Novos)</h5>
+            <div class="lista-curta">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Funcionário</th>
+                    <th class="text-center">Sempre</th>
+                    <th class="text-center">Nunca</th>
+                    <th class="text-center">Perguntar</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (funcionario of matrizOriginal.funcionarios; track
+                  $index) {
+                  <tr>
+                    <td>{{ funcionario.nome }}</td>
+                    <td class="text-center">
+                      <label class="radio-tabela">
+                        <input
+                          type="radio"
+                          name="config_novo_{{ funcionario.id }}"
+                          [value]="'SEMPRE'"
+                          [checked]="
+                            verificaEscolhaCadastrar(funcionario.id) ===
+                            'SEMPRE'
+                          "
+                          (change)="
+                            atualizarEscolhaCadastrar(funcionario.id, 'SEMPRE')
+                          "
+                        />
+                        <span class="bolinha"></span>
+                      </label>
+                    </td>
+                    <td class="text-center">
+                      <label class="radio-tabela">
+                        <input
+                          type="radio"
+                          name="config_novo_{{ funcionario.id }}"
+                          [value]="'NUNCA'"
+                          [checked]="
+                            verificaEscolhaCadastrar(funcionario.id) === 'NUNCA'
+                          "
+                          (change)="
+                            atualizarEscolhaCadastrar(funcionario.id, 'NUNCA')
+                          "
+                        />
+                        <span class="bolinha"></span>
+                      </label>
+                    </td>
+                    <td class="text-center">
+                      <label class="radio-tabela">
+                        <input
+                          type="radio"
+                          name="config_novo_{{ funcionario.id }}"
+                          [value]="'PERGUNTAR'"
+                          [checked]="
+                            verificaEscolhaCadastrar(funcionario.id) ===
+                            'PERGUNTAR'
+                          "
+                          (change)="
+                            atualizarEscolhaCadastrar(
+                              funcionario.id,
+                              'PERGUNTAR'
+                            )
+                          "
+                        />
+                        <span class="bolinha"></span>
+                      </label>
+                    </td>
+                  </tr>
+
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+          }
+        </div>
+        <div class="col-md-6 d-flex flex-column gap-2 h-100">
+          <h5>Imprimir Produtos Deletados</h5>
+
+          <label class="radio-personalizado">
+            <input
+              type="radio"
+              id="deletarSim"
+              name="imprimirDeletar"
+              [(ngModel)]="matrizOriginal.imprimirDeletar"
+              [value]="0"
+            />
+            <span class="bolinha"></span>
+            <span>Sim</span>
+          </label>
+          <label class="radio-personalizado">
+            <input
+              type="radio"
+              id="deletarNao"
+              name="imprimirDeletar"
+              [(ngModel)]="matrizOriginal.imprimirDeletar"
+              [value]="1"
+            />
+            <span class="bolinha"></span>
+            <span>Não</span>
+          </label>
+          <label class="radio-personalizado">
+            <input
+              type="radio"
+              id="deletarPerguntar"
+              name="imprimirDeletar"
+              [(ngModel)]="matrizOriginal.imprimirDeletar"
+              [value]="2"
+            />
+            <span class="bolinha"></span>
+            <span>Personalizar</span>
+          </label>
+
+          @if (matrizOriginal.imprimirDeletar === 2) {
+          <div class="d-flex flex-column espaco-impressoras p-2">
+            <h5>Personalizar Impressão por Funcionário (Produtos Deletados)</h5>
+            <div class="lista-curta">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Funcionário</th>
+                    <th class="text-center">Sempre</th>
+                    <th class="text-center">Nunca</th>
+                    <th class="text-center">Perguntar</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (funcionario of matrizOriginal.funcionarios; track
+                  $index) {
+                  <tr>
+                    <td>{{ funcionario.nome }}</td>
+                    <td class="text-center">
+                      <label class="radio-tabela">
+                        <input
+                          type="radio"
+                          name="config_deletado_{{ funcionario.id }}"
+                          [value]="'SEMPRE'"
+                          [checked]="
+                            verificaEscolhaDeletar(funcionario.id) === 'SEMPRE'
+                          "
+                          (change)="
+                            atualizarEscolhaDeletar(funcionario.id, 'SEMPRE')
+                          "
+                        />
+                        <span class="bolinha"></span>
+                      </label>
+                    </td>
+                    <td class="text-center">
+                      <label class="radio-tabela">
+                        <input
+                          type="radio"
+                          name="config_deletado_{{ funcionario.id }}"
+                          [value]="'NUNCA'"
+                          [checked]="
+                            verificaEscolhaDeletar(funcionario.id) === 'NUNCA'
+                          "
+                          (change)="
+                            atualizarEscolhaDeletar(funcionario.id, 'NUNCA')
+                          "
+                        />
+                        <span class="bolinha"></span>
+                      </label>
+                    </td>
+                    <td class="text-center">
+                      <label class="radio-tabela">
+                        <input
+                          type="radio"
+                          name="config_deletado_{{ funcionario.id }}"
+                          [value]="'PERGUNTAR'"
+                          [checked]="
+                            verificaEscolhaDeletar(funcionario.id) ===
+                            'PERGUNTAR'
+                          "
+                          (change)="
+                            atualizarEscolhaDeletar(funcionario.id, 'PERGUNTAR')
+                          "
+                        />
+                        <span class="bolinha"></span>
+                      </label>
+                    </td>
+                  </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+          }
+        </div>
+        <div class="col-md-6">
+          <h5>Imprimir Nota Fiscal</h5>
+
+          <label class="radio-personalizado">
+            <input
+              type="radio"
+              id="notaSim"
+              name="imprimirNotaFiscal"
+              [(ngModel)]="matrizOriginal.imprimirNotaFiscal"
+              [value]="0"
+            />
+            <span class="bolinha"></span>
+            <span>Sim</span>
+          </label>
+          <label class="radio-personalizado">
+            <input
+              type="radio"
+              id="notaNao"
+              name="imprimirNotaFiscal"
+              [(ngModel)]="matrizOriginal.imprimirNotaFiscal"
+              [value]="1"
+            />
+            <span class="bolinha"></span>
+            <span>Não</span>
+          </label>
+          <label class="radio-personalizado">
+            <input
+              type="radio"
+              id="notaPerguntar"
+              name="imprimirNotaFiscal"
+              [(ngModel)]="matrizOriginal.imprimirNotaFiscal"
+              [value]="2"
+            />
+            <span class="bolinha"></span>
+            <span>Perguntar</span>
+          </label>
+        </div>
+      </div>
+      }
+      <div
+        class="d-flex flex-wrap justify-content-start align-items-center gap-5"
+      >
+        <div class="d-flex flex-column">
+          <label class="form-label">Defenir motivo deletar?</label>
+          <div class="btn-group largura">
+            <button
+              type="button"
+              class="btn btn-borda-laranja p-2"
+              [ngClass]="{
+                'btn-comum-laranja':
+                  matrizOriginal.mostarMotivoDeletarProduto === true,
+                'btn-borda-laranja':
+                  matrizOriginal.mostarMotivoDeletarProduto !== true
+              }"
+              (click)="matrizOriginal.mostarMotivoDeletarProduto = true"
+            >
+              Sim
+            </button>
+            <button
+              type="button"
+              class="btn btn-borda-laranja p-2"
+              [ngClass]="{
+                'btn-comum-laranja':
+                  matrizOriginal.mostarMotivoDeletarProduto === false,
+                'btn-borda-laranja':
+                  matrizOriginal.mostarMotivoDeletarProduto !== false
+              }"
+              (click)="matrizOriginal.mostarMotivoDeletarProduto = false"
+            >
+              Não
+            </button>
+          </div>
+        </div>
+        <div class="d-flex flex-column">
+          <label class="form-label">Defenir motivo deletar produto?</label>
+          <div class="btn-group largura">
+            <button
+              type="button"
+              class="btn btn-borda-laranja p-2"
+              [ngClass]="{
+                'btn-comum-laranja':
+                  matrizOriginal.mostarMotivoDeletarVenda === true,
+                'btn-borda-laranja':
+                  matrizOriginal.mostarMotivoDeletarVenda !== true
+              }"
+              (click)="matrizOriginal.mostarMotivoDeletarVenda = true"
+            >
+              Sim
+            </button>
+            <button
+              type="button"
+              class="btn btn-borda-laranja p-2"
+              [ngClass]="{
+                'btn-comum-laranja':
+                  matrizOriginal.mostarMotivoDeletarVenda === false,
+                'btn-borda-laranja':
+                  matrizOriginal.mostarMotivoDeletarVenda !== false
+              }"
+              (click)="matrizOriginal.mostarMotivoDeletarVenda = false"
+            >
+              Não
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex flex-column w-50">
+        <label for="tempo" class="form-label">Previsão De Tempo Retirada:</label>
+        <input
+          autocomplete="off"
+          #tempo="ngModel"
+          required
+          type="number"
+          inputmode="numeric"
+          min="0"
+          step="1"
+          onkeydown="return !['e', 'E', '-', '+' , ',' , '.'].includes(event.key)"
+          oninput="if (this.value.length > 10) this.value = this.value.slice(0, 10)"
+          class="form-control no-spin w-50"
+          name="tempo"
+          [(ngModel)]="matrizOriginal.tempoEstimadoRetidara"
+          [ngClass]="{ 'borda-vermelha': !tempo.valid && tempo.touched }"
+        />
+      </div>
+    </div>
+  </div>
+</form>
+
+<ng-template #modalEntregaConf let-modal>
+  <div class="modal-header cabecalhoModal">
+    <h4 class="modal-title">{{ tituloModal }}</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <app-entrega-conf #confeguracaoEntrega></app-entrega-conf>
+  </div>
+  <div
+    class="modal-footer d-flex justify-content-center align-items-center border-0"
+  >
+    <button
+      type="button"
+      class="btn-comum btn-comum-laranja"
+      [disabled]="!confeguracaoEntrega.isModificado()"
+      (click)="confeguracaoEntrega.salvar()"
+    >
+      Salvar
+    </button>
+  </div>
+</ng-template>
+<ng-template #modalListarImpressoras let-modal>
+  <div class="modal-header cabecalhoModal">
+    <h4 class="modal-title">{{ tituloModal }}</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <app-impressoras-matriz
+      #impressoraMatriz
+      [tipoImpressoa]="tipoImpressora"
+      [identificador]="identificador"
+      [impressora]="impressora"
+      (retornoImpressora)="retornoImpressora($event)"
+      (retornoIdentificador)="retornoIdentificador($event)"
+    ></app-impressoras-matriz>
+  </div>
+  <div
+    class="modal-footer d-flex justify-content-center align-items-center border-0"
+  >
+    <button
+      type="button"
+      class="btn-comum btn-comum-laranja"
+      (click)="impressoraMatriz.salvar()"
+    >
+      Salvar
+    </button>
+  </div>
+</ng-template>
+<ng-template #modalCancelar let-modal>
+  <div class="modal-body">
+    Você tem alterações não salvas. Deseja sair mesmo assim?
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-danger" (click)="modal.close('confirmado')">
+      Sair sem salvar
+    </button>
+    <button class="btn btn-secondary" (click)="modal.dismiss()">
+      Cancelar
+    </button>
+  </div>
+</ng-template>

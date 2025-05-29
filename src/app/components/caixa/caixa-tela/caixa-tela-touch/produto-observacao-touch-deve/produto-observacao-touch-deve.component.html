@@ -1,0 +1,73 @@
+<div>
+
+  <div class="form-group">
+    <label class="form-label">Sabores</label>
+    <div class="obs-container">
+      <div class="obs-scroll-2">
+        @for (obs of categoria.observacoesCategoria; track obs.id) {
+        <div class="d-flex align-items-center gap-2 mb-2">
+            @if (obs.valor != null || obs.valor > 0) {
+                <span class="flex-grow-1"
+                  >{{ obs.observacao }} - R$ {{ obs.valor || 0 }}</span
+                >
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-danger"
+                  (click)="removerObs(obs)"
+                >
+                  -
+                </button>
+                <span>{{ getQuantidade(obs) }}</span>
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-success"
+                  (click)="adicionarObs(obs)"
+                >
+                  +
+                </button>
+            }
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="form-label">Recomendações</label>
+    <div class="obs-container">
+      <div class="obs-scroll">
+        <ng-container>
+          @for (observacao of categoria.observacoesCategoria; track $index) {
+          <ng-container>
+            @if (observacao.valor == null || observacao.valor < 0) {
+            <input
+              autocomplete="off"
+              type="button"
+              name="obs_{{ observacao.observacao }}"
+              (click)="colar(observacao)"
+              [ngClass]="{
+                'btn btn-outline-secondary mx-1 mb-1': true,
+                ativo: isObservacaoSelecionada(observacao)
+              }"
+              value="{{ observacao.observacao }}"
+            />
+            }
+          </ng-container>
+          }
+        </ng-container>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="nome" class="form-label">Observação</label>
+    <input
+      autocomplete="off"
+      type="text"
+      placeholder="Obs"
+      [(ngModel)]="produtoVenda.observacaoProdutoVenda"
+      name="obs"
+      class="form-control"
+    />
+  </div>
+</div>

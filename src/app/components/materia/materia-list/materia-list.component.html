@@ -1,0 +1,205 @@
+<div
+  class="tela d-flex flex-column col-lg-12 w-100 p-2"
+  [ngClass]="{ tela_modoVincular: modoVincular }"
+>
+  <div class="d-flex align-items-center justify-content-between">
+    <div class="d-flex align-items-center">
+      @if (!modoVincular) {
+      <button type="button" class="botao_voltar me-2" routerLink="/home">
+        <i class="bi bi-arrow-left"></i>
+      </button>
+      }
+
+      <h2 class="titulo m-0">Matérias</h2>
+    </div>
+
+    <div class="d-flex justify-content-between my-2 gap-2">
+      <div>
+        @if (usuario && usuario.permissao && usuario.permissao.cadastrarMateria)
+        {
+        <button
+          type="button"
+          (click)="cadastrarMateria(modalMateria)"
+          class="btn-comum btn-comum-laranja"
+        >
+          Novo Matéria
+        </button>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="col-lg-12 d-flex align-items-center gap-3 pb-2 w-100 area-pesquisa"
+  >
+    <div class="d-flex flex-column w-100">
+      <label>Nome</label>
+      <div class="filtro-pesquisa">
+        <input
+          class="form-control"
+          type="text"
+          placeholder="nome"
+          [(ngModel)]="nome"
+          (keydown.enter)="filtrarMaterias()"
+        />
+        <button type="button" class="botao_cep" (click)="filtrarMaterias()">
+          <img src="../../../../assets/images/search.svg" class="busca" />
+        </button>
+      </div>
+    </div>
+    <div class="d-flex align-items-center w-25 tamanho-select">
+      @if (!modoVincular) {
+      <div class="d-flex flex-column w-100">
+        <label>Ativo</label>
+        <select
+          class="select-filtro p-1"
+          [(ngModel)]="ativo"
+          (change)="filtrarMaterias()"
+        >
+          <option value="">Todos</option>
+          <option value="true">Sim</option>
+          <option value="false">Não</option>
+        </select>
+      </div>
+      }
+    </div>
+  </div>
+  <div class="lista">
+    <table class="table ">
+      <thead>
+        <th class="text-center col-1">#</th>
+        <th class="text-start col-2">Nome</th>
+        <th class="text-center col-2">Ações</th>
+      </thead>
+      <tbody>
+        @for (materia of listaMateriasFiltrada; track $index) {
+        <tr>
+          <td class="text-center">{{ $index }}</td>
+          <td class="text-start">{{ materia.nome }}</td>
+          <td>
+            <div class="col-acoes">
+              @if (usuario && usuario.permissao &&
+              usuario.permissao.editarMateria) {
+              <button
+                type="button"
+                (click)="editarMateria(modalMateria, materia, $index)"
+                class="hover-btn"
+              >
+                <img
+                  src="../../../../assets/images/botao_editar.svg"
+                  alt="Editar"
+                />
+                <span class="hover-text">Editar</span>
+              </button>
+              } @if (usuario && usuario.permissao &&
+              usuario.permissao.deletarMateria) {
+              <button
+                type="button"
+                (click)="deletarMateria(modalExcluirMateria, materia, $index)"
+                class="hover-btn"
+              >
+                <img
+                  src="../../../../assets/images/botao_deletar.svg"
+                  alt="Deletar"
+                />
+                <span class="hover-text">Deletar</span>
+              </button>
+              } @if (usuario && usuario.permissao &&
+              usuario.permissao.editarMateria && !modoVincular) {
+              <button
+                type="button"
+                (click)="ativarOuDesativarMateria(materia)"
+                class="hover-btn"
+              >
+                @if (materia.ativo == true) {
+                <img
+                  src="../../../../assets/images/pause.svg"
+                  alt="Desativar"
+                  class="icon-tamanho"
+                />
+                <span class="hover-text">Desativar</span>
+                } @if (materia.ativo == false) {
+                <img
+                  src="../../../../assets/images/play.svg"
+                  alt="Desativar"
+                  class="icon-tamanho"
+                />
+                <span class="hover-text">Ativar</span>
+                }
+              </button>
+              } @if (modoVincular) {
+              <button
+                type="button"
+                (click)="vincular(materia)"
+                class="hover-btn"
+              >
+                <img
+                  src="../../../../assets/images/link-vincular.svg"
+                  alt="Vincular"
+                />
+                <span class="hover-text">Vincular</span>
+              </button>
+              } @else { &nbsp; }
+            </div>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<ng-template #modalMateria let-modal>
+  <div class="modal-header modal-style">
+    <h4 class="modal-title">{{ tituloModal }}</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body modal-style">
+    <app-materia-detalhes
+      #materiaDetalhes
+      [materia]="materia"
+      (retorno)="atualizarListaMateria($event)"
+    ></app-materia-detalhes>
+  </div>
+  <div
+    class="modal-footer d-flex justify-content-center align-items-center border-0"
+  >
+    <button
+      type="button"
+      class="btn-comum btn-comum-laranja"
+      (click)="materiaDetalhes.salvar()"
+    >
+      Salvar
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #modalExcluirMateria let-modal>
+  <div class="modal-header modal-style">
+    <h4 class="modal-title">{{ tituloModal }}</h4>
+  </div>
+  <div class="modal-body modal-style">
+    <h5>Tem certeza que deseja deletar?</h5>
+  </div>
+  <div class="modal-footer modal-style justify-content-center">
+    <button
+      type="button"
+      class="btn-comum btn-comum-vermelho"
+      (click)="confirmarExclusaoMateria(materia)"
+    >
+      Deletar
+    </button>
+    <button
+      type="button"
+      class="btn-comum btn-comum-cinza"
+      (click)="modal.close('Close click')"
+    >
+      Fechar
+    </button>
+  </div>
+</ng-template>

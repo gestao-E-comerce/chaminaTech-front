@@ -1,0 +1,156 @@
+<div class="d-flex flex-column gap-3">
+  <div class="col-6 d-flex flex-column">
+    <label for="nome" class="form-label">Nome</label>
+    <input
+      autocomplete="off"
+      type="text"
+      class="form-control"
+      name="nome"
+      id="nome"
+      [(ngModel)]="categoria.nome"
+      required
+      #nome="ngModel"
+      [ngClass]="{ 'borda-vermelha': !nome.valid && nome.touched }"
+    />
+  </div>
+  <div class="d-flex align-items-center w-100 gap-2">
+    <div class="d-flex flex-column w-100">
+      <label class="form-label">Obrigar seleção de observações?</label>
+      <div class="btn-group w-100">
+        <button
+          type="button"
+          class="btn btn-borda-laranja p-2"
+          [ngClass]="{
+            'btn-comum-laranja': categoria.obsObrigatotio === true,
+            'btn-borda-laranja': categoria.obsObrigatotio !== true
+          }"
+          (click)="categoria.obsObrigatotio = true"
+        >
+          Sim
+        </button>
+        <button
+          type="button"
+          class="btn btn-borda-laranja p-2"
+          [ngClass]="{
+            'btn-comum-laranja': categoria.obsObrigatotio === false,
+            'btn-borda-laranja': categoria.obsObrigatotio !== false
+          }"
+          (click)="categoria.obsObrigatotio = false"
+        >
+          Não
+        </button>
+      </div>
+    </div>
+    <div class="d-flex flex-column w-100">
+      <label for="valor" class="form-label">Limite máximo de observações adicionais</label>
+      <input
+        id="valor"
+        autocomplete="off"
+        type="number"
+        inputmode="numeric"
+        min="0"
+        step="1"
+        oninput="if (this.value.length > 10) this.value = this.value.slice(0, 10)"
+        onkeydown="return !['e', 'E', '-', '+' , ',' , '.'].includes(event.key)"
+        class="form-control"
+        name="valor"
+        [(ngModel)]="categoria.maxObs"
+      />
+    </div>
+  </div>
+  <div class="col-12 d-flex flex-column w-100 espaco-impressoras p-2">
+    <div class="d-flex align-items-center justify-content-between w-100 mb-2">
+      <label>Lista de Observações:</label>
+      <button
+        type="button"
+        class="btn-comum btn-comum-laranja"
+        (click)="adicionarObservacao(modalListarObservacoes)"
+      >
+        Adicionar Observação
+      </button>
+    </div>
+    <div class="lista-curta">
+      <table class="table">
+        <thead>
+          <th class="text-start col-1">Nome</th>
+          <th class="text-center col-1">Valor</th>
+          <th class="text-center col-1">Ações</th>
+        </thead>
+        <tbody>
+          @for (observacao of categoria.observacoesCategoria; track $index) {
+          @if (observacao.ativo) {
+          <tr>
+            <td class="text-start">
+              {{ observacao.observacao }}
+            </td>
+            <td class="text-center">
+              @if (observacao.valor) {
+              {{ observacao.valor }}
+              }
+            </td>
+            <td>
+              <div class="col-acoes">
+                <button
+                  (click)="
+                    editarObservacao(modalListarObservacoes, observacao, $index)
+                  "
+                  class="hover-btn"
+                  name="Editar{{ observacao.id }}"
+                >
+                  <img
+                    src="../../../../../assets/images/botao_editar.svg"
+                    alt="Editar"
+                  />
+                  <span class="hover-text">Editar</span>
+                </button>
+                <button
+                  type="button"
+                  (click)="deletarObservacao($index)"
+                  class="hover-btn"
+                  name="Deletar{{ observacao.id }}"
+                >
+                  <img
+                    src="../../../../../assets/images/botao_deletar.svg"
+                    alt="Deletar"
+                  />
+                  <span class="hover-text">Deletar</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+          } }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<ng-template #modalListarObservacoes let-modal>
+  <div class="modal-header cabecalhoModal">
+    <h4 class="modal-title">{{ tituloModal }}</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <app-observacao-detalhes
+      #observacaoDetalhes
+      [observacoes]="observacoes"
+      (retorno)="atualizarListaObservacoes($event)"
+    ></app-observacao-detalhes>
+  </div>
+  <div
+    class="modal-footer d-flex justify-content-center align-items-center border-0"
+  >
+    <button
+      type="button"
+      class="btn-comum btn-comum-laranja"
+      (click)="observacaoDetalhes.salvar()"
+    >
+      Adicionar
+    </button>
+  </div>
+</ng-template>

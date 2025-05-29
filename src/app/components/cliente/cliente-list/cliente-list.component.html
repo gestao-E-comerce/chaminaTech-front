@@ -1,0 +1,271 @@
+<div
+  class="tela d-flex flex-column col-lg-12 w-100 p-2"
+  [ngClass]="{ tela_modoVincular: modoVincular }"
+>
+  <div class="d-flex align-items-center justify-content-between">
+    <div class="d-flex align-items-center">
+      @if (!modoVincular) {
+      <button type="button" class="botao_voltar me-2" routerLink="/home">
+        <i class="bi bi-arrow-left"></i>
+      </button>
+      }
+
+      <h2 class="titulo m-0">Clientes</h2>
+    </div>
+
+    <div class="d-flex justify-content-center my-2">
+      @if (usuario && usuario.permissao && usuario.permissao.cadastrarCliente) {
+      <button
+        type="button"
+        (click)="cadastrarCliente(modalCliente)"
+        class="btn-comum btn-comum-laranja"
+      >
+        Novo Cliente
+      </button>
+      }
+    </div>
+  </div>
+
+  <div
+    class="col-lg-12 d-flex align-items-center gap-3 pb-2 w-100 area-pesquisa"
+  >
+    <div class="d-flex flex-column w-100">
+      <label>Nome</label>
+      <div class="filtro-pesquisa">
+        <input
+          autocomplete="off"
+          type="text"
+          placeholder="{{ filtroTipo }}"
+          [(ngModel)]="termoPesquisa"
+          [attr.inputmode]="getInputMode()"
+          [mask]="getInputMask()"
+          (keydown.enter)="realizarPesquisa(termoPesquisa)"
+          class="form-control"
+        />
+        <button
+          type="button"
+          class="botao_cep"
+          (click)="realizarPesquisa(termoPesquisa)"
+        >
+          <img src="../../../../assets/images/search.svg" class="busca" />
+        </button>
+      </div>
+    </div>
+
+    <div class="d-flex align-items-center w-25 tamanho-select-cliente">
+      <div class="d-flex flex-column w-100">
+        <label>Pesquisar por :</label>
+        <select
+          class="select-filtro p-1 w-100"
+          name="filtro"
+          [(ngModel)]="filtroTipo"
+        >
+          <option value="nome">Nome</option>
+          <option value="cpf">CPF/CNPJ</option>
+          <option value="celular">Celular</option>
+          <option value="cep">CEP</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="lista">
+    <table class="table ">
+      <thead>
+        @if (screenWidth) {
+        <th class="text-center col-1">#</th>
+        }
+        <th class="text-start col-2">Nome</th>
+        @if (screenWidth) {
+        <th class="text-start col-2">CPF/CNPJ</th>
+        <th class="text-start col-2">Celular</th>
+        <th class="text-start col-3">Endereço</th>
+        } @if(modoVincular){
+        <th class="text-center col-3">Ações</th>
+        } @else {
+        <th class="text-center col-2">Ações</th>
+        }
+      </thead>
+      <tbody>
+        @for (cliente of listaClientesFiltrada; track $index) {
+        <tr>
+          @if (screenWidth) {
+          <td class="text-center">{{ $index }}</td>
+          }
+          <td class="text-start">{{ cliente.nome }}</td>
+          @if (screenWidth) {
+          <td class="text-start">
+            @if (cliente.cpf && cliente.cpf.length == 11) {
+            {{ cliente.cpf | mask : "000.000.000-00" }}
+            } @if (cliente.cpf && cliente.cpf.length == 14) {
+            {{ cliente.cpf | mask : "00.000.000/0000-00" }}
+            }
+          </td>
+          <td class="text-start">
+            {{ cliente.celular | mask : "(00) 0 0000-0000" }}
+          </td>
+          <td class="text-wrap">
+            @for (endereco of cliente.enderecos; track $index) {
+            <div>{{ endereco.rua }}, {{ endereco.numero }}</div>
+            }
+          </td>
+          }
+          <td>
+            <div class="col-acoes">
+              @if (usuario && usuario.permissao &&
+              usuario.permissao.editarCliente) {
+              <button
+                type="button"
+                (click)="editarCliente(modalCliente, cliente, $index)"
+                class="hover-btn"
+              >
+                <img
+                  src="../../../../assets/images/botao_editar.svg"
+                  alt="Editar"
+                />
+                <span class="hover-text">Editar</span>
+              </button>
+              } @if (usuario && usuario.permissao &&
+              usuario.permissao.deletarCliente) {
+              <button
+                type="button"
+                (click)="deletarCliente(modalExcluirCliente, cliente, $index)"
+                class="hover-btn"
+              >
+                <img
+                  src="../../../../assets/images/botao_deletar.svg"
+                  alt="Deletar"
+                />
+                <span class="hover-text">Deletar</span>
+              </button>
+              } @if (modoVincular) {
+              <button
+                type="button"
+                (click)="vincular(cliente)"
+                class="hover-btn"
+              >
+                <img
+                  src="../../../../assets/images/link-vincular.svg"
+                  alt="Vincular"
+                />
+                <span class="hover-text">Vincular</span>
+              </button>
+              } @if (!screenWidth) {
+              <button
+                type="button"
+                class="hover-btn"
+                (click)="abrirModalDetalhes(cliente, $index, modalDetalhes)"
+              >
+                <img
+                  src="../../../../assets/images/mais-detalhes.png"
+                  alt="Detalhes"
+                  class="detalhes"
+                />
+                <span class="hover-text">Detalhes</span>
+              </button>
+              }@else { &nbsp; }
+            </div>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<ng-template #modalCliente let-modal>
+  <div class="modal-header modal-style">
+    <h4 class="modal-title">{{ tituloModal }}</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body modal-style">
+    <app-cliente-detalhes
+      #clienteDetalhes
+      [modoRetirada]="modoRetirada"
+      [cliente]="cliente"
+      (retorno)="atualizarListaCliente($event)"
+    ></app-cliente-detalhes>
+  </div>
+  <div
+    class="modal-footer d-flex justify-content-center align-items-center border-0"
+  >
+    <button
+      type="button"
+      class="btn-comum btn-comum-laranja"
+      (click)="clienteDetalhes.salvar()"
+    >
+      Salvar
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #modalExcluirCliente let-modal>
+  <div class="modal-header modal-style">
+    <h4 class="modal-title">{{ tituloModal }}</h4>
+  </div>
+  <div class="modal-body modal-style">
+    <h5>Tem certeza que deseja deletar?</h5>
+  </div>
+  <div class="modal-footer modal-style justify-content-center">
+    <button
+      type="button"
+      class="btn-comum btn-comum-vermelho"
+      (click)="confirmarExclusaoCliente(cliente)"
+    >
+      Deletar
+    </button>
+    <button
+      type="button"
+      class="btn-comum btn-comum-cinza"
+      (click)="modal.close('Close click')"
+    >
+      Fechar
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #modalDetalhes let-modal>
+  <div class="modal-header modal-style">
+    <h4 class="modal-title">Linha {{ indice }}</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body modal-style">
+    <h5 class="mb-3">Detalhes do Cliente</h5>
+    <div class="d-flex flex-column gap-2">
+      <div><strong>Nome:</strong> {{ cliente.nome }}</div>
+
+      <div>
+        <strong>CPF/CNPJ:</strong> @if (cliente.cpf && cliente.cpf.length == 11)
+        {
+        {{ cliente.cpf | mask : "000.000.000-00" }}
+        } @if (cliente.cpf && cliente.cpf.length == 14) {
+        {{ cliente.cpf | mask : "00.000.000/0000-00" }}
+        }
+      </div>
+      <div>
+        <strong>Celular:</strong>
+        {{ cliente.celular | mask : "(00) 0 0000-0000" }}
+      </div>
+      <br />
+      <div><strong>Endereços:</strong></div>
+      @for (endereco of cliente.enderecos; track $index) {
+      <div><strong>Rua:</strong> {{ endereco.rua }}</div>
+      <div><strong>Bairro:</strong> {{ endereco.bairro }}</div>
+      <div><strong>Cidade:</strong> {{ endereco.cidade }}</div>
+      <div><strong>Estado:</strong> {{ endereco.estado }}</div>
+      <div><strong>CEP:</strong> {{ endereco.cep }}</div>
+      <br />
+      }
+    </div>
+  </div>
+</ng-template>

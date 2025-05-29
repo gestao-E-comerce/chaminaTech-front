@@ -1,0 +1,117 @@
+p {
+    color: var(--cor-white) !important;
+    font-weight: normal !important;
+}
+
+label,
+h3,
+h4 {
+    color: var(--cor-white);
+}
+
+.titulo-vertical {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    color: var(--cor-laranja);
+    font-size: var(--fs-h1);
+    font-weight: bold;
+    margin-top: 1rem;
+}
+
+.menu-container {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: 4vw;
+    background-color: var(--cor-cinza-escuro);
+    overflow: hidden;
+    transition: width 0.3s ease-in-out;
+    z-index: 1050;
+}
+
+.menu-container.expanded {
+    width: auto;
+}
+
+.abrir-menu {
+    background-color: var(--cor-laranja);
+    color:  var(--cor-white);
+    border: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+}
+
+.fechar-menu {
+    background: none;
+    color:  var(--cor-white);
+    border: none;
+    font-size: 1.4rem;
+    margin: 5px 10px;
+    align-self: flex-end;
+    cursor: pointer;
+
+    &:hover {
+        background-color: var(--cor-laranja);
+    }
+}
+
+.content-container {
+    margin-left: 4vw;
+    width: 96vw !important;
+}
+
+
+@media (max-width: 1024px) {
+    .menu-container {
+        width: 6vw;
+    }
+
+    .content-container {
+        margin-left: 6vw;
+        width: calc(100% - 6vw);
+    }
+
+    // .table {
+    //     table-layout: auto;
+    //     width: 100%;
+    //     min-width: unset;
+    // }
+
+    // .table th,
+    // .table td {
+    //     white-space: nowrap;
+    // }
+}
+
+@media (max-width: 768px) {
+    .menu-container {
+        width: 8vw;
+    }
+
+    .content-container {
+        margin-left: 8vw;
+        width: calc(100% - 8vw) !important;
+    }
+
+    // .table {
+    //     table-layout: auto;
+    //     width: 100%;
+    //     min-width: unset;
+    // }
+
+    // .table th,
+    // .table td {
+    //     white-space: nowrap;
+    // }
+}
+
+@media (max-width: 480px) {
+    .menu-container {
+        width: 15vw;
+    }
+    .content-container {
+        margin-left: 15vw;
+        width: 85vw !important;
+    }
+}

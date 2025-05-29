@@ -1,0 +1,103 @@
+<div class="d-flex flex-column h-100 col-12 gap-2">
+  <div class="d-flex align-items-center gap-3">
+    <h5 class="p-0 m-0">Calcular por:</h5>
+    <label class="radio-personalizado">
+      <input
+        type="radio"
+        id="kiloMetragem"
+        name="tipo"
+        [(ngModel)]="matriz.calcular"
+        [value]="0"
+      />
+      <span class="bolinha"></span>
+      <span>KiloMetragem</span>
+    </label>
+    <!-- <label class="radio-personalizado">
+      <input
+        type="radio"
+        id="bairro"
+        name="tipo"
+        [(ngModel)]="matriz.calcular"
+        [value]="1"
+      />
+      <span class="bolinha"></span>
+      <span>Bairro</span>
+    </label> -->
+  </div>
+
+  @if (matriz && matriz.calcular == 0) { @for (item of listaKm; track $index) {
+  <div class="d-flex flex-wrap align-items-center col-12 gap-5 p-3">
+    <div class="d-flex align-items-center gap-2">
+      <label>Até:</label>
+      <input
+        inputmode="numeric"
+        min="0"
+        step="1"
+        oninput="if (this.value.length > 10) this.value = this.value.slice(0, 10)"
+        onkeydown="return !['e', 'E', '-', '+' , ','].includes(event.key)"
+        type="number"
+        [(ngModel)]="item.km"
+        name="km{{ $index }}"
+        class="form-control w-75"
+        min="0"
+      />
+      <span> KM</span>
+    </div>
+    |
+    <div class="d-flex align-items-center gap-2">
+      <label>Taxa:</label>
+      <input
+        inputmode="numeric"
+        min="0"
+        step="1"
+        oninput="if (this.value.length > 10) this.value = this.value.slice(0, 10)"
+        onkeydown="return !['e', 'E', '-', '+' , ','].includes(event.key)"
+        type="number"
+        [(ngModel)]="item.valor"
+        name="valor{{ $index }}"
+        class="form-control w-75"
+        min="0"
+      />
+      <span>R$</span>
+    </div>
+    |
+    <div class="d-flex align-items-center gap-2">
+      <label>Previsão do tempo:</label>
+      <input
+        inputmode="numeric"
+        min="0"
+        step="1"
+        oninput="if (this.value.length > 10) this.value = this.value.slice(0, 10)"
+        onkeydown="return !['e', 'E', '-', '+' , ','].includes(event.key)"
+        type="number"
+        [(ngModel)]="item.tempo"
+        name="tempo{{ $index }}"
+        class="form-control w-25"
+        min="0"
+      />
+      <span>MIN</span>
+      <div class="d-flex align-items-center gap-2">
+        @if ($index === 0) {
+        <button
+          class="btn btn-success"
+          type="button"
+          name="mais{{ $index }}"
+          (click)="adicionarCampo()"
+        >
+          +
+        </button>
+        } @if ($index !== 0) {
+        <button
+          class="btn btn-danger"
+          type="button"
+          name="menos{{ $index }}"
+          (click)="removerCampo($index)"
+        >
+          −
+        </button>
+        }
+      </div>
+    </div>
+  </div>
+  } }
+</div>

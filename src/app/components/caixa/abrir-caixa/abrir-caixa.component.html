@@ -1,0 +1,44 @@
+<form #formulario="ngForm" (ngSubmit)="abrir(modalConfermacao)" class="mb-3">
+  <div class="d-flex justify-content-between">
+    <div class="mb-3">
+      <label for="valorAbertura" class="form-label">Saldo abertura</label>
+      <input 
+        autocomplete="off"
+        #valorAbertura
+        type="number"
+        class="form-control"
+        name="valorAbertura"
+        inputmode="numeric"
+        min="0"
+        step="0.01"
+        oninput="if (this.value.length > 10) this.value = this.value.slice(0, 10)"
+        onkeydown="return !['e', 'E', '-', '+' , ','].includes(event.key)"
+        [(ngModel)]="caixa.valorAbertura"
+      >
+    </div>
+  </div>
+  <div class="d-flex justify-content-center gap-3">
+    <button type="submit" class="btn-comum btn-comum-laranja">Salvar</button>
+    <button
+        id="zerarCupons"
+        type="button"
+        class="btn-comum btn-comum-laranja"
+        (click)="zerarCupons()"
+      >
+        Zerar Cupons
+      </button>
+  </div>
+</form>
+
+<ng-template #modalConfermacao let-modal>
+  <div class="modal-header modal-style p-3">
+    <h4 class="modal-title">{{ "Confirmação!"}}</h4>
+  </div>
+  <div class="modal-body modal-style p-3">
+    <h5>Caixa aberta com valor {{ caixa.valorAbertura }}?</h5>
+  </div>
+  <div class="modal-footer modal-style d-flex justify-content-center p-2 gap-3">
+    <button type="button" class="btn-comum btn-comum-laranja" (click)="confirmarAbrir()">Sim</button>
+    <button type="button" class="btn-comum btn-comum-vermelho" (click)="modal.close('Close click')">Não</button>
+  </div>
+</ng-template>

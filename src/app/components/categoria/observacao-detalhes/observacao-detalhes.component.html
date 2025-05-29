@@ -1,0 +1,272 @@
+<div class="d-flex flex-column gap-3">
+  <div class="d-flex align-items-center gap-3 w-100">
+    <div class="d-flex flex-column w-75">
+      <label for="observacao" class="form-label">Texto De Observação</label>
+      <input
+        autocomplete="off"
+        type="text"
+        class="form-control"
+        name="observacao"
+        id="observacao"
+        [(ngModel)]="observacoes.observacao"
+        required
+        #observacao="ngModel"
+        [ngClass]="{
+          'borda-vermelha': !observacao.valid && observacao.touched
+        }"
+      />
+    </div>
+    <div class="w-25">
+      <label for="valor" class="form-label">Valor</label>
+      <input
+        id="valor"
+        autocomplete="off"
+        type="number"
+        inputmode="numeric"
+        min="0"
+        step="1"
+        oninput="if (this.value.length > 10) this.value = this.value.slice(0, 10)"
+        onkeydown="return !['e', 'E', '-', '+' , ','].includes(event.key)"
+        class="form-control"
+        name="valor"
+        [(ngModel)]="observacoes.valor"
+        required
+        #valor="ngModel"
+        [ngClass]="{ 'borda-vermelha': !valor.valid && valor.touched }"
+      />
+    </div>
+  </div>
+  <div class="col-12 d-flex align-items-center w-100 gap-3">
+    <div>
+      <label class="form-label">Validar estoque antes da venda?</label>
+      <div class="btn-group w-100">
+        <button
+          type="button"
+          class="btn btn-borda-laranja p-2"
+          [ngClass]="{
+            'btn-comum-laranja': observacoes.validarExestencia === true,
+            'btn-borda-laranja': observacoes.validarExestencia !== true
+          }"
+          (click)="observacoes.validarExestencia = true"
+        >
+          Sim
+        </button>
+        <button
+          type="button"
+          class="btn btn-borda-laranja p-2"
+          [ngClass]="{
+            'btn-comum-laranja': observacoes.validarExestencia === false,
+            'btn-borda-laranja': observacoes.validarExestencia !== false
+          }"
+          (click)="observacoes.validarExestencia = false"
+        >
+          Não
+        </button>
+      </div>
+    </div>
+    @if (observacoes.validarExestencia == true) {
+    <div>
+      <label class="form-label">Vai adicionar ou tirar algo?</label>
+      <div class="btn-group w-100">
+        <button
+          type="button"
+          class="btn btn-borda-laranja p-2"
+          [ngClass]="{
+            'btn-comum-laranja': observacoes.extra === true,
+            'btn-borda-laranja': observacoes.extra !== true
+          }"
+          (click)="observacoes.extra = true"
+        >
+          Adicionar
+        </button>
+        <button
+          type="button"
+          class="btn btn-borda-laranja p-2"
+          [ngClass]="{
+            'btn-comum-laranja': observacoes.extra === false,
+            'btn-borda-laranja': observacoes.extra !== false
+          }"
+          (click)="observacoes.extra = false"
+        >
+          Tirar
+        </button>
+      </div>
+    </div>
+    }
+  </div>
+  @if (observacoes.extra != null && observacoes.validarExestencia == true) {
+  <div class="col-12 d-flex flex-column w-100 espaco-impressoras p-2">
+    <div class="d-flex align-items-center justify-content-between w-100 mb-2">
+      <label>Lista de Matérias:</label>
+      <button
+        type="button"
+        class="btn-comum btn-comum-laranja"
+        (click)="adicionarMateria(modalListarMaterias)"
+      >
+        Adicionar Matéria
+      </button>
+    </div>
+    <div class="lista-curta">
+      <table class="table ">
+        <thead>
+          <th class="text-start col-1">Nome</th>
+          <th class="text-center col-1">Quantidade gasto</th>
+          <th class="text-center col-1">Ações</th>
+        </thead>
+        <tbody>
+          @for (observacoesMateria of observacoes.observacaoMaterias; track
+          $index) { @if (observasaoMateria.ativo) {
+          <tr>
+            <td class="text-start">
+              {{ observacoesMateria.materia.nome }}
+            </td>
+            <td class="text-center">
+              @if (observacoesMateria.quantidadeGasto) {
+              {{ observacoesMateria.quantidadeGasto }}}
+            </td>
+            <td>
+              <div class="col-acoes">
+                <button
+                  (click)="
+                    editarMateria(
+                      modalListarMaterias,
+                      observacoesMateria,
+                      $index
+                    )
+                  "
+                  class="hover-btn"
+                  name="Editar{{ observacoesMateria.id }}"
+                >
+                  <img
+                    src="../../../../../assets/images/botao_editar.svg"
+                    alt="Editar"
+                  />
+                  <span class="hover-text">Editar</span>
+                </button>
+                <button
+                  type="button"
+                  (click)="deletarMateria($index)"
+                  class="hover-btn"
+                  name="Deletar{{ observacoesMateria.id }}"
+                >
+                  <img
+                    src="../../../../../assets/images/botao_deletar.svg"
+                    alt="Deletar"
+                  />
+                  <span class="hover-text">Deletar</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+          } }
+        </tbody>
+      </table>
+    </div>
+  </div>
+  } @if (observacoes.extra != null && observacoes.validarExestencia == true) {
+  <div class="col-12 d-flex flex-column w-100 espaco-impressoras p-2">
+    <div class="d-flex align-items-center justify-content-between w-100 mb-2">
+      <label>Lista de Produtos:</label>
+      <button
+        type="button"
+        class="btn-comum btn-comum-laranja"
+        (click)="adicionarProduto(modalListarProdutos)"
+      >
+        Adicionar Produto
+      </button>
+    </div>
+    <div class="lista-curta">
+      <table class="table ">
+        <thead>
+          <th class="text-start col-1">Nome</th>
+          <th class="text-center col-1">Quantidade gasto</th>
+          <th class="text-center col-1">Ações</th>
+        </thead>
+        <tbody>
+          @for (observacoesProduto of observacoes.observacaoProdutos; track
+          $index) { @if (observacoesProduto.ativo) {
+          <tr>
+            <td class="text-start">
+              {{ observacoesProduto.produto.nome }}
+            </td>
+            <td class="text-center">
+              @if (observacoesProduto.quantidadeGasto) {
+              {{ observacoesProduto.quantidadeGasto }}}
+            </td>
+            <td>
+              <div class="col-acoes">
+                <button
+                  (click)="
+                    editarProduto(
+                      modalListarProdutos,
+                      observacoesProduto,
+                      $index
+                    )
+                  "
+                  class="hover-btn"
+                  name="Editar{{ observacoesProduto.id }}"
+                >
+                  <img
+                    src="../../../../../assets/images/botao_editar.svg"
+                    alt="Editar"
+                  />
+                  <span class="hover-text">Editar</span>
+                </button>
+                <button
+                  type="button"
+                  (click)="deletarProduto($index)"
+                  class="hover-btn"
+                  name="Deletar{{ observacoesProduto.id }}"
+                >
+                  <img
+                    src="../../../../../assets/images/botao_deletar.svg"
+                    alt="Deletar"
+                  />
+                  <span class="hover-text">Deletar</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+          } }
+        </tbody>
+      </table>
+    </div>
+  </div>
+  }
+</div>
+
+<ng-template #modalListarMaterias let-modal>
+  <div class="modal-header cabecalhoModal">
+    <h4 class="modal-title">{{ tituloModal }}</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <app-selecionar-materias
+      [observacoes]="observacoes"
+      (retornoObservacaoMateria)="atualizarListaMaterias($event)"
+    ></app-selecionar-materias>
+  </div>
+</ng-template>
+
+<ng-template #modalListarProdutos let-modal>
+  <div class="modal-header cabecalhoModal">
+    <h4 class="modal-title">{{ tituloModal }}</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <app-selecionar-produtos
+      [observacoes]="observacoes"
+      (retornoObservacaoProduto)="atualizarListaProdutos($event)"
+    ></app-selecionar-produtos>
+  </div>
+</ng-template>

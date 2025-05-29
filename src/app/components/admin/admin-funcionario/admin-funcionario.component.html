@@ -1,0 +1,215 @@
+<div class="tela d-flex flex-column col-lg-12 w-100 p-2">
+  <div class="d-flex align-items-center justify-content-between">
+    <div class="d-flex align-items-center">
+      <button type="button" class="botao_voltar me-2" routerLink="/home">
+        <i class="bi bi-arrow-left"></i>
+      </button>
+
+      <h2 class="titulo m-0">Funcionários</h2>
+    </div>
+
+    <div class="d-flex justify-content-between my-2 gap-2 area-btns">
+      <div>
+        @if (usuario && usuario.permissao &&
+        usuario.permissao.cadastrarFuncionario) {
+        <button
+          type="button"
+          (click)="cadastrarAdminFuncionario(modalFuncionario)"
+          class="btn-comum btn-comum-laranja"
+        >
+          Novo Funcionário
+        </button>
+        }
+      </div>
+      <div>
+        @if (usuario && usuario.permissao && usuario.permissao.permissao) {
+        <button
+          type="button"
+          (click)="abrirModalPermissaosList(modalListaPermissaos)"
+          class="btn-comum btn-comum-laranja"
+        >
+          Permissaos
+        </button>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="col-lg-12 d-flex align-items-center gap-3 pb-2 w-100 area-pesquisa"
+  >
+    <div class="d-flex flex-column w-100">
+      <label for="nome">Nome</label>
+      <div class="filtro-pesquisa">
+        <input
+          id="nome"
+          class="form-control"
+          type="text"
+          placeholder="nome"
+          [(ngModel)]="nome"
+          (keydown.enter)="filtrarAdminFuncionarios()"
+        />
+        <button type="button" class="botao_cep" (click)="filtrarAdminFuncionarios()">
+          <img src="../../../../assets/images/search.svg" class="busca" />
+        </button>
+      </div>
+    </div>
+    <div class="d-flex align-items-center w-25 tamanho-select">
+      <div class="d-flex flex-column w-100">
+        <label>Ativo</label>
+        <select
+          class="select-filtro p-1"
+          [(ngModel)]="ativo"
+          (change)="filtrarAdminFuncionarios()"
+        >
+          <option value="">Todos</option>
+          <option value="true">Sim</option>
+          <option value="false">Não</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="lista">
+    <table class="table ">
+      <thead>
+        <th class="text-center col-1">#</th>
+        <th class="text-center col-1">Nome</th>
+        <th class="text-center col-1">Permissão</th>
+        <th class="text-center col-2">Ações</th>
+      </thead>
+      <tbody>
+        @for (funcionario of listaAdminFuncionariosFiltrada; track $index) {
+        <tr>
+          <td class="text-center">{{ $index }}</td>
+          <td class="text-center">{{ funcionario?.nome }}</td>
+          <td class="text-center">{{ funcionario?.permissao?.nome }}</td>
+          <td>
+            <div class="col-acoes">
+              @if (usuario && usuario.permissao &&
+              usuario.permissao.editarFuncionario) {
+              <button
+                type="button"
+                (click)="
+                  editarAdminFuncionario(modalFuncionario, funcionario, $index)
+                "
+                class="hover-btn"
+                name="Editar{{ $index }}"
+              >
+                <img
+                  src="../../../../assets/images/botao_editar.svg"
+                  alt="Editar"
+                />
+                <span class="hover-text">Editar</span>
+              </button>
+              } @if (usuario && usuario.permissao &&
+              usuario.permissao.deletarFuncionario) {
+              <button
+                type="button"
+                (click)="
+                  deletarAdminFuncionario(
+                    modalExcluirFuncionario,
+                    funcionario,
+                    $index
+                  )
+                "
+                class="hover-btn"
+                name="Deletar{{ $index }}"
+              >
+                <img
+                  src="../../../../assets/images/botao_deletar.svg"
+                  alt="Deletar"
+                />
+                <span class="hover-text">Deletar</span>
+              </button>
+              } @if (usuario && usuario.permissao &&
+              usuario.permissao.editarFuncionario) {
+              <button
+                type="button"
+                (click)="ativarOuDesativarAdminFuncionario(funcionario)"
+                class="hover-btn"
+                name="Desativar{{ $index }}"
+              >
+                @if (funcionario.ativo == true) {
+                <img
+                  src="../../../../assets/images/pause.svg"
+                  alt="Desativar"
+                  class="icon-tamanho"
+                />
+                <span class="hover-text">Desativar</span>
+                } @if (funcionario.ativo == false) {
+                <img
+                  src="../../../../assets/images/play.svg"
+                  alt="Desativar"
+                  class="icon-tamanho"
+                />
+                <span class="hover-text">Ativar</span>
+                }
+              </button>
+              } @else { &nbsp; }
+            </div>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<ng-template #modalFuncionario let-modal>
+  <div class="modal-header modal-style">
+    <h4 class="modal-title">{{ tituloModal }}</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body modal-style">
+    <app-admin-funcionario-detalhes
+      [adminFuncionario]="adminFuncionario"
+      (retorno)="atualizarListaAdminFuncionario($event)"
+    ></app-admin-funcionario-detalhes>
+  </div>
+</ng-template>
+
+<ng-template #modalExcluirFuncionario let-modal>
+  <div class="modal-header modal-style">
+    <h4 class="modal-title">{{ tituloModal }}</h4>
+  </div>
+  <div class="modal-body modal-style">
+    <h5>Tem certeza que deseja deletar?</h5>
+  </div>
+  <div class="modal-footer modal-style justify-content-center">
+    <button
+      type="button"
+      class="btn-comum btn-comum-vermelho"
+      (click)="confirmarExclusaoAdminFuncionario(adminFuncionario)"
+    >
+      Deletar
+    </button>
+    <button
+      type="button"
+      class="btn-comum btn-comum-cinza"
+      (click)="modal.close('Close click')"
+    >
+      Fechar
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #modalListaPermissaos let-modal>
+  <div class="modal-header modal-style">
+    <h4 class="modal-title">{{ tituloModal }}</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body modal-style">
+    <app-permissao-lista></app-permissao-lista>
+  </div>
+</ng-template>
