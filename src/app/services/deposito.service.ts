@@ -5,12 +5,13 @@ import { Deposito } from '../models/deposito';
 import { Mensagem } from '../models/mensagem';
 import { GlobalService } from './global.service';
 import { DepositoDescartar } from '../models/deposito-descartar';
+import { Config } from '../../config';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DepositoService {
-  API: string = 'http://localhost:8080/api/deposito';
+  private readonly API = `${Config.BACKEND_URL}/api/deposito`;
   http = inject(HttpClient);
   globalService = inject(GlobalService);
 

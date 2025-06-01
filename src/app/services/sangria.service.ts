@@ -3,12 +3,13 @@ import { inject, Injectable } from '@angular/core';
 import { Sangria } from '../models/sangria';
 import { Observable } from 'rxjs';
 import { Mensagem } from '../models/mensagem';
+import { Config } from '../../config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SangriaService {
-  API: string = 'http://localhost:8080/api/sangria';
+  API: string = `${Config.BACKEND_URL}/api/sangria`;
   http = inject(HttpClient);
 
   save(sangria: Sangria): Observable<Mensagem> {

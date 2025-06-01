@@ -4,12 +4,13 @@ import { Observable, switchMap } from 'rxjs';
 import { Mensagem } from '../models/mensagem';
 import { HttpClient } from '@angular/common/http';
 import { GlobalService } from './global.service';
+import { Config } from '../../config';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PermissaoService {
-  API: string = 'http://localhost:8080/api/permissao';
+  private readonly API = `${Config.BACKEND_URL}/api/permissao`;
   http = inject(HttpClient);
   globalService = inject(GlobalService);
 

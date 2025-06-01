@@ -5,13 +5,13 @@ import { Observable } from 'rxjs';
 import { Usuario } from '../models/usuario';
 import { Mensagem } from '../models/mensagem';
 import { JwtPayload, jwtDecode } from 'jwt-decode';
+import { Config } from '../../config';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LoginService {
-  API: string = 'http://localhost:8080/api/login';
-  API_MATRIZ: string = 'http://localhost:8080/api/matriz';
+  private readonly API = `${Config.BACKEND_URL}/api/login`;
   http = inject(HttpClient);
 
   logar(login: Login): Observable<Usuario> {

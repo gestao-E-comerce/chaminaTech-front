@@ -3,12 +3,13 @@ import { inject, Injectable } from '@angular/core';
 import { Suprimento } from '../models/suprimento';
 import { Mensagem } from '../models/mensagem';
 import { Observable } from 'rxjs';
+import { Config } from '../../config';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SuprimentoService {
-  API: string = 'http://localhost:8080/api/suprimento';
+  private readonly API = `${Config.BACKEND_URL}/api/suprimento`;
   http = inject(HttpClient);
 
   save(suprimento: Suprimento): Observable<Mensagem> {

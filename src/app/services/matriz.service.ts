@@ -4,12 +4,13 @@ import { Observable, switchMap } from 'rxjs';
 import { Mensagem } from '../models/mensagem';
 import { Matriz } from '../models/matriz';
 import { GlobalService } from './global.service';
+import { Config } from '../../config';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MatrizService {
-  API: string = 'http://localhost:8080/api/matriz';
+  private readonly API = `${Config.BACKEND_URL}/api/matriz`;
   http = inject(HttpClient);
   globalService = inject(GlobalService);
 

@@ -3,10 +3,11 @@ import { inject, Injectable } from '@angular/core';
 import { GlobalService } from './global.service';
 import { Observable, switchMap } from 'rxjs';
 import { Auditoria } from '../models/auditoria';
+import { Config } from '../../config';
 
 @Injectable({ providedIn: 'root' })
 export class AuditoriaService {
-  API: string = 'http://localhost:8080/api/auditoria';
+  private readonly API = `${Config.BACKEND_URL}/api/auditoria`;
   http = inject(HttpClient);
   globalService = inject(GlobalService);
 

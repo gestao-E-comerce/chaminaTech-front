@@ -4,12 +4,13 @@ import { Observable } from 'rxjs';
 import { Matriz } from '../models/matriz';
 import { Admin } from '../models/admin';
 import { Mensagem } from '../models/mensagem';
+import { Config } from '../../config';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AdminService {
-  API: string = 'http://localhost:8080/api/admin';
+  private readonly API = `${Config.BACKEND_URL}/api/admin`;
   http = inject(HttpClient);
 
   editar(admin: Admin): Observable<Mensagem> {

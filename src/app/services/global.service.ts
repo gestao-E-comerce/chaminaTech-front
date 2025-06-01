@@ -18,16 +18,17 @@ import { UsuarioService } from './usuario.service';
 import { Caixa } from '../models/caixa';
 import { Admin } from '../models/admin';
 import { AdminFuncionario } from '../models/admin-funcionario';
+import { Config } from '../../config';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GlobalService {
-  API_ADMIN_FUNCIONARIO: string = 'http://localhost:8080/api/adminFuncionario';
-  API_ADMIN: string = 'http://localhost:8080/api/admin';
-  API_FUNCIONARIO: string = 'http://localhost:8080/api/funcionario';
-  API_MATRIZ: string = 'http://localhost:8080/api/matriz';
-  API_CAIXA: string = 'http://localhost:8080/api/caixa';
+  private readonly API_ADMIN_FUNCIONARIO = `${Config.BACKEND_URL}/api/adminFuncionario`;
+  private readonly API_ADMIN = `${Config.BACKEND_URL}/api/admin`;
+  private readonly API_FUNCIONARIO = `${Config.BACKEND_URL}/api/funcionario`;
+  private readonly API_MATRIZ = `${Config.BACKEND_URL}/api/matriz`;
+  private readonly API_CAIXA = `${Config.BACKEND_URL}/api/caixa`;
   http = inject(HttpClient);
   injector = inject(Injector);
   adminService = inject(AdminService);

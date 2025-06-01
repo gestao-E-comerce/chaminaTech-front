@@ -4,12 +4,13 @@ import { Observable, switchMap } from 'rxjs';
 import { Categoria } from '../models/categoria';
 import { Mensagem } from '../models/mensagem';
 import { GlobalService } from './global.service';
+import { Config } from '../../config';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CategoriaService {
-  API: string = 'http://localhost:8080/api/categoria';
+  private readonly API = `${Config.BACKEND_URL}/api/categoria`;
   http = inject(HttpClient);
   globalService = inject(GlobalService);
 

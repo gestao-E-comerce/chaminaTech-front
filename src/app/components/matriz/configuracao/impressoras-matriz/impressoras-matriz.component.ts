@@ -1,6 +1,5 @@
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import { ImpressoraService } from '../../../../services/impressora.service';
 import { FormsModule } from '@angular/forms';
 import { Impressora } from '../../../../models/impressora';
 import { Identificador } from '../../../../models/identificador';
@@ -20,7 +19,6 @@ export class ImpressorasMatrizComponent {
   @Input() identificador: Identificador = new Identificador();
 
   toastr = inject(ToastrService);
-  impressoraService = inject(ImpressoraService);
 
   listaImpressoras: String[] = [];
   

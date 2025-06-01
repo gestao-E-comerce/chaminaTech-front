@@ -2,12 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Usuario } from '../models/usuario';
+import { Config } from '../../config';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UsuarioService {
-  API: string = 'http://localhost:8080/api/usuario';
+  private readonly API = `${Config.BACKEND_URL}/api/usuario`;
   http = inject(HttpClient);
 
   buscarUsuarioPorId(id: number): Observable<Usuario> {

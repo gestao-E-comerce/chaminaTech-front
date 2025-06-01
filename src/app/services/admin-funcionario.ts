@@ -4,12 +4,13 @@ import { GlobalService } from './global.service';
 import { AdminFuncionario } from '../models/admin-funcionario';
 import { Observable, switchMap } from 'rxjs';
 import { Mensagem } from '../models/mensagem';
+import { Config } from '../../config';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AdminFuncionarioService {
-  API: string = 'http://localhost:8080/api/adminFuncionario';
+  private readonly API = `${Config.BACKEND_URL}/api/adminFuncionario`;
   http = inject(HttpClient);
   globalService = inject(GlobalService);
 

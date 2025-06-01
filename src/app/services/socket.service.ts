@@ -2,6 +2,7 @@
 import { Injectable } from '@angular/core';
 import { Client, IMessage } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
+import { Config } from '../../config';
 
 @Injectable({ providedIn: 'root' })
 export class SocketService {
@@ -16,7 +17,7 @@ export class SocketService {
 
     this.stompClient = new Client({
       // ⚠️ aponta para o mesmo /ws (SockJS) que o Spring expõe
-      webSocketFactory: () => new SockJS('http://localhost:8080/ws'),
+      webSocketFactory: () => new SockJS(`${Config.BACKEND_URL}/api/ws`),
       // 📨 só aqui no CONNECT enviamos o JWT
       connectHeaders: { Authorization: `Bearer ${jwt}` },
       reconnectDelay: 5000,

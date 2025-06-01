@@ -7,12 +7,13 @@ import { Observable } from 'rxjs';
 import { Sangria } from '../models/sangria';
 import { Suprimento } from '../models/suprimento';
 import { Caixa } from '../models/caixa';
+import { Config } from '../../config';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ImpressaoService {
-  private API = 'http://localhost:8080/api/impressao';
+  private readonly API = `${Config.BACKEND_URL}/api/impressao`;
   http = inject(HttpClient);
 
   getNomeImpressora(): string | null {

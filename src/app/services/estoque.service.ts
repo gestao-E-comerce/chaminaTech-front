@@ -5,12 +5,13 @@ import { Estoque } from '../models/estoque';
 import { Mensagem } from '../models/mensagem';
 import { GlobalService } from './global.service';
 import { EstoqueDescartar } from '../models/estoque-descartar';
+import { Config } from '../../config';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EstoqueService {
-  API: string = 'http://localhost:8080/api/estoque';
+  private readonly API = `${Config.BACKEND_URL}/api/estoque`;
   http = inject(HttpClient);
   globalService = inject(GlobalService);
 
