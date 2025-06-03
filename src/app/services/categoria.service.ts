@@ -25,7 +25,6 @@ export class CategoriaService {
       return this.globalService.getMatrizAsync().pipe(
         switchMap((matriz) => {
           let params = new HttpParams().set('matrizId', matriz.id.toString());
-          params = params.set('deletado', false);
   
           if (ativo != null && ativo !== '') {
             params = params.set('ativo', ativo);

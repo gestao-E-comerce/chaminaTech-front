@@ -72,6 +72,7 @@ export class PermissaoDetalhesComponent {
       'cadastrarDeposito',
       'cadastrarMateria',
       'cadastrarFilho',
+      'cadastrarMatriz',
       'cadastrarVenda',
     ];
 
@@ -87,6 +88,7 @@ export class PermissaoDetalhesComponent {
     this.verificarFuncionario();
     this.verificarMateria();
     this.verificarFilho();
+    this.verificarMatriz();
     this.verificarProduto();
     this.verificarTodosAtivos();
   }
@@ -101,6 +103,7 @@ export class PermissaoDetalhesComponent {
       'editarDeposito',
       'editarMateria',
       'editarFilho',
+      'editarMatriz',
       'editarProdutoVenda',
     ];
 
@@ -116,6 +119,7 @@ export class PermissaoDetalhesComponent {
     this.verificarFuncionario();
     this.verificarMateria();
     this.verificarFilho();
+    this.verificarMatriz();
     this.verificarProduto();
     this.verificarTodosAtivos();
   }
@@ -329,6 +333,20 @@ export class PermissaoDetalhesComponent {
     }
     this.verificarTodosAtivos();
   }
+  toggleMatriz() {
+    const novoValor = !this.permissao.matriz;
+    const permissoesRelacionadas = [
+      'cadastrarMatriz',
+      'editarMatriz',
+    ];
+
+    if (novoValor == false) {
+      permissoesRelacionadas.forEach((permissao) => {
+        this.permissao[permissao as keyof Permissao] = novoValor;
+      });
+    }
+    this.verificarTodosAtivos();
+  }
   toggleProduto() {
     const novoValor = !this.permissao.produto;
     const permissoesRelacionadas = [
@@ -526,6 +544,20 @@ export class PermissaoDetalhesComponent {
     }
     this.verificarTodosAtivos();
   }
+  verificarMatriz() {
+    const permissoesMatriz = ['cadastrarMatriz', 'editarMatriz'];
+
+    const matrizAtivo = permissoesMatriz.some(
+      (permissao) => this.permissao[permissao as keyof Permissao]
+    );
+
+    if (matrizAtivo) {
+      this.permissao.matriz = true;
+    } else {
+      this.permissao.matriz = false;
+    }
+    this.verificarTodosAtivos();
+  }
   verificarProduto() {
     const permissoesProduto = [
       'cadastrarProduto',
@@ -569,6 +601,7 @@ export class PermissaoDetalhesComponent {
       'cadastrarDeposito',
       'cadastrarMateria',
       'cadastrarFilho',
+      'cadastrarMatriz',
     ];
 
     const cadastrarDesmarcado = permissoesCadastrar.some(
@@ -591,6 +624,7 @@ export class PermissaoDetalhesComponent {
       'editarDeposito',
       'editarMateria',
       'editarFilho',
+      'editarMatriz',
       'editarProdutoVenda',
     ];
 

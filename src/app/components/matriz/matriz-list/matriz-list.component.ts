@@ -11,7 +11,6 @@ import { ToastrService } from 'ngx-toastr';
 import { GlobalService } from '../../../services/global.service';
 import { take } from 'rxjs';
 import { MatrizService } from '../../../services/matriz.service';
-import { Admin } from '../../../models/admin';
 import { PermissaoListaComponent } from '../../permissao/permissao-lista/permissao-lista.component';
 
 @Component({
@@ -43,7 +42,6 @@ export class MatrizListComponent implements OnInit {
   tituloModal!: string;
   ativo?: string = '';
   nome?: string = '';
-  deletado?: string = '';
 
   ngOnInit() {
     this.filtrarMatrizes();
@@ -61,7 +59,7 @@ export class MatrizListComponent implements OnInit {
   filtrarMatrizes() {
     this.nome = this.nome?.toLocaleUpperCase();
     this.adminService
-      .listarMatrizes(this.deletado, this.nome, this.ativo)
+      .listarMatrizes(this.nome, this.ativo)
       .subscribe({
         next: (lista) => {
           this.listaMatrizesOrginal = lista;

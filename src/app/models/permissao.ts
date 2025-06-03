@@ -77,9 +77,13 @@ export class Permissao {
   deletarMateria: boolean = false;
 
   filho: boolean = false;
-  cadastrarFilho: boolean = false;
+  cadastrarFilh: boolean = false;
   editarFilho: boolean = false;
   deletarFilho: boolean = false;
+
+  matriz: boolean = false;
+  cadastrarMatriz: boolean = false;
+  editarMatriz: boolean = false;
 
   produto: boolean = false;
   cadastrarProduto: boolean = false;

@@ -21,7 +21,6 @@ export class MateriaService {
     return this.globalService.getMatrizAsync().pipe(
       switchMap((matriz) => {
         let params = new HttpParams().set('matrizId', matriz.id.toString());
-        params = params.set('deletado', false);
         if (termoPesquisa != null && termoPesquisa !== '') {
           params = params.set('termoPesquisa', termoPesquisa);
         }

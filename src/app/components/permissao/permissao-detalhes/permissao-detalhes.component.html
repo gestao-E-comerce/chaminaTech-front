@@ -1002,9 +1002,7 @@
           </td>
         </tr>
 
-        @if (matriz && matriz.permissao && matriz.permissao.filho ||
-        usuario.role === 'ADMIN') {
-        <tr>
+        <!-- <tr>
           <td class="text-start">FILHO</td>
           <td class="text-start">Permite acessar área filho</td>
           <td class="text-center">
@@ -1066,6 +1064,58 @@
                 name="filho-deletar"
                 [(ngModel)]="permissao.deletarFilho"
                 (ngModelChange)="verificarFilho()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr> -->
+        @if (matriz && matriz.permissao && matriz.permissao.filho ||
+        usuario.role === 'ADMIN') {
+        <tr>
+          <td class="text-start">MATRIZ</td>
+          <td class="text-start">Permite acessar área matriz</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="matriz"
+                [(ngModel)]="permissao.matriz"
+                (click)="toggleMatriz()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">CADASTRAR MATRIZ</td>
+          <td class="text-start">Permite cadastrar matriz</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="matriz-cadastrar"
+                [(ngModel)]="permissao.cadastrarMatriz"
+                (ngModelChange)="verificarMatriz()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">EDITAR MATRIZ</td>
+          <td class="text-start">Permite editar matriz</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="matriz-editar"
+                [(ngModel)]="permissao.editarMatriz"
+                (ngModelChange)="verificarMatriz()"
               />
               <span class="slider"></span>
             </label>

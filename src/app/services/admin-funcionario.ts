@@ -21,7 +21,6 @@ export class AdminFuncionarioService {
     return this.globalService.getAdminAsync().pipe(
       switchMap((admin) => {
         let params = new HttpParams().set('adminId', admin.id.toString());
-        params = params.set('deletado', false);
         if (termoPesquisa != null && termoPesquisa !== '') {
           params = params.set('termoPesquisa', termoPesquisa);
         }

@@ -18,14 +18,10 @@ export class AdminService {
   }
 
   listarMatrizes(
-    deletado?: string,
     termoPesquisa?: string,
     ativo?: string
   ): Observable<Matriz[]> {
     let params = new HttpParams();
-    if (deletado != null && deletado !== '') {
-      params = params.set('deletado', deletado);
-    }
     if (termoPesquisa != null && termoPesquisa !== '') {
       params = params.set('termoPesquisa', termoPesquisa);
     }
