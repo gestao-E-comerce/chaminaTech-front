@@ -9,6 +9,7 @@
     </div>
 
     <div class="d-flex justify-content-between my-2 gap-2 area-btns">
+      @if (usuario && usuario.permissao && usuario.permissao.cadastrarMatriz) {
       <div>
         <button
           type="button"
@@ -18,8 +19,8 @@
           Novo Matriz
         </button>
       </div>
+      } @if (usuario && usuario.permissao && usuario.permissao.permissao) {
       <div>
-        @if (usuario && usuario.permissao && usuario.permissao.permissao) {
         <button
           type="button"
           (click)="abrirModalPermissaosList(modalListaPermissaos)"
@@ -27,8 +28,8 @@
         >
           Permissaos
         </button>
-        }
       </div>
+      }
     </div>
   </div>
 
@@ -83,40 +84,44 @@
           <td class="text-center">{{ matriz?.permissao?.nome }}</td>
           <td>
             <div class="col-acoes">
-              <button
-                type="button"
-                (click)="editarMatriz(modalMatriz, matriz, $index)"
-                class="hover-btn"
-                name="Editar{{ $index }}"
-              >
-                <img
-                  src="../../../../assets/images/botao_editar.svg"
-                  alt="Editar"
-                />
-                <span class="hover-text">Editar</span>
-              </button>
-              <button
-                type="button"
-                (click)="ativarOuDesativarMatriz(matriz)"
-                class="hover-btn"
-                name="Desativar{{ $index }}"
-              >
-                @if (matriz.ativo == true) {
-                <img
-                  src="../../../../assets/images/pause.svg"
-                  alt="Desativar"
-                  class="icon-tamanho"
-                />
-                <span class="hover-text">Desativar</span>
-                } @if (matriz.ativo == false) {
-                <img
-                  src="../../../../assets/images/play.svg"
-                  alt="Desativar"
-                  class="icon-tamanho"
-                />
-                <span class="hover-text">Ativar</span>
-                }
-              </button>
+              @if (usuario && usuario.permissao && usuario.permissao.editarMatriz) {
+                <button
+                  type="button"
+                  (click)="editarMatriz(modalMatriz, matriz, $index)"
+                  class="hover-btn"
+                  name="Editar{{ $index }}"
+                >
+                  <img
+                    src="../../../../assets/images/botao_editar.svg"
+                    alt="Editar"
+                  />
+                  <span class="hover-text">Editar</span>
+                </button>
+              }
+              @if (usuario && usuario.permissao && usuario.permissao.editarMatriz) {
+                <button
+                  type="button"
+                  (click)="ativarOuDesativarMatriz(matriz)"
+                  class="hover-btn"
+                  name="Desativar{{ $index }}"
+                >
+                  @if (matriz.ativo == true) {
+                  <img
+                    src="../../../../assets/images/pause.svg"
+                    alt="Desativar"
+                    class="icon-tamanho"
+                  />
+                  <span class="hover-text">Desativar</span>
+                  } @if (matriz.ativo == false) {
+                  <img
+                    src="../../../../assets/images/play.svg"
+                    alt="Desativar"
+                    class="icon-tamanho"
+                  />
+                  <span class="hover-text">Ativar</span>
+                  }
+                </button>
+              }
             </div>
           </td>
         </tr>

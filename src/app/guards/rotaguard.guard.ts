@@ -37,16 +37,12 @@ export const rotaguardGuard: CanActivateFn = (route, state) => {
     
     conf: 'editarConfiguracoes',
     funcionarios: 'funcionario',
-    audit: 'auditoria'
+    audit: 'auditoria',
+    matriz: 'matrizPermissao'
   };
 
   if (state.url === '/home') {
     location.replaceState('/home');
-    return of(true);
-  }
-
-  if (state.url === '/matriz') {
-    location.replaceState('/matriz');
     return of(true);
   }
 

@@ -30,8 +30,9 @@
   <div
     class="col-11 d-flex justify-content-center flex-column align-items-center"
   >
-    @if (loginService.getUser().role != "ADMIN" && loginService.getUser().role != "ADMINFUNCIONARIO") { @if
-    (loginService.getUser().role == "FUNCIONARIO") {
+    @if (loginService.getUser().role != "ADMIN" && loginService.getUser().role
+    != "ADMINFUNCIONARIO") { @if (loginService.getUser().role == "FUNCIONARIO")
+    {
     <div class="d-flex justify-content-between col-12 gap-3 lista-venda">
       @if (usuario && usuario.permissao && usuario.permissao.caixa) {
       <div
@@ -156,6 +157,7 @@
     <div
       class="d-flex justify-content-evenly col-12 flex-wrap gap-4 justify-content-start lista-servicos mt-5"
     >
+      @if (usuario && usuario.permissao && usuario.permissao.matrizPermissao){
       <div
         class="col-3 p-5 bloco d-flex flex-column justify-content-center"
         (click)="acao = 'matriz'; verificarUsuarioAdmin()"
@@ -163,6 +165,7 @@
         <i class="bi bi-grid-3x3-gap"></i>
         <span>Matriz</span>
       </div>
+      } 
       @if (usuario && usuario.permissao && usuario.permissao.funcionario){
       <div
         class="col-3 p-5 bloco d-flex flex-column justify-content-center"
@@ -181,7 +184,7 @@
         <span class="Texto">Configuração</span>
       </div>
       }
-       <!-- @if (usuario && usuario.permissao && usuario.permissao.auditoria) {
+      <!-- @if (usuario && usuario.permissao && usuario.permissao.auditoria) {
       <div
         class="col-3 p-5 bloco d-flex flex-column justify-content-center"
         (click)="acao = 'audit'; verificarUsuario(modalAbrirCaixa)"

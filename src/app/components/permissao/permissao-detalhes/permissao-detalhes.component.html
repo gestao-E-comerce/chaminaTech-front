@@ -35,57 +35,8 @@
         <th class="text-center col-1">Ativar</th>
       </thead>
       <tbody>
-        <tr>
-          <td class="text-start">CADASTRAR</td>
-          <td class="text-start">Permite criar novos registros em geral</td>
-          <td class="text-center">
-            <label class="switch">
-              <input
-                type="checkbox"
-                class="switch-input"
-                name="cadastrar"
-                [(ngModel)]="permissao.cadastrar"
-                (click)="toggleCadastrar()"
-              />
-              <span class="slider"></span>
-            </label>
-          </td>
-        </tr>
 
-        <tr>
-          <td class="text-start">EDITAR</td>
-          <td class="text-start">Permite editar registros em geral</td>
-          <td class="text-center">
-            <label class="switch">
-              <input
-                type="checkbox"
-                class="switch-input"
-                name="editar"
-                [(ngModel)]="permissao.editar"
-                (click)="toggleEditar()"
-              />
-              <span class="slider"></span>
-            </label>
-          </td>
-        </tr>
-
-        <tr>
-          <td class="text-start">DELETAR</td>
-          <td class="text-start">Permite deletar registros em geral</td>
-          <td class="text-center">
-            <label class="switch">
-              <input
-                type="checkbox"
-                class="switch-input"
-                name="deletar"
-                [(ngModel)]="permissao.deletar"
-                (click)="toggleDeletar()"
-              />
-              <span class="slider"></span>
-            </label>
-          </td>
-        </tr>
-
+        @if (usuario && usuario.permissao && usuario.permissao.venda) {
         <tr>
           <td class="text-start">VENDA</td>
           <td class="text-start">Permite acessar área venda</td>
@@ -188,99 +139,6 @@
             </label>
           </td>
         </tr>
-
-        @if (matriz && matriz.usarImpressora == true || usuario.role ===
-        'ADMIN') {
-        <tr>
-          <td class="text-start">IMPRIMIR</td>
-          <td class="text-start">Permite ação de imprimir</td>
-          <td class="text-center">
-            <label class="switch">
-              <input
-                type="checkbox"
-                class="switch-input"
-                name="imprimir"
-                [(ngModel)]="permissao.imprimir"
-                (ngModelChange)="verificarVenda()"
-              />
-              <span class="slider"></span>
-            </label>
-          </td>
-        </tr>
-        } @if (matriz && matriz.permissao && matriz.permissao.vendaBalcao ||
-        usuario.role === 'ADMIN') {
-        <tr>
-          <td class="text-start">VENDA BALCAO</td>
-          <td class="text-start">Permite acesso ao balcao</td>
-          <td class="text-center">
-            <label class="switch">
-              <input
-                type="checkbox"
-                class="switch-input"
-                name="vendaBalcao"
-                [(ngModel)]="permissao.vendaBalcao"
-                (ngModelChange)="verificarVenda()"
-              />
-              <span class="slider"></span>
-            </label>
-          </td>
-        </tr>
-        } @if (matriz && matriz.permissao && matriz.permissao.vendaMesa ||
-        usuario.role === 'ADMIN') {
-        <tr>
-          <td class="text-start">VENDA MESA</td>
-          <td class="text-start">Permite acesso ao mesas</td>
-          <td class="text-center">
-            <label class="switch">
-              <input
-                type="checkbox"
-                class="switch-input"
-                name="vendaMesa"
-                [(ngModel)]="permissao.vendaMesa"
-                (ngModelChange)="verificarVenda()"
-              />
-              <span class="slider"></span>
-            </label>
-          </td>
-        </tr>
-        } @if (matriz && matriz.permissao && matriz.permissao.vendaRetirada ||
-        usuario.role === 'ADMIN') {
-        <tr>
-          <td class="text-start">VENDA RETIRADA</td>
-          <td class="text-start">Permite acesso ao retiradas</td>
-          <td class="text-center">
-            <label class="switch">
-              <input
-                type="checkbox"
-                class="switch-input"
-                name="vendaRetirada"
-                [(ngModel)]="permissao.vendaRetirada"
-                (ngModelChange)="verificarVenda()"
-              />
-              <span class="slider"></span>
-            </label>
-          </td>
-        </tr>
-        } @if (matriz && matriz.permissao && matriz.permissao.vendaEntrega ||
-        usuario.role === 'ADMIN') {
-        <tr>
-          <td class="text-start">VENDA ENTREGA</td>
-          <td class="text-start">Permite acesso ao entregas</td>
-          <td class="text-center">
-            <label class="switch">
-              <input
-                type="checkbox"
-                class="switch-input"
-                name="vendaEntrega"
-                [(ngModel)]="permissao.vendaEntrega"
-                (ngModelChange)="verificarVenda()"
-              />
-              <span class="slider"></span>
-            </label>
-          </td>
-        </tr>
-        }
-
         <tr>
           <td class="text-start">EDITAR ITEM DA VENDA</td>
           <td class="text-start">Permite editar item da venda</td>
@@ -314,7 +172,93 @@
             </label>
           </td>
         </tr>
-
+        }@if (usuario && usuario.permissao && usuario.permissao.imprimir) {
+        <tr>
+          <td class="text-start">IMPRIMIR</td>
+          <td class="text-start">Permite ação de imprimir</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="imprimir"
+                [(ngModel)]="permissao.imprimir"
+                (ngModelChange)="verificarVenda()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+        } @if (usuario && usuario.permissao && usuario.permissao.vendaBalcao) {
+        <tr>
+          <td class="text-start">VENDA BALCAO</td>
+          <td class="text-start">Permite acesso ao balcao</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="vendaBalcao"
+                [(ngModel)]="permissao.vendaBalcao"
+                (ngModelChange)="verificarVenda()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+        } @if (usuario && usuario.permissao && usuario.permissao.vendaMesa) {
+        <tr>
+          <td class="text-start">VENDA MESA</td>
+          <td class="text-start">Permite acesso ao mesas</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="vendaMesa"
+                [(ngModel)]="permissao.vendaMesa"
+                (ngModelChange)="verificarVenda()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+        } @if (usuario && usuario.permissao && usuario.permissao.vendaRetirada)
+        {
+        <tr>
+          <td class="text-start">VENDA RETIRADA</td>
+          <td class="text-start">Permite acesso ao retiradas</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="vendaRetirada"
+                [(ngModel)]="permissao.vendaRetirada"
+                (ngModelChange)="verificarVenda()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+        } @if (usuario && usuario.permissao && usuario.permissao.vendaEntrega) {
+        <tr>
+          <td class="text-start">VENDA ENTREGA</td>
+          <td class="text-start">Permite acesso ao entregas</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="vendaEntrega"
+                [(ngModel)]="permissao.vendaEntrega"
+                (ngModelChange)="verificarVenda()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+        } @if (usuario && usuario.permissao && usuario.permissao.caixa) {
         <tr>
           <td class="text-start">CAIXA</td>
           <td class="text-start">Permite acessar área caixa</td>
@@ -382,7 +326,6 @@
             </label>
           </td>
         </tr>
-
         <tr>
           <td class="text-start">CADASTRAR SANGRIA</td>
           <td class="text-start">Permite emissão de sangria</td>
@@ -469,7 +412,7 @@
         </tr>
 
         <tr>
-          <td class="text-start">DELETAR SANGRIA</td>
+          <td class="text-start">DELETAR SUPRIMENTO</td>
           <td class="text-start">Permite deletar suprimento</td>
           <td class="text-center">
             <label class="switch">
@@ -484,7 +427,7 @@
             </label>
           </td>
         </tr>
-
+        } @if (usuario && usuario.permissao && usuario.permissao.categoria) {
         <tr>
           <td class="text-start">CATEGORIA</td>
           <td class="text-start">Permite acessar área categoria</td>
@@ -552,7 +495,7 @@
             </label>
           </td>
         </tr>
-
+        } @if (usuario && usuario.permissao && usuario.permissao.cliente) {
         <tr>
           <td class="text-start">CLIENTE</td>
           <td class="text-start">Permite acessar área cliente</td>
@@ -620,9 +563,7 @@
             </label>
           </td>
         </tr>
-
-        @if (matriz && matriz.permissao && matriz.permissao.estoque ||
-        usuario.role === 'ADMIN') {
+        } @if (usuario && usuario.permissao && usuario.permissao.estoque) {
         <tr>
           <td class="text-start">ESTOQUE</td>
           <td class="text-start">Permite acessar área estoque</td>
@@ -673,8 +614,7 @@
             </label>
           </td>
         </tr>
-        } @if (matriz && matriz.permissao && matriz.permissao.deposito ||
-        usuario.role === 'ADMIN') {
+        } @if (usuario && usuario.permissao && usuario.permissao.deposito) {
         <tr>
           <td class="text-start">DEPOSITO</td>
           <td class="text-start">Permite acessar área deposito</td>
@@ -725,8 +665,7 @@
             </label>
           </td>
         </tr>
-        }
-
+        } @if (usuario && usuario.permissao && usuario.permissao.funcionario) {
         <tr>
           <td class="text-start">FUNCIONÁRIO</td>
           <td class="text-start">Permite acessar área funcionário</td>
@@ -794,7 +733,7 @@
             </label>
           </td>
         </tr>
-
+        } @if (usuario && usuario.permissao && usuario.permissao.permissao) {
         <tr>
           <td class="text-start">PERMISSAO</td>
           <td class="text-start">Permite acessar área permissao</td>
@@ -862,9 +801,7 @@
             </label>
           </td>
         </tr>
-
-        @if (matriz && matriz.permissao && matriz.permissao.materia ||
-        usuario.role === 'ADMIN') {
+        } @if (usuario && usuario.permissao && usuario.permissao.materia) {
         <tr>
           <td class="text-start">MATERIA</td>
           <td class="text-start">Permite acessar área materia</td>
@@ -932,8 +869,7 @@
             </label>
           </td>
         </tr>
-        }
-
+        } @if (usuario && usuario.permissao && usuario.permissao.produto) {
         <tr>
           <td class="text-start">PRODUTO</td>
           <td class="text-start">Permite acessar área produto</td>
@@ -1001,8 +937,8 @@
             </label>
           </td>
         </tr>
-
-        <!-- <tr>
+        } @if (usuario && usuario.permissao && usuario.permissao.filho) {
+        <tr>
           <td class="text-start">FILHO</td>
           <td class="text-start">Permite acessar área filho</td>
           <td class="text-center">
@@ -1068,9 +1004,9 @@
               <span class="slider"></span>
             </label>
           </td>
-        </tr> -->
-        @if (matriz && matriz.permissao && matriz.permissao.filho ||
-        usuario.role === 'ADMIN') {
+        </tr>
+        } @if (usuario && usuario.permissao &&
+        usuario.permissao.matrizPermissao) {
         <tr>
           <td class="text-start">MATRIZ</td>
           <td class="text-start">Permite acessar área matriz</td>
@@ -1080,7 +1016,7 @@
                 type="checkbox"
                 class="switch-input"
                 name="matriz"
-                [(ngModel)]="permissao.matriz"
+                [(ngModel)]="permissao.matrizPermissao"
                 (click)="toggleMatriz()"
               />
               <span class="slider"></span>
@@ -1121,8 +1057,8 @@
             </label>
           </td>
         </tr>
-        }
-
+        } @if (usuario && usuario.permissao &&
+        usuario.permissao.editarConfiguracoes) {
         <tr>
           <td class="text-start">CONFIGURAÇÃOES</td>
           <td class="text-start">Permite editar configuraçãoes</td>
@@ -1138,6 +1074,7 @@
             </label>
           </td>
         </tr>
+        } @if (usuario && usuario.permissao && usuario.permissao.auditoria) {
         <tr>
           <td class="text-start">AUDITORIA</td>
           <td class="text-start">Permite acessar área auditoria</td>
@@ -1153,6 +1090,7 @@
             </label>
           </td>
         </tr>
+        }
       </tbody>
     </table>
   </div>

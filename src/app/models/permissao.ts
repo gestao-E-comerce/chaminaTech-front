@@ -1,4 +1,3 @@
-import { Matriz } from "./matriz";
 import { Usuario } from "./usuario";
 
 export class Permissao {
@@ -7,12 +6,6 @@ export class Permissao {
   id!: number;
   nome!: string;
   usuario!: Usuario;
-
-  todos: boolean = false;
-
-  cadastrar: boolean = false;
-  editar: boolean = false;
-  deletar: boolean = false;
   
   venda: boolean = false;
   transferirVenda: boolean = false;
@@ -77,11 +70,11 @@ export class Permissao {
   deletarMateria: boolean = false;
 
   filho: boolean = false;
-  cadastrarFilh: boolean = false;
+  cadastrarFilho: boolean = false;
   editarFilho: boolean = false;
   deletarFilho: boolean = false;
 
-  matriz: boolean = false;
+  matrizPermissao: boolean = false;
   cadastrarMatriz: boolean = false;
   editarMatriz: boolean = false;
 

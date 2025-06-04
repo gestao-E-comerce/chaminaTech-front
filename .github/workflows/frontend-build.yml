@@ -64,7 +64,7 @@ jobs:
         run: |
           kubectl get ns $NAMESPACE || kubectl create ns $NAMESPACE
 
-      - name: Aplicar YAML e atualizar imagem
+      - name: Aplicar arquivos Kubernetes
         run: |
           kubectl apply -f K8s/ --namespace=$NAMESPACE
           kubectl set image deployment/frontend frontend=$IMAGE_NAME:${{ github.sha }} -n $NAMESPACE

@@ -67,9 +67,6 @@ export class AuditoriaComponent {
     let df: Date | undefined;
 
     try {
-      console.log('Valor bruto dataInicio:', this.dataInicio);
-      console.log('Valor bruto dataFim:', this.dataFim);
-
       if (this.dataInicio) {
         const dataConvertida = this.convertStringToDate(this.dataInicio);
         if (!dataConvertida) throw new Error('Data Início inválida');
@@ -89,9 +86,6 @@ export class AuditoriaComponent {
 
       const isoInicio = di ? this.formatToISO(di) : undefined;
       const isoFim = df ? this.formatToISO(df) : undefined;
-
-      console.log('✅ Data Início (ISO):', isoInicio);
-      console.log('✅ Data Fim (ISO):', isoFim);
 
       this.auditoriaService
         .listarAuditorias(
@@ -113,7 +107,6 @@ export class AuditoriaComponent {
           },
         });
     } catch (err: any) {
-      console.error('❌ Erro ao processar datas:', err.message);
       this.toastr.error(err.message || 'Erro desconhecido nas datas.');
     }
   }

@@ -1437,7 +1437,6 @@ export class CaixaTelaComponent implements OnInit {
     modalObservacao: any,
     modalObservacaoTouchDeve: any
   ) {
-    console.log('aqui');
     if (codigo > 0) {
       if (this.produtoCache && this.produtoCache.codigo === codigo) {
         this.tratarProdutoEncontrado(
@@ -2198,7 +2197,6 @@ export class CaixaTelaComponent implements OnInit {
     modalObservacaoTouchDeve: any,
     produtoVenda: ProdutoVenda
   ) {
-    console.log('abrindo modal de observação');
     this.produtoVendaSelecionada = Object.assign({}, produtoVenda);
     if (this.produtoVendaSelecionada.produto.categoria.obsObrigatotio == true) {
       setTimeout(() => {

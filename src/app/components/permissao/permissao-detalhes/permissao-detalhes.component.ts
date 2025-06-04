@@ -47,111 +47,157 @@ export class PermissaoDetalhesComponent {
   }
 
   desmarcarTodos() {
-    Object.keys(this.permissao).forEach((key) => {
-      if (typeof this.permissao[key] === 'boolean') {
-        this.permissao[key] = false;
+    // Definir as permissões visíveis que o usuário tem acesso
+    const permissoesVisiveis = [
+      'venda',
+      'transferirVenda',
+      'cadastrarVenda',
+      'deletarVenda',
+      'liberarVenda',
+      'historicoVenda',
+      'imprimir',
+      'vendaBalcao',
+      'vendaMesa',
+      'vendaEntrega',
+      'vendaRetirada',
+      'deletarProdutoVenda',
+      'editarProdutoVenda',
+      'caixa',
+      'editarCaixa',
+      'deletarCaixa',
+      'historicoCaixa',
+      'cadastrarSangria',
+      'editarSangria',
+      'deletarSangria',
+      'cadastrarSuprimento',
+      'editarSuprimento',
+      'deletarSuprimento',
+      'categoria',
+      'cadastrarCategoria',
+      'editarCategoria',
+      'deletarCategoria',
+      'cliente',
+      'cadastrarCliente',
+      'editarCliente',
+      'deletarCliente',
+      'estoque',
+      'cadastrarEstoque',
+      'editarEstoque',
+      'deposito',
+      'cadastrarDeposito',
+      'editarDeposito',
+      'funcionario',
+      'cadastrarFuncionario',
+      'editarFuncionario',
+      'deletarFuncionario',
+      'permissao',
+      'cadastrarPermissao',
+      'editarPermissao',
+      'deletarPermissao',
+      'materia',
+      'cadastrarMateria',
+      'editarMateria',
+      'deletarMateria',
+      'filho',
+      'cadastrarFilho',
+      'editarFilho',
+      'deletarFilho',
+      'matriz',
+      'cadastrarMatriz',
+      'editarMatriz',
+      'produto',
+      'cadastrarProduto',
+      'editarProduto',
+      'deletarProduto',
+      'editarConfiguracoes',
+      'auditoria',
+    ];
+
+    // Desmarcar as permissões visíveis
+    permissoesVisiveis.forEach((permissao) => {
+      if (this.usuario.permissao[permissao]) {
+        // Verifica se o usuário tem a permissão
+        this.permissao[permissao as keyof Permissao] = false; // Desmarcar
       }
     });
+    // Verificar se todas estão ativas
   }
   toggleTodos() {
-    const novoValor = !this.permissao.todos;
-    Object.keys(this.permissao).forEach((key) => {
-      if (typeof this.permissao[key as keyof Permissao] === 'boolean') {
-        this.permissao[key as keyof Permissao] = novoValor;
+    // Definindo as permissões visíveis
+    const permissoesVisiveis = [
+      'venda',
+      'transferirVenda',
+      'cadastrarVenda',
+      'deletarVenda',
+      'liberarVenda',
+      'historicoVenda',
+      'imprimir',
+      'vendaBalcao',
+      'vendaMesa',
+      'vendaEntrega',
+      'vendaRetirada',
+      'deletarProdutoVenda',
+      'editarProdutoVenda',
+      'caixa',
+      'editarCaixa',
+      'deletarCaixa',
+      'historicoCaixa',
+      'cadastrarSangria',
+      'editarSangria',
+      'deletarSangria',
+      'cadastrarSuprimento',
+      'editarSuprimento',
+      'deletarSuprimento',
+      'categoria',
+      'cadastrarCategoria',
+      'editarCategoria',
+      'deletarCategoria',
+      'cliente',
+      'cadastrarCliente',
+      'editarCliente',
+      'deletarCliente',
+      'estoque',
+      'cadastrarEstoque',
+      'editarEstoque',
+      'deposito',
+      'cadastrarDeposito',
+      'editarDeposito',
+      'funcionario',
+      'cadastrarFuncionario',
+      'editarFuncionario',
+      'deletarFuncionario',
+      'permissao',
+      'cadastrarPermissao',
+      'editarPermissao',
+      'deletarPermissao',
+      'materia',
+      'cadastrarMateria',
+      'editarMateria',
+      'deletarMateria',
+      'filho',
+      'cadastrarFilho',
+      'editarFilho',
+      'deletarFilho',
+      'matriz',
+      'cadastrarMatriz',
+      'editarMatriz',
+      'produto',
+      'cadastrarProduto',
+      'editarProduto',
+      'deletarProduto',
+      'editarConfiguracoes',
+      'auditoria',
+    ];
+
+    // Atualiza as permissões visíveis
+    permissoesVisiveis.forEach((permissao) => {
+      if (this.usuario.permissao[permissao]) {
+        // Verifica se o usuário tem a permissão
+        this.permissao[permissao as keyof Permissao] = true; // Marca/desmarca
       }
     });
   }
-  toggleCadastrar() {
-    const novoValor = !this.permissao.cadastrar;
-    const permissoesRelacionadas = [
-      'cadastrarProduto',
-      'cadastrarCategoria',
-      'cadastrarFuncionario',
-      'cadastrarCliente',
-      'cadastrarEstoque',
-      'cadastrarDeposito',
-      'cadastrarMateria',
-      'cadastrarFilho',
-      'cadastrarMatriz',
-      'cadastrarVenda',
-    ];
 
-    permissoesRelacionadas.forEach((permissao) => {
-      this.permissao[permissao as keyof Permissao] = novoValor;
-    });
-
-    this.verificarVenda();
-    this.verificarCategoria();
-    this.verificarCliente();
-    this.verificarEstoque();
-    this.verificarDeposito();
-    this.verificarFuncionario();
-    this.verificarMateria();
-    this.verificarFilho();
-    this.verificarMatriz();
-    this.verificarProduto();
-    this.verificarTodosAtivos();
-  }
-  toggleEditar() {
-    const novoValor = !this.permissao.editar;
-    const permissoesRelacionadas = [
-      'editarProduto',
-      'editarCategoria',
-      'editarFuncionario',
-      'editarCliente',
-      'editarEstoque',
-      'editarDeposito',
-      'editarMateria',
-      'editarFilho',
-      'editarMatriz',
-      'editarProdutoVenda',
-    ];
-
-    permissoesRelacionadas.forEach((permissao) => {
-      this.permissao[permissao as keyof Permissao] = novoValor;
-    });
-
-    this.verificarVenda();
-    this.verificarCategoria();
-    this.verificarCliente();
-    this.verificarEstoque();
-    this.verificarDeposito();
-    this.verificarFuncionario();
-    this.verificarMateria();
-    this.verificarFilho();
-    this.verificarMatriz();
-    this.verificarProduto();
-    this.verificarTodosAtivos();
-  }
-  toggleDeletar() {
-    const novoValor = !this.permissao.deletar;
-    const permissoesRelacionadas = [
-      'deletarProduto',
-      'deletarCategoria',
-      'deletarFuncionario',
-      'deletarCliente',
-      'deletarEstoque',
-      'deletarMateria',
-      'deletarFilho',
-      'deletarVenda',
-      'deletarProdutoVenda',
-    ];
-
-    permissoesRelacionadas.forEach((permissao) => {
-      this.permissao[permissao as keyof Permissao] = novoValor;
-    });
-
-    this.verificarVenda();
-    this.verificarCategoria();
-    this.verificarCliente();
-    this.verificarEstoque();
-    this.verificarDeposito();
-    this.verificarFuncionario();
-    this.verificarMateria();
-    this.verificarFilho();
-    this.verificarProduto();
-    this.verificarTodosAtivos();
-  }
   toggleVenda() {
     const novoValor = !this.permissao.venda;
     const permissoesRelacionadas = [
@@ -185,7 +231,6 @@ export class PermissaoDetalhesComponent {
       this.permissao.editarCaixa = false;
       this.permissao.deletarCaixa = false;
     }
-    this.verificarTodosAtivos();
   }
   toggleCaixa() {
     const novoValor = !this.permissao.caixa;
@@ -208,8 +253,6 @@ export class PermissaoDetalhesComponent {
     } else {
       this.permissao.venda = true;
     }
-
-    this.verificarTodosAtivos();
   }
   toggleCategoria() {
     const novoValor = !this.permissao.categoria;
@@ -224,7 +267,6 @@ export class PermissaoDetalhesComponent {
         this.permissao[permissao as keyof Permissao] = novoValor;
       });
     }
-    this.verificarTodosAtivos();
   }
   toggleCliente() {
     const novoValor = !this.permissao.cliente;
@@ -239,7 +281,6 @@ export class PermissaoDetalhesComponent {
         this.permissao[permissao as keyof Permissao] = novoValor;
       });
     }
-    this.verificarTodosAtivos();
   }
   toggleEstoque() {
     const novoValor = !this.permissao.estoque;
@@ -254,7 +295,6 @@ export class PermissaoDetalhesComponent {
         this.permissao[permissao as keyof Permissao] = novoValor;
       });
     }
-    this.verificarTodosAtivos();
   }
   toggleDeposito() {
     const novoValor = !this.permissao.deposito;
@@ -269,7 +309,6 @@ export class PermissaoDetalhesComponent {
         this.permissao[permissao as keyof Permissao] = novoValor;
       });
     }
-    this.verificarTodosAtivos();
   }
   toggleFuncionario() {
     const novoValor = !this.permissao.funcionario;
@@ -284,7 +323,6 @@ export class PermissaoDetalhesComponent {
         this.permissao[permissao as keyof Permissao] = novoValor;
       });
     }
-    this.verificarTodosAtivos();
   }
 
   togglePermissao() {
@@ -300,7 +338,6 @@ export class PermissaoDetalhesComponent {
         this.permissao[permissao as keyof Permissao] = novoValor;
       });
     }
-    this.verificarTodosAtivos();
   }
 
   toggleMateria() {
@@ -316,7 +353,6 @@ export class PermissaoDetalhesComponent {
         this.permissao[permissao as keyof Permissao] = novoValor;
       });
     }
-    this.verificarTodosAtivos();
   }
   toggleFilho() {
     const novoValor = !this.permissao.filho;
@@ -331,21 +367,16 @@ export class PermissaoDetalhesComponent {
         this.permissao[permissao as keyof Permissao] = novoValor;
       });
     }
-    this.verificarTodosAtivos();
   }
   toggleMatriz() {
-    const novoValor = !this.permissao.matriz;
-    const permissoesRelacionadas = [
-      'cadastrarMatriz',
-      'editarMatriz',
-    ];
+    const novoValor = !this.permissao.matrizPermissao;
+    const permissoesRelacionadas = ['cadastrarMatriz', 'editarMatriz'];
 
     if (novoValor == false) {
       permissoesRelacionadas.forEach((permissao) => {
         this.permissao[permissao as keyof Permissao] = novoValor;
       });
     }
-    this.verificarTodosAtivos();
   }
   toggleProduto() {
     const novoValor = !this.permissao.produto;
@@ -360,7 +391,6 @@ export class PermissaoDetalhesComponent {
         this.permissao[permissao as keyof Permissao] = novoValor;
       });
     }
-    this.verificarTodosAtivos();
   }
   transferirVenda() {
     const novoValor = !this.permissao.transferirVenda;
@@ -391,7 +421,6 @@ export class PermissaoDetalhesComponent {
     );
 
     this.permissao.venda = vendaAtivo;
-    this.verificarTodosAtivos();
   }
   verificarCaixa() {
     const permissoesCaixa = [
@@ -410,7 +439,6 @@ export class PermissaoDetalhesComponent {
     if (caixaAtivo) {
       this.permissao.venda = true;
     }
-    this.verificarTodosAtivos();
   }
   verificarCategoria() {
     const permissoesCategoria = [
@@ -428,7 +456,6 @@ export class PermissaoDetalhesComponent {
     } else {
       this.permissao.categoria = false;
     }
-    this.verificarTodosAtivos();
   }
   verificarCliente() {
     const permissoesCliente = [
@@ -446,7 +473,6 @@ export class PermissaoDetalhesComponent {
     } else {
       this.permissao.cliente = false;
     }
-    this.verificarTodosAtivos();
   }
   verificarEstoque() {
     const permissoesEstoque = ['cadastrarEstoque', 'editarEstoque'];
@@ -460,7 +486,6 @@ export class PermissaoDetalhesComponent {
     } else {
       this.permissao.estoque = false;
     }
-    this.verificarTodosAtivos();
   }
   verificarDeposito() {
     const permissoesDeposito = ['cadastrarDeposito', 'editarDeposito'];
@@ -474,7 +499,6 @@ export class PermissaoDetalhesComponent {
     } else {
       this.permissao.deposito = false;
     }
-    this.verificarTodosAtivos();
   }
   verificarFuncionario() {
     const permissoesFuncionario = [
@@ -492,7 +516,6 @@ export class PermissaoDetalhesComponent {
     } else {
       this.permissao.funcionario = false;
     }
-    this.verificarTodosAtivos();
   }
   verificarPermissao() {
     const permissoesPermissao = [
@@ -510,7 +533,6 @@ export class PermissaoDetalhesComponent {
     } else {
       this.permissao.permissao = false;
     }
-    this.verificarTodosAtivos();
   }
   verificarMateria() {
     const permissoesMateria = [
@@ -528,7 +550,6 @@ export class PermissaoDetalhesComponent {
     } else {
       this.permissao.materia = false;
     }
-    this.verificarTodosAtivos();
   }
   verificarFilho() {
     const permissoesFilho = ['cadastrarFilho', 'editarFilho', 'deletarFilho'];
@@ -542,7 +563,6 @@ export class PermissaoDetalhesComponent {
     } else {
       this.permissao.filho = false;
     }
-    this.verificarTodosAtivos();
   }
   verificarMatriz() {
     const permissoesMatriz = ['cadastrarMatriz', 'editarMatriz'];
@@ -552,11 +572,10 @@ export class PermissaoDetalhesComponent {
     );
 
     if (matrizAtivo) {
-      this.permissao.matriz = true;
+      this.permissao.matrizPermissao = true;
     } else {
-      this.permissao.matriz = false;
+      this.permissao.matrizPermissao = false;
     }
-    this.verificarTodosAtivos();
   }
   verificarProduto() {
     const permissoesProduto = [
@@ -574,93 +593,8 @@ export class PermissaoDetalhesComponent {
     } else {
       this.permissao.produto = false;
     }
-    this.verificarTodosAtivos();
   }
-  verificarTodosAtivos() {
-    const todasAtivas = Object.keys(this.permissao).every(
-      (key) =>
-        key === 'todos' ||
-        typeof this.permissao[key] !== 'boolean' ||
-        this.permissao[key] === true
-    );
 
-    this.permissao.todos = todasAtivas ? true : false;
-
-    this.verificarCadastrar();
-    this.verificarEditar();
-    this.verificarDeletar();
-  }
-  verificarCadastrar() {
-    const permissoesCadastrar = [
-      'cadastrarVenda',
-      'cadastrarProduto',
-      'cadastrarCategoria',
-      'cadastrarFuncionario',
-      'cadastrarCliente',
-      'cadastrarEstoque',
-      'cadastrarDeposito',
-      'cadastrarMateria',
-      'cadastrarFilho',
-      'cadastrarMatriz',
-    ];
-
-    const cadastrarDesmarcado = permissoesCadastrar.some(
-      (permissao) => this.permissao[permissao as keyof Permissao] === false
-    );
-
-    if (cadastrarDesmarcado) {
-      this.permissao.cadastrar = false;
-    } else {
-      this.permissao.cadastrar = true;
-    }
-  }
-  verificarEditar() {
-    const permissoesEditar = [
-      'editarProduto',
-      'editarCategoria',
-      'editarFuncionario',
-      'editarCliente',
-      'editarEstoque',
-      'editarDeposito',
-      'editarMateria',
-      'editarFilho',
-      'editarMatriz',
-      'editarProdutoVenda',
-    ];
-
-    const editarDesmarcado = permissoesEditar.some(
-      (permissao) => this.permissao[permissao as keyof Permissao] === false
-    );
-
-    if (editarDesmarcado) {
-      this.permissao.editar = false;
-    } else {
-      this.permissao.editar = true;
-    }
-  }
-  verificarDeletar() {
-    const permissoesDeletar = [
-      'deletarVenda',
-      'deletarProduto',
-      'deletarCategoria',
-      'deletarFuncionario',
-      'deletarCliente',
-      'deletarDeposito',
-      'deletarMateria',
-      'deletarFilho',
-      'deletarProdutoVenda',
-    ];
-
-    const deletarDesmarcado = permissoesDeletar.some(
-      (permissao) => this.permissao[permissao as keyof Permissao] === false
-    );
-
-    if (deletarDesmarcado) {
-      this.permissao.deletar = false;
-    } else {
-      this.permissao.deletar = true;
-    }
-  }
   salvar() {
     if (this.matriz && this.matriz.usarImpressora == false) {
       this.permissao.imprimir = false;
