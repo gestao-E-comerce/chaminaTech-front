@@ -26,7 +26,7 @@
             inputmode="numeric"
             class="form-control"
             name="cep"
-            [(ngModel)]="matrizOriginal.cep"
+            [(ngModel)]="matriz.cep"
             mask="00000-000"
             (keydown.Space)="buscarCEP()"
             [ngClass]="{ 'borda-vermelha': !cep.valid && cep.touched }"
@@ -45,7 +45,7 @@
           type="text"
           class="form-control w-100"
           name="rua"
-          [(ngModel)]="matrizOriginal.rua"
+          [(ngModel)]="matriz.rua"
           [ngClass]="{ 'borda-vermelha': !rua.valid && rua.touched }"
         />
       </div>
@@ -63,7 +63,7 @@
           oninput="if (this.value.length > 10) this.value = this.value.slice(0, 10)"
           class="form-control no-spin w-100"
           name="numero"
-          [(ngModel)]="matrizOriginal.numero"
+          [(ngModel)]="matriz.numero"
           [ngClass]="{ 'borda-vermelha': !numero.valid && numero.touched }"
         />
       </div>
@@ -78,7 +78,7 @@
           type="text"
           class="form-control"
           name="bairro"
-          [(ngModel)]="matrizOriginal.bairro"
+          [(ngModel)]="matriz.bairro"
           [ngClass]="{ 'borda-vermelha': !bairro.valid && bairro.touched }"
         />
       </div>
@@ -91,7 +91,7 @@
           type="text"
           class="form-control"
           name="cidade"
-          [(ngModel)]="matrizOriginal.cidade"
+          [(ngModel)]="matriz.cidade"
           [ngClass]="{ 'borda-vermelha': !cidade.valid && cidade.touched }"
         />
       </div>
@@ -104,7 +104,7 @@
           type="text"
           class="form-control"
           name="estado"
-          [(ngModel)]="matrizOriginal.estado"
+          [(ngModel)]="matriz.estado"
           [ngClass]="{ 'borda-vermelha': !estado.valid && estado.touched }"
         />
       </div>

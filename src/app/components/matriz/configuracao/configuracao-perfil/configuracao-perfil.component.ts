@@ -67,16 +67,16 @@ export class ConfiguracaoPerfilComponent implements OnInit {
   }
 
   buscarCEP() {
-    if (this.matrizOriginal.cep && this.matrizOriginal.cep.length === 8) {
-      this.globalService.buscarCEP(this.matrizOriginal.cep).subscribe({
+    if (this.matriz.cep && this.matriz.cep.length === 8) {
+      this.globalService.buscarCEP(this.matriz.cep).subscribe({
         next: (dados) => {
           if (dados.erro) {
             this.toastr.error('CEP não encontrado.');
           } else {
-            this.matrizOriginal.rua = dados.logradouro;
-            this.matrizOriginal.bairro = dados.bairro;
-            this.matrizOriginal.cidade = dados.localidade;
-            this.matrizOriginal.estado = dados.uf;
+            this.matriz.rua = dados.logradouro;
+            this.matriz.bairro = dados.bairro;
+            this.matriz.cidade = dados.localidade;
+            this.matriz.estado = dados.uf;
           }
         },
         error: () => {
@@ -104,19 +104,19 @@ export class ConfiguracaoPerfilComponent implements OnInit {
     }
 
     // 7. Preparar endereço para geocodificação
-    const enderecoCompleto = `${this.matrizOriginal.rua}, ${this.matrizOriginal.numero}, ${this.matrizOriginal.bairro}, ${this.matrizOriginal.cidade}, ${this.matrizOriginal.estado}`;
+    const enderecoCompleto = `${this.matriz.rua}, ${this.matriz.numero}, ${this.matriz.bairro}, ${this.matriz.cidade}, ${this.matriz.estado}`;
 
     // 6. Verifica se endereço foi alterado
     const enderecoAlterado =
-      this.matriz.cep !== this.matrizOriginal.cep ||
-      this.matriz.rua !== this.matrizOriginal.rua ||
-      this.matriz.numero !== this.matrizOriginal.numero ||
-      this.matriz.cidade !== this.matrizOriginal.cidade ||
-      this.matriz.bairro !== this.matrizOriginal.bairro;
+      this.matriz.cep !== this.matriz.cep ||
+      this.matriz.rua !== this.matriz.rua ||
+      this.matriz.numero !== this.matriz.numero ||
+      this.matriz.cidade !== this.matriz.cidade ||
+      this.matriz.bairro !== this.matriz.bairro;
 
     // 8. Função de salvar final
     const salvarFinal = () => {
-      this.matrizService.save(this.matrizOriginal).subscribe({
+      this.matrizService.save(this.matriz).subscribe({
         next: (mensagem) => {
           this.toastr.success(mensagem.mensagem);
           this.matrizOriginal = JSON.parse(JSON.stringify(this.matriz));
@@ -133,8 +133,8 @@ export class ConfiguracaoPerfilComponent implements OnInit {
         .buscarCoordenadasPorEndereco(enderecoCompleto)
         .subscribe({
           next: (coords) => {
-            this.matrizOriginal.latitude = coords.lat;
-            this.matrizOriginal.longitude = coords.lng;
+            this.matriz.latitude = coords.lat;
+            this.matriz.longitude = coords.lng;
             salvarFinal();
           },
           error: () => {

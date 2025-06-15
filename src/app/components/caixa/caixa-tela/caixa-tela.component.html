@@ -996,7 +996,7 @@
   <div class="modal-header modal-style justify-content-between">
     <h4 class="modal-title">{{ tituloModal }} {{ tipoPagamento }}</h4>
     <div class="d-flex align-items-center gap-2">
-      @if (tipoCaixa === 'mesa') {
+      @if (tipoCaixa === 'mesa' && matriz.configuracaoTaxaServicio.aplicar) {
       <button
         class="btn-comum btn-comum-vermelho"
         (click)="vendaPagamento.removerTaxaServico()"
