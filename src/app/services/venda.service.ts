@@ -10,7 +10,7 @@ import { Config } from '../../config';
   providedIn: 'root',
 })
 export class VendaService {
-  private readonly API = `${Config.BACKEND_URL}/api/venda`;
+  private readonly API = `${Config.BACKEND_URL}/venda`;
   http = inject(HttpClient);
   globalService = inject(GlobalService);
 
@@ -48,8 +48,8 @@ export class VendaService {
     return this.globalService.getMatrizAsync().pipe(
       switchMap((matriz) => {
         venda.matriz = matriz;
-        const headers = new HttpHeaders().set('chaveUnico', chaveUnico);
         if (venda.id) {
+          const headers = new HttpHeaders().set('chaveUnico', chaveUnico);
           return this.http.put<Mensagem>(`${this.API}/${venda.id}`, venda, {
             headers,
           });

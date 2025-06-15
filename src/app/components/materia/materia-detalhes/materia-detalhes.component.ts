@@ -21,7 +21,7 @@ export class MateriaDetalhesComponent {
   toastr = inject(ToastrService);
 
   salvar() {
-    if (!this.materia.nome && !this.materia.nome.trim()) {
+    if (!this.materia.nome?.trim()) {
       this.toastr.error('Nome obrigatório!');
     } else {
       this.materiaService.save(this.materia).subscribe({

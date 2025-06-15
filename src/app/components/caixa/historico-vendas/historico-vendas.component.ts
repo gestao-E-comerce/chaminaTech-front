@@ -118,7 +118,7 @@ export class HistoricoVendasComponent implements OnInit {
   }
 
   confirmarDeletarVenda() {
-    if (this.motivoDeletar.trim() === '') {
+    if (!this.motivoDeletar?.trim()) {
       this.toastr.error('Motivo indefinido!!');
     } else {
       this.venda.imprimirCadastrar = false;

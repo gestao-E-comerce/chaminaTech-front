@@ -137,3 +137,8 @@ button.login:hover {
         padding: 0 !important;
     }
 }
+
+input[name="usuario"],
+input[name="senha"] {
+  text-transform: none;
+}

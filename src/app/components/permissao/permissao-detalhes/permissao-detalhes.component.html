@@ -83,6 +83,7 @@
                 name="vendaCadastrar"
                 [(ngModel)]="permissao.cadastrarVenda"
                 (ngModelChange)="verificarVenda()"
+                (click)="cadastrarVenda()"
               />
               <span class="slider"></span>
             </label>
@@ -100,6 +101,7 @@
                 name="vendaDeletar"
                 [(ngModel)]="permissao.deletarVenda"
                 (ngModelChange)="verificarVenda()"
+                (click)="deletarVenda()"
               />
               <span class="slider"></span>
             </label>
@@ -167,6 +169,7 @@
                 name="produtoVendaDeletar"
                 [(ngModel)]="permissao.deletarProdutoVenda"
                 (ngModelChange)="verificarVenda()"
+                (click)="deletarProdutoVenda()"
               />
               <span class="slider"></span>
             </label>

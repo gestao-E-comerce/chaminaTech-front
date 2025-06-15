@@ -9,7 +9,7 @@ import { Config } from '../../config';
   providedIn: 'root'
 })
 export class SangriaService {
-  API: string = `${Config.BACKEND_URL}/api/sangria`;
+  API: string = `${Config.BACKEND_URL}/sangria`;
   http = inject(HttpClient);
 
   save(sangria: Sangria): Observable<Mensagem> {

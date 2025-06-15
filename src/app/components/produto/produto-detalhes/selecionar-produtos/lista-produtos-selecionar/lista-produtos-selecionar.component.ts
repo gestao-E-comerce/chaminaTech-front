@@ -68,10 +68,10 @@ export class ListaProdutosSelecionarComponent {
             lista = lista.filter((produto) => {
               const jaFoiAdicionado =
                 this.produto?.produtoCompostos?.some(
-                  (pp) => pp.produtoComposto?.id === produto.id
+                  (pp) => pp.produtoComposto?.id === produto.id && pp.ativo === true
                 ) ||
                 this.observacoes?.observacaoProdutos?.some(
-                  (om) => om.produto?.id === produto.id
+                  (om) => om.produto?.id === produto.id && om.ativo === true
                 );
               const ehProdutoAtual =
                 this.produto && this.produto.id === produto.id;

@@ -51,7 +51,7 @@
           </div>
         </div>
         <div class="d-flex flex-column w-25">
-          <label for="filtro">Ativo</label>
+          <label for="filtro">Tipo</label>
           <select
             id="filtro"
             class="select-filtro p-1"
@@ -104,6 +104,9 @@
     @if (cupomSelecionado && cupomSelecionado.venda) {
     <div class="d-flex flex-column h-100 w-100">
       <div class="d-flex flex-column">
+        @if (cupomSelecionado.venda.deletado == true) {
+        <h5><strong class="text-danger">Venda Deletada</strong></h5>
+        }
         <h4>Detalhes do Cupom {{ cupomSelecionado.cupom }}</h4>
         <h4>
           Venda
@@ -128,7 +131,7 @@
         </p>
       </div>
       <div class="lista w-100 h-100">
-        <table class="table ">
+        <table class="table">
           <thead>
             <th class="text-center col-1">Código</th>
             <th class="text-center col-1">N. item</th>
@@ -179,7 +182,7 @@
       </div>
       <div class="d-flex justify-content-between align-items-center w-100 mt-2">
         <div
-          class="d-flex justify-content-between align-items-center areaPagar p-3"
+          class="d-flex justify-content-between align-items-center areaPagar p-3 w-75"
         >
           <h3 class="m-0">VALOR TOTAL</h3>
           <h3 class="m-0 barra">|</h3>
@@ -189,7 +192,7 @@
         </div>
         <div class="col-acoes">
           @if ((usuario && usuario.permissao && (usuario.permissao.imprimir &&
-          urlString === 'caixa')) && matriz.usarImpressora) {
+          urlString === 'caixa')) && matriz.configuracaoImpressao.usarImpressora && cupomSelecionado.venda.deletado == false) {
           <button
             type="button"
             class="hover-btn btn-imprimir"
@@ -205,7 +208,8 @@
             <span class="hover-text">Imprimir</span>
           </button>
           } @if ((usuario && usuario.permissao &&
-          usuario.permissao.deletarVenda) && urlString === 'caixa') {
+          usuario.permissao.deletarVenda) && urlString === 'caixa' &&
+          cupomSelecionado.venda.deletado == false) {
           <button
             type="button"
             class="btn-comum btn-comum-vermelho"

@@ -10,7 +10,7 @@ import { Config } from '../../config';
   providedIn: 'root',
 })
 export class AdminService {
-  private readonly API = `${Config.BACKEND_URL}/api/admin`;
+  private readonly API = `${Config.BACKEND_URL}/admin`;
   http = inject(HttpClient);
 
   editar(admin: Admin): Observable<Mensagem> {

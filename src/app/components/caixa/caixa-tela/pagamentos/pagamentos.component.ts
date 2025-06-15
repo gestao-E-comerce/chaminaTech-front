@@ -174,7 +174,7 @@ export class PagamentosComponent implements OnInit {
     modalConfirmarImpressao: any
   ) {
     let nomeImpressora: any;
-    if (this.matriz.usarImpressora == false) {
+    if (this.matriz.configuracaoImpressao.usarImpressora == false) {
       nomeImpressora = null;
     } else {
       nomeImpressora = this.getNomeImpressora();
@@ -185,57 +185,63 @@ export class PagamentosComponent implements OnInit {
     this.venda.statusEmAberto = true;
     this.venda.imprimirCadastrar = false;
     this.venda.imprimirDeletar = false;
-    const salvarVenda = () =>
-      this.vendaService.save(this.venda, this.chaveUnico).subscribe({
-        next: (mensagem) => {
-          this.vendaOriginal = JSON.parse(JSON.stringify(this.venda));
-          this.vendaParcial.mesa = this.venda.mesa;
-          this.vendaParcial.funcionario = this.venda.funcionario;
-          this.vendaParcial.retirada = false;
-          this.vendaParcial.entrega = false;
-          this.vendaParcial.balcao = false;
-          this.vendaParcial.ativo = false;
-          this.vendaParcial.statusEmAberto = false;
-          this.vendaParcial.statusEmPagamento = false;
-          this.vendaParcial.nomeImpressora = nomeImpressora;
-          this.vendaParcial.caixa = this.caixa;
 
-          this.vendaService.saveParcial(this.vendaParcial).subscribe({
-            next: (mensagem) => {
-              this.modalPagamentoparcial.dismiss();
-              this.modalSelecionarProdutos.dismiss();
-              this.toastr.success(mensagem.mensagem);
-              this.vendaParcial = new Venda();
-
-              this.dinheiroLista = [NaN];
-              this.debitoLista = [NaN];
-              this.creditoLista = [NaN];
-              this.pixLista = [NaN];
-            },
-          });
-        },
-      });
-    if (this.matriz.imprimirNotaFiscal === 0) {
-      this.vendaParcial.imprimirNotaFiscal = true;
-      salvarVenda();
-    } else if (this.matriz.imprimirNotaFiscal === 1) {
-      this.vendaParcial.imprimirNotaFiscal = false;
-      salvarVenda();
-    } else if (this.matriz.imprimirNotaFiscal === 2) {
-      this.abrirModalConfirmarImpressao(
-        'notaFiscal',
-        modalConfirmarImpressao
-      ).then((result) => {
-        if (result === 'imprimir') {
-          this.vendaParcial.imprimirNotaFiscal = true;
-          salvarVenda();
-        } else if (result === 'naoImprimir') {
-          this.vendaParcial.imprimirNotaFiscal = false;
-          salvarVenda();
+    if (this.venda.produtoVendas) {
+      for (const produtoVenda of this.venda.produtoVendas) {
+        if (!produtoVenda.funcionario) {
+          produtoVenda.funcionario = this.venda.funcionario; // Atribuir o funcionário padrão
         }
-      });
+      }
     }
-    this.retornoPagamentoParcial.emit(this.venda);
+
+    this.vendaService.save(this.venda, this.chaveUnico).subscribe({
+      next: (mensagem) => {
+        this.vendaOriginal = JSON.parse(JSON.stringify(this.venda));
+        this.vendaParcial.mesa = this.venda.mesa;
+        this.vendaParcial.funcionario = this.venda.funcionario;
+        this.vendaParcial.retirada = false;
+        this.vendaParcial.entrega = false;
+        this.vendaParcial.balcao = false;
+        this.vendaParcial.ativo = false;
+        this.vendaParcial.statusEmAberto = false;
+        this.vendaParcial.statusEmPagamento = false;
+        this.vendaParcial.nomeImpressora = nomeImpressora;
+        this.vendaParcial.caixa = this.caixa;
+
+        if (this.matriz.configuracaoImpressao.imprimirNotaFiscal === 0) {
+          this.vendaParcial.imprimirNotaFiscal = true;
+        } else if (this.matriz.configuracaoImpressao.imprimirNotaFiscal === 1) {
+          this.vendaParcial.imprimirNotaFiscal = false;
+        } else if (this.matriz.configuracaoImpressao.imprimirNotaFiscal === 2) {
+          this.abrirModalConfirmarImpressao(
+            'notaFiscal',
+            modalConfirmarImpressao
+          ).then((result) => {
+            if (result === 'imprimir') {
+              this.vendaParcial.imprimirNotaFiscal = true;
+            } else if (result === 'naoImprimir') {
+              this.vendaParcial.imprimirNotaFiscal = false;
+            }
+          });
+        }
+        this.vendaService.saveParcial(this.vendaParcial).subscribe({
+          next: (mensagem) => {
+            this.modalPagamentoparcial.dismiss();
+            this.modalSelecionarProdutos.dismiss();
+            this.toastr.success(mensagem.mensagem);
+            console.log('Venda Atual:', this.venda);
+            console.log('Venda Parcial:', this.vendaParcial);
+            this.vendaParcial = new Venda();
+            this.retornoPagamentoParcial.emit(this.venda);
+
+            this.dinheiroLista = [NaN];
+            this.debitoLista = [NaN];
+            this.creditoLista = [NaN];
+            this.pixLista = [NaN];
+          },
+        });
+      },
+    });
   }
   getNomeImpressora(): string | null {
     const valor = localStorage.getItem('identificador');
@@ -283,9 +289,10 @@ export class PagamentosComponent implements OnInit {
   }
   valorTotal(vendaCalcular: Venda) {
     let valorTotal = 0;
+    let taxa = 0;
 
-    if (vendaCalcular.produtoVendas && vendaCalcular.produtoVendas.length > 0) {
-      for (const produtoVenda of vendaCalcular.produtoVendas) {
+    if (this.venda.produtoVendas && this.venda.produtoVendas.length > 0) {
+      for (const produtoVenda of this.venda.produtoVendas) {
         const produto = produtoVenda.produto;
         let valorProduto = 0;
 
@@ -308,8 +315,61 @@ export class PagamentosComponent implements OnInit {
         valorTotal += valorProduto;
       }
     }
+    this.venda.valorBruto = valorTotal;
+    valorTotal += this.venda.taxaEntrega ?? 0;
+    if (
+      this.tipoCaixa === 'mesa' &&
+      this.matriz.configuracaoTaxaServicio.aplicar
+    ) {
+      if (
+        this.matriz.configuracaoTaxaServicio.tipo === 'PERCENTUAL' &&
+        this.matriz.configuracaoTaxaServicio.percentual > 0
+      ) {
+        taxa =
+          (valorTotal * this.matriz.configuracaoTaxaServicio.percentual) / 100;
+      } else if (
+        this.matriz.configuracaoTaxaServicio.tipo === 'FIXO' &&
+        this.matriz.configuracaoTaxaServicio.valorFixo > 0
+      ) {
+        taxa = this.matriz.configuracaoTaxaServicio.valorFixo;
+      }
+      valorTotal += taxa;
+    }
 
-    vendaCalcular.valorTotal = valorTotal;
+    this.venda.valorServico = taxa;
+    this.venda.valorTotal = valorTotal;
+  }
+  removerTaxaServico() {
+    let valorTotal = 0;
+
+    if (this.venda.produtoVendas && this.venda.produtoVendas.length > 0) {
+      for (const produtoVenda of this.venda.produtoVendas) {
+        const produto = produtoVenda.produto;
+        let valorProduto = 0;
+
+        if (produto.tipo) {
+          valorProduto = (produto.valor / 1000) * produtoVenda.quantidade;
+        } else {
+          valorProduto = produto.valor * produtoVenda.quantidade;
+        }
+
+        if (produtoVenda.observacoesProdutoVenda) {
+          for (const obs of produtoVenda.observacoesProdutoVenda) {
+            if (obs.valor != null) {
+              valorProduto += obs.valor * produtoVenda.quantidade;
+            }
+          }
+        }
+
+        produtoVenda.valor = valorProduto;
+
+        valorTotal += valorProduto;
+      }
+    }
+    valorTotal += this.venda.taxaEntrega ?? 0;
+
+    this.venda.valorServico = 0;
+    this.venda.valorTotal = valorTotal;
   }
   navegarInputs(event: KeyboardEvent, tipo: string, index: number): void {
     if (['e', 'E', '-', '+', ','].includes(event.key)) {
@@ -341,15 +401,45 @@ export class PagamentosComponent implements OnInit {
     let tipoAtualIndex = tipos.indexOf(tipo);
     let novoTipo = tipo;
     let novoIndex = index;
+    const listas: { [key: string]: number[] } = {
+      dinheiro: this.dinheiroLista,
+      credito: this.creditoLista,
+      debito: this.debitoLista,
+      pix: this.pixLista,
+    };
 
     switch (event.key) {
+      case '*':
+        event.preventDefault();
+        const lista = listas[tipo];
+
+        // Zera campo atual pra não atrapalhar cálculo
+        const valorOriginal = lista[index];
+        lista[index] = 0;
+        const totalPago = this.calcularTotal();
+        const valorRestante = this.venda.valorTotal - totalPago;
+
+        if (valorRestante <= 0 || isNaN(valorRestante)) {
+          lista[index] = valorOriginal;
+          return;
+        }
+
+        lista[index] = parseFloat(valorRestante.toFixed(2));
+
+        setTimeout(() => {
+          refs[tipo].toArray()[index]?.nativeElement?.focus();
+          refs[tipo].toArray()[index]?.nativeElement?.select();
+        }, 0);
+        return;
+
       case 'ArrowDown':
         event.preventDefault();
         novoIndex++;
         if (novoIndex >= refs[tipo].length) {
-          novoIndex = 0;
+          // muda para o tipo seguinte
           tipoAtualIndex = (tipoAtualIndex + 1) % tipos.length;
           novoTipo = tipos[tipoAtualIndex];
+          novoIndex = 0;
         }
         break;
 
@@ -357,6 +447,7 @@ export class PagamentosComponent implements OnInit {
         event.preventDefault();
         novoIndex--;
         if (novoIndex < 0) {
+          // volta para o tipo anterior
           tipoAtualIndex = (tipoAtualIndex - 1 + tipos.length) % tipos.length;
           novoTipo = tipos[tipoAtualIndex];
           novoIndex = refs[novoTipo].length - 1;

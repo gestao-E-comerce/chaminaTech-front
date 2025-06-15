@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, Output, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Deposito } from '../../../models/deposito';
 import { Mensagem } from '../../../models/mensagem';
@@ -25,6 +25,11 @@ export class DepositoDetalhesComponent {
   toastr = inject(ToastrService);
   modalService = inject(NgbModal);
   modalRef!: NgbModalRef;
+
+  @HostListener('document:keydown.enter', ['$event'])
+  onEscapeKey(event: KeyboardEvent) {
+    this.salvar();
+  }
 
   retornoMateria(materia: any) {
     this.toastr.success('Matéria vinculada com sucesso');

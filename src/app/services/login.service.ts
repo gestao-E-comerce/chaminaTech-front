@@ -11,7 +11,7 @@ import { Config } from '../../config';
   providedIn: 'root',
 })
 export class LoginService {
-  private readonly API = `${Config.BACKEND_URL}/api/login`;
+  private readonly API = `${Config.BACKEND_URL}/login`;
   http = inject(HttpClient);
 
   logar(login: Login): Observable<Usuario> {

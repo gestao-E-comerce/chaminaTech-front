@@ -34,6 +34,9 @@
     </div>
     } @if (menuPrincipalAberto) {
     <div class="d-flex flex-column h-100 align-items-center">
+      <button (click)="menuPrincipalAberto = false" class="abrir-menu w-100">
+        ☰
+      </button>
       <div>
         <img
           src="../../../assets/images/logo-da-empresa.png"
@@ -72,10 +75,7 @@
             class="mb-3 w-100 text-start d-flex align-items-center botao"
             [routerLink]="['/' + urlString, 'mesa']"
           >
-            <img
-              src="../../../assets/images/mesa.svg"
-              class="pe-2 icon-img"
-            />
+            <img src="../../../assets/images/mesa.svg" class="pe-2 icon-img" />
             <span class="texto-balcao">Mesas</span>
           </button>
           } @if (usuario && usuario.permissao && usuario.permissao.vendaRetirada

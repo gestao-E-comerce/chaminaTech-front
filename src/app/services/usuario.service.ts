@@ -8,7 +8,7 @@ import { Config } from '../../config';
   providedIn: 'root',
 })
 export class UsuarioService {
-  private readonly API = `${Config.BACKEND_URL}/api/usuario`;
+  private readonly API = `${Config.BACKEND_URL}/usuario`;
   http = inject(HttpClient);
 
   buscarUsuarioPorId(id: number): Observable<Usuario> {

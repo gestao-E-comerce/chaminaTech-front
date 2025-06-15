@@ -85,15 +85,45 @@ export class PagamentoParcialComponent implements OnInit {
     let tipoAtualIndex = tipos.indexOf(tipo);
     let novoTipo = tipo;
     let novoIndex = index;
+    const listas: { [key: string]: number[] } = {
+      dinheiro: this.dinheiroLista,
+      credito: this.creditoLista,
+      debito: this.debitoLista,
+      pix: this.pixLista,
+    };
 
     switch (event.key) {
+      case '*':
+        event.preventDefault();
+        const lista = listas[tipo];
+
+        // Zera campo atual pra não atrapalhar cálculo
+        const valorOriginal = lista[index];
+        lista[index] = 0;
+        const totalPago = this.calcularTotal();
+        const valorRestante = this.vendaParcial.valorTotal - totalPago;
+
+        if (valorRestante <= 0 || isNaN(valorRestante)) {
+          lista[index] = valorOriginal;
+          return;
+        }
+
+        lista[index] = parseFloat(valorRestante.toFixed(2));
+
+        setTimeout(() => {
+          refs[tipo].toArray()[index]?.nativeElement?.focus();
+          refs[tipo].toArray()[index]?.nativeElement?.select();
+        }, 0);
+        return;
+
       case 'ArrowDown':
         event.preventDefault();
         novoIndex++;
         if (novoIndex >= refs[tipo].length) {
-          novoIndex = 0;
+          // muda para o tipo seguinte
           tipoAtualIndex = (tipoAtualIndex + 1) % tipos.length;
           novoTipo = tipos[tipoAtualIndex];
+          novoIndex = 0;
         }
         break;
 
@@ -101,6 +131,7 @@ export class PagamentoParcialComponent implements OnInit {
         event.preventDefault();
         novoIndex--;
         if (novoIndex < 0) {
+          // volta para o tipo anterior
           tipoAtualIndex = (tipoAtualIndex - 1 + tipos.length) % tipos.length;
           novoTipo = tipos[tipoAtualIndex];
           novoIndex = refs[novoTipo].length - 1;

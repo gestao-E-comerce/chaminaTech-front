@@ -13,7 +13,7 @@ import { Config } from '../../config';
   providedIn: 'root',
 })
 export class ImpressaoService {
-  private readonly API = `${Config.BACKEND_URL}/api/impressao`;
+  private readonly API = `${Config.BACKEND_URL}/impressao`;
   http = inject(HttpClient);
 
   getNomeImpressora(): string | null {

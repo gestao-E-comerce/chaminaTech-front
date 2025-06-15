@@ -11,7 +11,7 @@ import { Config } from '../../config';
   providedIn: 'root',
 })
 export class DepositoService {
-  private readonly API = `${Config.BACKEND_URL}/api/deposito`;
+  private readonly API = `${Config.BACKEND_URL}/deposito`;
   http = inject(HttpClient);
   globalService = inject(GlobalService);
 

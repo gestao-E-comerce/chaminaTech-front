@@ -127,10 +127,10 @@ export class MateriaListComponent implements OnInit {
           lista = lista.filter((materia) => {
             const jaFoiAdicionado =
               this.produto?.produtoMaterias?.some(
-                (pp) => pp.materia?.id === materia.id
+                (pp) => pp.materia?.id === materia.id && pp.ativo === true
               ) ||
               this.observacoes?.observacaoMaterias?.some(
-                (om) => om.materia?.id === materia.id
+                (om) => om.materia?.id === materia.id && om.ativo === true
               );
             return !jaFoiAdicionado;
           });

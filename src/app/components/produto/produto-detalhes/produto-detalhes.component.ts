@@ -1,6 +1,7 @@
 import {
   Component,
   EventEmitter,
+  HostListener,
   inject,
   Input,
   OnInit,
@@ -57,6 +58,11 @@ export class ProdutoDetalhesComponent implements OnInit {
   tituloModal!: string;
 
   listaCategorias: Categoria[] = [];
+
+  @HostListener('document:keydown.enter', ['$event'])
+  onEscapeKey(event: KeyboardEvent) {
+    this.salvar();
+  }
 
   ngOnInit() {
     this.carregarCategorias();
@@ -142,7 +148,12 @@ export class ProdutoDetalhesComponent implements OnInit {
   }
 
   deletarMateria(index: number) {
-    this.produto.produtoMaterias[index].ativo = false;
+    const materia = this.produto.produtoMaterias[index];
+    if (materia.id) {
+      materia.ativo = false;
+    } else {
+      this.produto.produtoMaterias.splice(index, 1);
+    }
   }
 
   adicionarProduto(modalListarProdutos: any) {
@@ -162,14 +173,19 @@ export class ProdutoDetalhesComponent implements OnInit {
   }
 
   deletarProduto(index: number) {
-    this.produto.produtoCompostos[index].ativo = false;
+    const produto = this.produto.produtoCompostos[index];
+    if (produto.id) {
+      produto.ativo = false;
+    } else {
+      this.produto.produtoCompostos.splice(index, 1);
+    }
   }
 
   salvar() {
     if (!this.produto.impressoras?.length) {
       this.produto.deveImprimir = false;
     }
-    if (!this.produto.nome && !this.produto.nome.trim()) {
+    if (!this.produto.nome?.trim()) {
       this.toastr.error('Nome do produto é obrigatório!');
       return;
     }

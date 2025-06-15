@@ -10,7 +10,7 @@ import { Config } from '../../config';
   providedIn: 'root',
 })
 export class MateriaService {
-  private readonly API = `${Config.BACKEND_URL}/api/materia`;
+  private readonly API = `${Config.BACKEND_URL}/materia`;
   http = inject(HttpClient);
   globalService = inject(GlobalService);
 

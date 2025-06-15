@@ -1,4 +1,11 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  HostListener,
+  inject,
+  Input,
+  Output,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Estoque } from '../../../models/estoque';
 import { Mensagem } from '../../../models/mensagem';
@@ -26,6 +33,11 @@ export class EstoqueDetalhesComponent {
   modalService = inject(NgbModal);
   modalRef!: NgbModalRef;
 
+  @HostListener('document:keydown.enter', ['$event'])
+  onEscapeKey(event: KeyboardEvent) {
+    this.salvar();
+  }
+
   retornoProduto(produto: any) {
     this.toastr.success('Produto vinculada com sucesso');
     this.estoque.produto = produto;
@@ -44,7 +56,11 @@ export class EstoqueDetalhesComponent {
       this.toastr.error('Quantidade Obrigatório!');
       return;
     }
-    if (this.estoque && !this.estoque.produto.estocavel && this.estoque.valorTotal == null) {
+    if (
+      this.estoque &&
+      !this.estoque.produto.estocavel &&
+      this.estoque.valorTotal == null
+    ) {
       this.toastr.error('Valor Compra Obrigatório!');
       return;
     }

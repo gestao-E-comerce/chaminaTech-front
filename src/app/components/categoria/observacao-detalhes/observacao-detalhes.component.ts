@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, inject, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Observacoes } from '../../../models/observacoes';
 import { ToastrService } from 'ngx-toastr';
@@ -35,6 +35,11 @@ export class ObservacaoDetalhesComponent {
 
   indice!: number;
   tituloModal!: string;
+
+  @HostListener('document:keydown.enter', ['$event'])
+  onEscapeKey(event: KeyboardEvent) {
+    this.salvar();
+  }
 
   atualizarListaProdutos(produto: ObservacaoProduto) {
     if (this.observacoes.observacaoProdutos == null) {
@@ -87,7 +92,12 @@ export class ObservacaoDetalhesComponent {
   }
 
   deletarMateria(index: number) {
-    this.observacoes.observacaoMaterias[index].ativo = false;
+    const materia = this.observacoes.observacaoMaterias[index];
+    if (materia.id) {
+      materia.ativo = false;
+    } else {
+      this.observacoes.observacaoMaterias.splice(index, 1);
+    }
   }
 
   adicionarProduto(modalListarProdutos: any) {
@@ -107,11 +117,16 @@ export class ObservacaoDetalhesComponent {
   }
 
   deletarProduto(index: number) {
-    this.observacoes.observacaoProdutos[index].ativo = false;
+    const produto = this.observacoes.observacaoProdutos[index];
+    if (produto.id) {
+      produto.ativo = false;
+    } else {
+      this.observacoes.observacaoProdutos.splice(index, 1);
+    }
   }
 
   salvar() {
-    if (!this.observacoes.observacao || this.observacoes.observacao.trim() === '') {
+    if (!this.observacoes.observacao?.trim()) {
       this.toastr.error('Texto do observação é obrigatório!');
       return;
     }

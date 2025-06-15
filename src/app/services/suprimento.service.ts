@@ -9,7 +9,7 @@ import { Config } from '../../config';
   providedIn: 'root',
 })
 export class SuprimentoService {
-  private readonly API = `${Config.BACKEND_URL}/api/suprimento`;
+  private readonly API = `${Config.BACKEND_URL}/suprimento`;
   http = inject(HttpClient);
 
   save(suprimento: Suprimento): Observable<Mensagem> {

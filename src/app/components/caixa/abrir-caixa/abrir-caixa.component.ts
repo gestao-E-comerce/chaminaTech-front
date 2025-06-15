@@ -64,6 +64,7 @@ export class AbrirCaixaComponent implements OnInit {
 
     this.caixaService.abrirCaixa(this.caixa).subscribe({
       next: (caixaSalvo) => {
+        this.globalService.setCaixa(caixaSalvo);
         this.toastr.success('Caixa aberto com sucesso!');
         this.modalService.dismissAll();
         this.router.navigate(['/caixa/balcao']);

@@ -10,7 +10,7 @@ import { Config } from '../../config';
   providedIn: 'root',
 })
 export class GestaoCaixaService {
-  private readonly API = `${Config.BACKEND_URL}/api/gestaoCaixa`;
+  private readonly API = `${Config.BACKEND_URL}/gestaoCaixa`;
   http = inject(HttpClient);
   globalService = inject(GlobalService);
 

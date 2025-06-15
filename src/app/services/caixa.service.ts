@@ -10,7 +10,7 @@ import { Config } from '../../config';
   providedIn: 'root',
 })
 export class CaixaService {
-  private readonly API = `${Config.BACKEND_URL}/api/caixa`;
+  private readonly API = `${Config.BACKEND_URL}/caixa`;
   http = inject(HttpClient);
   globalService = inject(GlobalService);
 

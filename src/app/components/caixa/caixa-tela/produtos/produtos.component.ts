@@ -26,10 +26,9 @@ export class ProdutosComponent {
   produtosCopia: ProdutoVenda[] = [];
 
   ngOnInit() {
-    // Criando uma cópia profunda para evitar modificar o objeto original
     this.produtosCopia = this.venda.produtoVendas.map(produto => ({
       ...produto,
-      produto: { ...produto.produto }, // Copia a estrutura interna
+      produto: { ...produto.produto },
       selecionado: false
     }));
   }
@@ -41,7 +40,6 @@ export class ProdutosComponent {
   }
 
   atualizarQuantidade(produto: ProdutoVenda) {
-    // Se todos estiverem marcados, marca "tudoSelecionado", senão desmarca
     this.tudoSelecionado = this.produtosCopia.every(p => p.selecionado);
     this.updateSalvarDisabledState();
   }

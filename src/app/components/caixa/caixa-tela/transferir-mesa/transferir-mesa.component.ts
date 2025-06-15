@@ -1,8 +1,16 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Venda } from '../../../../models/venda';
 import { ProdutoVenda } from '../../../../models/produto-venda';
 import { Observacoes } from '../../../../models/observacoes';
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-transferir-mesa',
   standalone: true,
@@ -20,6 +28,8 @@ export class TransferirMesaComponent implements OnInit {
   isSalvarDisabled: boolean = true;
   tudoSelecionado: boolean = false;
 
+  toastr = inject(ToastrService);
+
   ngOnInit() {
     setTimeout(() => {
       this.venda.produtoVendas.forEach((produtoVenda) => {
@@ -35,7 +45,7 @@ export class TransferirMesaComponent implements OnInit {
     if (!this.vendaTransferir.produtoVendas) {
       this.vendaTransferir.produtoVendas = [];
     }
-
+    let produtoFoiSelecionado = false;
     for (let i = 0; i < this.venda.produtoVendas.length; i++) {
       const produtoVenda = this.venda.produtoVendas[i];
 
@@ -51,6 +61,7 @@ export class TransferirMesaComponent implements OnInit {
           produtoVenda.observacaoProdutoVenda;
 
         this.vendaTransferir.produtoVendas.push(novoProdutoVenda);
+        produtoFoiSelecionado = true;
 
         produtoVenda.quantidade -= produtoVenda.quantidadeTransferir;
         produtoVenda.quantidadeTransferir = 0;
@@ -60,12 +71,16 @@ export class TransferirMesaComponent implements OnInit {
         }
       }
     }
-    this.vendaTransferir.produtoVendas.forEach(pv => {
+    this.vendaTransferir.produtoVendas.forEach((pv) => {
       delete (pv as any)['selecionado'];
     });
-    this.venda.produtoVendas.forEach(pv => {
+    this.venda.produtoVendas.forEach((pv) => {
       delete (pv as any)['selecionado'];
     });
+    if (!produtoFoiSelecionado) {
+      this.toastr.error('Selecione um produto!');
+      return;
+    }
     this.retorno.emit({
       venda: this.venda,
       vendaTransferir: this.vendaTransferir,
@@ -105,7 +120,7 @@ export class TransferirMesaComponent implements OnInit {
   }
   updateSalvarDisabledState() {
     this.isSalvarDisabled = !this.venda.produtoVendas.some(
-      (produtoVenda) => produtoVenda.quantidadeTransferir > 0,
+      (produtoVenda) => produtoVenda.quantidadeTransferir > 0
     );
   }
 

@@ -1,4 +1,4 @@
-<div class="d-flex flex-column">
+<form (ngSubmit)="fechar()" class="d-flex flex-column">
   <div class="d-flex justify-content-between gap-2">
     <div class="mb-3">
       <label for="dinheiro" class="form-label">Dinheiro</label>
@@ -64,6 +64,6 @@
     </div>
   </div>
   <div class="d-flex justify-content-center mt-3">
-    <button type="button" class="btn-comum btn-comum-laranja" (click)="fechar()">Salvar</button>
+    <button type="submit" class="btn-comum btn-comum-laranja">Salvar</button>
   </div>
-</div>
+</form>

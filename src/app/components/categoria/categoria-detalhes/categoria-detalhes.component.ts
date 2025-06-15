@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, inject, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Mensagem } from '../../../models/mensagem';
 import { Categoria } from '../../../models/categoria';
@@ -12,9 +12,9 @@ import { NgClass } from '@angular/common';
 @Component({
   selector: 'app-categoria-detalhes',
   standalone: true,
-  imports: [FormsModule,ObservacaoDetalhesComponent, NgClass],
+  imports: [FormsModule, ObservacaoDetalhesComponent, NgClass],
   templateUrl: './categoria-detalhes.component.html',
-  styleUrl: './categoria-detalhes.component.scss'
+  styleUrl: './categoria-detalhes.component.scss',
 })
 export class CategoriaDetalhesComponent {
   @Output() retorno = new EventEmitter<Mensagem>();
@@ -29,12 +29,21 @@ export class CategoriaDetalhesComponent {
   tituloModal!: string;
   modalRef!: NgbModalRef;
 
+  @HostListener('document:keydown.enter', ['$event'])
+  onEscapeKey(event: KeyboardEvent) {
+    this.salvar();
+  }
+
   atualizarListaObservacoes(observacoes: Observacoes) {
-    if (this.categoria.observacoesCategoria == null) this.categoria.observacoesCategoria = [];
+    if (this.categoria.observacoesCategoria == null)
+      this.categoria.observacoesCategoria = [];
     if (this.indice == -1)
       this.categoria.observacoesCategoria.push(Object.assign({}, observacoes));
     else {
-      this.categoria.observacoesCategoria[this.indice] = Object.assign({}, observacoes);
+      this.categoria.observacoesCategoria[this.indice] = Object.assign(
+        {},
+        observacoes
+      );
     }
     this.modalRef.dismiss();
   }
@@ -42,36 +51,49 @@ export class CategoriaDetalhesComponent {
   adicionarObservacao(modalListarObservacoes: any) {
     this.indice = -1;
     this.observacoes = new Observacoes();
-    this.modalRef = this.modalService.open(modalListarObservacoes, { size: 'lg' });
+    this.modalRef = this.modalService.open(modalListarObservacoes, {
+      size: 'lg',
+    });
 
     this.tituloModal = 'Adicionar Observação';
   }
 
-  editarObservacao(modalListarObservacoes: any, observacoes: Observacoes, indice: number) {
+  editarObservacao(
+    modalListarObservacoes: any,
+    observacoes: Observacoes,
+    indice: number
+  ) {
     this.observacoes = Object.assign({}, observacoes);
     this.indice = indice;
-    this.modalRef = this.modalService.open(modalListarObservacoes, { size: 'lg' });
+    this.modalRef = this.modalService.open(modalListarObservacoes, {
+      size: 'lg',
+    });
 
     this.tituloModal = 'Editar Observação';
   }
 
   deletarObservacao(index: number) {
-    this.categoria.observacoesCategoria[index].ativo = false;
+    const obs = this.categoria.observacoesCategoria[index];
+    if (obs.id) {
+      obs.ativo = false;
+    } else {
+      this.categoria.observacoesCategoria.splice(index, 1);
+    }
   }
 
   salvar() {
-    if (!this.categoria.nome && !this.categoria.nome.trim()) {
+    if (!this.categoria.nome?.trim()) {
       this.toastr.error('Nome obrigatório!');
       return;
     } else {
       this.categoriaService.save(this.categoria).subscribe({
-        next: mensagem => {
+        next: (mensagem) => {
           this.toastr.success(mensagem.mensagem);
           this.retorno.emit(mensagem);
         },
-        error: erro => {
+        error: (erro) => {
           this.toastr.error(erro.error.mensagem);
-        }
+        },
       });
     }
   }

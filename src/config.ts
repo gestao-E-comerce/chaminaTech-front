@@ -1,4 +1,4 @@
 export class Config {
-  // static readonly BACKEND_URL = 'http://localhost:8080';
-  static readonly BACKEND_URL = '';
+  static readonly BACKEND_URL = 'http://localhost:8080/api';
+  // static readonly BACKEND_URL = '/api';
 }

@@ -7,7 +7,7 @@ import { Config } from '../../config';
 
 @Injectable({ providedIn: 'root' })
 export class AuditoriaService {
-  private readonly API = `${Config.BACKEND_URL}/api/auditoria`;
+  private readonly API = `${Config.BACKEND_URL}/auditoria`;
   http = inject(HttpClient);
   globalService = inject(GlobalService);
 

@@ -10,7 +10,7 @@ import { Config } from '../../config';
   providedIn: 'root',
 })
 export class MatrizService {
-  private readonly API = `${Config.BACKEND_URL}/api/matriz`;
+  private readonly API = `${Config.BACKEND_URL}/matriz`;
   http = inject(HttpClient);
   globalService = inject(GlobalService);
 
@@ -37,12 +37,16 @@ export class MatrizService {
     );
   }
 
-  instalar(matrizId: number): Observable<Blob> {
-    return this.http.get(
-      `http://localhost:8080/installer/download?matrizId=${matrizId}`,
-      {
-        responseType: 'blob',
-      }
+  instalar(): Observable<Blob> {
+    return this.globalService.getMatrizAsync().pipe(
+      switchMap((matriz) => {
+        return this.http.get(
+          `http://localhost:8080/installer/download?matrizId=${matriz.id}`,
+          {
+            responseType: 'blob',
+          }
+        );
+      })
     );
   }
 }

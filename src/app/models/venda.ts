@@ -21,6 +21,7 @@ export class Venda {
     statusEmAberto: boolean = false;
     statusEmPagamento: boolean = false;
     valorTotal!: number;
+    valorBruto!: number;
     dataVenda!: Date;
     dataEdicao!: Date;
     mesa!: number;
@@ -28,8 +29,10 @@ export class Venda {
     nomeImpressora!: string | null;
     taxaEntrega!: number;
     tempoEstimado!: number;
+    valorServico!: number;
+    desconto!: number;
     cliente!: Cliente;
-    endereco!:Endereco
+    endereco!:Endereco;
     produtoVendas!: ProdutoVenda[];
     funcionario!: Funcionario;
     caixa!: Caixa;

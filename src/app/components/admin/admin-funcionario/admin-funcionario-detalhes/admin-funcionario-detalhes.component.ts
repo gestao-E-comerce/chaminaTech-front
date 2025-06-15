@@ -41,13 +41,10 @@ export class AdminFuncionarioDetalhesComponent {
   }
 
   salvar() {
-    if (!this.adminFuncionario.nome && !this.adminFuncionario.nome.trim()) {
+    if (!this.adminFuncionario.nome?.trim()) {
       this.toastr.error('Nome obrigatório!');
       return;
-    } else if (
-      !this.adminFuncionario.username &&
-      !this.adminFuncionario.username.trim()
-    ) {
+    } else if (!this.adminFuncionario.username?.trim()) {
       this.toastr.error('UserName obrigatório!');
       return;
     } else {

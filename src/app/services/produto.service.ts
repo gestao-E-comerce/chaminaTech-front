@@ -10,7 +10,7 @@ import { Config } from '../../config';
   providedIn: 'root',
 })
 export class ProdutoService {
-  private readonly API = `${Config.BACKEND_URL}/api/produto`;
+  private readonly API = `${Config.BACKEND_URL}/produto`;
   http = inject(HttpClient);
   globalService = inject(GlobalService);
 

@@ -1,0 +1,163 @@
+<form #formulario="ngForm" (ngSubmit)="salvar()">
+  <div class="d-flex align-items-center justify-content-between header-fixo">
+    <div class="d-flex align-items-center">
+      <h2 class="titulo m-0">Taxa de Serviço</h2>
+    </div>
+    <div class="d-flex align-items-center">
+      <button
+        type="submit"
+        class="btn-comum btn-comum-laranja"
+        [disabled]="!isModified()"
+      >
+        Salvar
+      </button>
+    </div>
+  </div>
+  <div class="d-flex flex-column gap-3 p-2">
+    <div class="d-flex flex-column gap-3">
+      <div class="d-flex flex-column">
+        <label class="form-label">Aplica taxa de serviço?</label>
+        <div class="btn-group w-100">
+          <button
+            type="button"
+            class="btn btn-borda-laranja"
+            [ngClass]="{
+              'btn-comum-laranja': confTaxaServico.aplicar === true,
+              'btn-borda-laranja': confTaxaServico.aplicar !== true
+            }"
+            (click)="confTaxaServico.aplicar = true"
+          >
+            Sim
+          </button>
+          <button
+            type="button"
+            class="btn btn-borda-laranja"
+            [ngClass]="{
+              'btn-comum-laranja': confTaxaServico.aplicar === false,
+              'btn-borda-laranja': confTaxaServico.aplicar !== false
+            }"
+            (click)="confTaxaServico.aplicar = false"
+          >
+            Não
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex flex-column gap-3">
+      <div class="d-flex flex-column">
+        <label class="form-label">Tipo de taxa aplicada:</label>
+        <div class="btn-group w-100">
+          <button
+            type="button"
+            class="btn btn-borda-laranja"
+            [ngClass]="{
+              'btn-comum-laranja': confTaxaServico.tipo === 'PERCENTUAL',
+              'btn-borda-laranja': confTaxaServico.tipo !== 'PERCENTUAL'
+            }"
+            (click)="confTaxaServico.tipo = 'PERCENTUAL'"
+            [disabled]="confTaxaServico.aplicar !== true"
+          >
+            Percentual (%)
+          </button>
+          <button
+            type="button"
+            class="btn btn-borda-laranja"
+            [ngClass]="{
+              'btn-comum-laranja': confTaxaServico.tipo === 'FIXO',
+              'btn-borda-laranja': confTaxaServico.tipo !== 'FIXO'
+            }"
+            (click)="confTaxaServico.tipo = 'FIXO'"
+            [disabled]="confTaxaServico.aplicar !== true"
+          >
+            Valor Fixo (R$)
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex align-items-center w-100 gap-3 px-3">
+      <div class="d-flex flex-column w-100">
+        <label for="percentual" class="form-label">Percentual:</label>
+        <div class="d-flex align-items-center">
+          <input
+            autocomplete="off"
+            #percentual="ngModel"
+            required
+            type="number"
+            inputmode="numeric"
+            min="0"
+            step="1"
+            onkeydown="return !['e', 'E', '-', '+' , ','].incl(event.key)"
+            oninput="if (this.value.length > 10) this.value = this.value.slice(0, 10)"
+            class="form-control"
+            name="percentual"
+            [(ngModel)]="confTaxaServico.percentual"
+            [ngClass]="{
+              'borda-vermelha': !percentual.valid && percentual.touched
+            }"
+            [disabled]="
+              confTaxaServico.tipo !== 'PERCENTUAL' ||
+              confTaxaServico.aplicar !== true
+            "
+          />
+          <span
+            class="span-input"
+            [ngClass]="{
+              desativado:
+                confTaxaServico.tipo !== 'PERCENTUAL' ||
+                confTaxaServico.aplicar !== true
+            }"
+            >%</span
+          >
+        </div>
+      </div>
+      <div class="d-flex flex-column w-100">
+        <label for="valor" class="form-label">Valor Fixo:</label>
+        <div class="d-flex align-items-center">
+          <input
+            autocomplete="off"
+            #valor="ngModel"
+            required
+            type="number"
+            inputmode="numeric"
+            min="0"
+            step="1"
+            onkeydown="return !['e', 'E', '-', '+' , ','].incl(event.key)"
+            oninput="if (this.value.length > 10) this.value = this.value.slice(0, 10)"
+            class="form-control"
+            name="valor"
+            [(ngModel)]="confTaxaServico.valorFixo"
+            [ngClass]="{
+              'borda-vermelha': !valor.valid && valor.touched
+            }"
+            [disabled]="
+              confTaxaServico.tipo !== 'FIXO' ||
+              confTaxaServico.aplicar !== true
+            "
+          />
+          <span
+            class="span-input"
+            [ngClass]="{
+              desativado:
+                confTaxaServico.tipo !== 'FIXO' ||
+                confTaxaServico.aplicar !== true
+            }"
+            >R$</span
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<ng-template #modalCancelar let-modal>
+  <div class="modal-body">
+    Você tem alterações não salvas. Deseja sair mesmo assim?
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-danger" (click)="modal.close('confirmado')">
+      Sair sem salvar
+    </button>
+    <button class="btn btn-secondary" (click)="modal.dismiss()">
+      Cancelar
+    </button>
+  </div>
+</ng-template>

@@ -328,7 +328,7 @@
       <div><strong>Unidade de venda:</strong> {{ produto.tipo ? "Peso" : "Unidade" }}</div>
       <div><strong>Categoria:</strong> {{ produto.categoria.nome }}</div>
       <div><strong>Mostrar no cardápio:</strong> {{ produto.cardapio ? "Sim" : "Não" }}</div>
-      @if (matriz && matriz.usarImpressora) {
+      @if (matriz && matriz.configuracaoImpressao.usarImpressora) {
         <div><strong>Enviar para impressão ao vender:</strong> {{ produto.deveImprimir ? "Sim" : "Não" }}</div>
       }
       @if (produto.deveImprimir && (produto.impressoras != null && produto.impressoras.length > 0)) {

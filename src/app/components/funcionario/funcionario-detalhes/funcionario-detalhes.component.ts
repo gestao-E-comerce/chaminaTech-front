@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  HostListener,
+  Input,
+  Output,
+  inject,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Funcionario } from '../../../models/funcionario';
 import { Mensagem } from '../../../models/mensagem';
@@ -12,7 +19,7 @@ import { NgClass } from '@angular/common';
 @Component({
   selector: 'app-funcionario-detalhes',
   standalone: true,
-  imports: [FormsModule, PermissaoListaComponent,NgClass],
+  imports: [FormsModule, PermissaoListaComponent, NgClass],
   templateUrl: './funcionario-detalhes.component.html',
   styleUrl: './funcionario-detalhes.component.scss',
 })
@@ -27,8 +34,15 @@ export class FuncionarioDetalhesComponent {
 
   tituloModal!: string;
 
+  @HostListener('document:keydown.enter', ['$event'])
+  onEscapeKey(event: KeyboardEvent) {
+    this.salvar();
+  }
+
   buscar(modalListarPermissaos: any) {
-    this.modalRef = this.modalService.open(modalListarPermissaos, { size: 'lg' });
+    this.modalRef = this.modalService.open(modalListarPermissaos, {
+      size: 'lg',
+    });
 
     this.tituloModal = 'Selecionar grupo permissões';
   }
@@ -39,10 +53,10 @@ export class FuncionarioDetalhesComponent {
   }
 
   salvar() {
-    if (!this.funcionario.nome && !this.funcionario.nome.trim()) {
+    if (!this.funcionario.nome?.trim()) {
       this.toastr.error('Nome obrigatório!');
       return;
-    } else if (!this.funcionario.username && !this.funcionario.username.trim()){
+    } else if (!this.funcionario.username?.trim()) {
       this.toastr.error('UserName obrigatório!');
       return;
     } else {

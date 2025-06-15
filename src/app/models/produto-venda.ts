@@ -10,6 +10,7 @@ export class ProdutoVenda {
     valor!: number;
     observacaoProdutoVenda!: string;
     motivoExclusao!: string;
+    origemTransferenciaNumero!: number
     venda!: Venda;
     data!: Date;
     produto!: Produto;

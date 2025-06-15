@@ -8,7 +8,7 @@
       [(ngModel)]="impressoraSelecionada"
     >
       <option [ngValue]="undefined">Selecione...</option>
-      @if (matriz.impressoras != null) { @for (impressora of matriz.impressoras;
+      @if (matriz.configuracaoImpressao.impressoras != null) { @for (impressora of matriz.configuracaoImpressao.impressoras;
       track $index) {
       <option [ngValue]="impressora">
         {{ impressora.apelidoImpressora }}

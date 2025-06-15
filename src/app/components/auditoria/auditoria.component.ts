@@ -10,6 +10,7 @@ import { DatePipe } from '@angular/common';
 import { NgxMaskDirective } from 'ngx-mask';
 import { Usuario } from '../../models/usuario';
 import { take } from 'rxjs';
+import { FuncionarioService } from '../../services/funcionario.service';
 
 @Component({
   selector: 'app-auditoria',
@@ -24,6 +25,7 @@ export class AuditoriaComponent {
 
   globalService = inject(GlobalService);
   auditoriaService = inject(AuditoriaService);
+  funcionarioService = inject(FuncionarioService);
   toastr = inject(ToastrService);
   router = inject(Router);
 
@@ -43,9 +45,16 @@ export class AuditoriaComponent {
 
     this.globalService.getMatrizAsync().subscribe({
       next: (matriz) => {
-        this.funcionarios = (matriz.funcionarios || []).filter(
-          (f) => f.deletado === false
-        );
+        this.funcionarioService.listarFuncionarios().subscribe({
+          next: (lista) => {
+            this.funcionarios = (lista || []).filter(
+              (f) => f.deletado === false
+            );
+          },
+          error: () => {
+            this.toastr.error('Erro ao filtrar funcionarios.');
+          },
+        });
 
         this.filtrarAuditoria();
       },

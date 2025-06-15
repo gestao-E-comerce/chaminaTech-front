@@ -1,4 +1,11 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  HostListener,
+  inject,
+  Input,
+  Output,
+} from '@angular/core';
 import { Permissao } from '../../../models/permissao';
 import { Mensagem } from '../../../models/mensagem';
 import { PermissaoService } from '../../../services/permissao.service';
@@ -27,6 +34,10 @@ export class PermissaoDetalhesComponent {
   matriz!: Matriz;
   usuario!: Usuario;
 
+  @HostListener('document:keydown.enter', ['$event'])
+  onEscapeKey(event: KeyboardEvent) {
+    this.salvar();
+  }
   ngOnInit() {
     this.globalService
       .getMatrizAsync()
@@ -400,6 +411,30 @@ export class PermissaoDetalhesComponent {
       this.permissao[permissao as keyof Permissao] = novoValor;
     });
   }
+  cadastrarVenda() {
+    const novoValor = !this.permissao.cadastrarVenda;
+    const permissoesRelacionadas = ['transferirVenda'];
+
+    permissoesRelacionadas.forEach((permissao) => {
+      this.permissao[permissao as keyof Permissao] = novoValor;
+    });
+  }
+  deletarProdutoVenda() {
+    const novoValor = !this.permissao.deletarProdutoVenda;
+    const permissoesRelacionadas = ['deletarVenda'];
+
+    permissoesRelacionadas.forEach((permissao) => {
+      this.permissao[permissao as keyof Permissao] = novoValor;
+    });
+  }
+  deletarVenda() {
+    const novoValor = !this.permissao.deletarVenda;
+    const permissoesRelacionadas = ['deletarProdutoVenda'];
+
+    permissoesRelacionadas.forEach((permissao) => {
+      this.permissao[permissao as keyof Permissao] = novoValor;
+    });
+  }
   verificarVenda() {
     const permissoesVenda = [
       'cadastrarVenda',
@@ -596,7 +631,11 @@ export class PermissaoDetalhesComponent {
   }
 
   salvar() {
-    if (this.matriz && this.matriz.usarImpressora == false) {
+    if (!this.permissao.nome?.trim()) {
+      this.toastr.error('Nome obrigatório!');
+      return;
+    }
+    if (this.matriz && this.matriz.configuracaoImpressao.usarImpressora == false) {
       this.permissao.imprimir = false;
     }
     if (

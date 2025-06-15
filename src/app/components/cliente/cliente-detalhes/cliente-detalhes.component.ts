@@ -2,6 +2,7 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
+  HostListener,
   inject,
   Input,
   OnInit,
@@ -40,6 +41,11 @@ export class ClienteDetalhesComponent implements OnInit {
   indice!: number;
   tituloModal!: string;
   documento!: number;
+
+  @HostListener('document:keydown.enter', ['$event'])
+  onEscapeKey(event: KeyboardEvent) {
+    this.salvar();
+  }
 
   ngOnInit(): void {
     if (this.cliente && this.cliente.cpf != null) {
@@ -154,13 +160,12 @@ export class ClienteDetalhesComponent implements OnInit {
   salvar() {
     const cpfLimpo = this.cliente.cpf?.replace(/\D/g, '') || '';
 
-    if (!this.validarCelular(this.cliente.celular)) {
-      this.toastr.error('Celular inválido!');
+    if (!this.cliente.nome?.trim()) {
+      this.toastr.error('Nome obrigatório!');
       return;
     }
-
-    if (!this.cliente.nome && !this.cliente.nome.trim()) {
-      this.toastr.error('Nome obrigatório!');
+    if (!this.validarCelular(this.cliente.celular)) {
+      this.toastr.error('Celular inválido!');
       return;
     }
 

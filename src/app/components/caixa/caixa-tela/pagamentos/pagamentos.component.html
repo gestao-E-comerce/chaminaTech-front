@@ -133,9 +133,15 @@
         <label>Subtotal </label>
         <p>R$ {{ venda.valorTotal }}</p>
       </div>
+      @if (tipoCaixa === 'mesa') {
+      <div class="d-flex justify-content-between gap-2 col-12">
+        <label>Serviço </label>
+        <p>R$ {{ venda.valorServico }}</p>
+      </div>
+      }
       <div class="d-flex justify-content-between gap-2 col-12">
         <label>Desconto </label>
-        <p>R$ 0.00</p>
+        <p>R$ 0</p>
       </div>
       <div class="d-flex justify-content-between gap-2 col-12">
         <label>Total </label>

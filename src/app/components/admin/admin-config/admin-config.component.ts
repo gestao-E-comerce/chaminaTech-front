@@ -52,10 +52,10 @@ export class AdminConfigComponent {
       });
       return;
     }
-    if (!this.admin.nome && !this.admin.nome.trim()) {
+    if (!this.admin.nome?.trim()) {
       this.toastr.error('Nome obrigatório!');
       return;
-    } else if (!this.admin.username && !this.admin.username.trim()) {
+    } else if (!this.admin.username?.trim()) {
       this.toastr.error('UserName obrigatório!');
       return;
     } else {

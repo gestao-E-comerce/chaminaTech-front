@@ -1,6 +1,7 @@
 import {
   Component,
   EventEmitter,
+  HostListener,
   inject,
   Input,
   OnInit,
@@ -43,6 +44,15 @@ export class SelecionarMateriasComponent implements OnInit {
   obcervacaoMateriaLocal: ObservacaoMateria = new ObservacaoMateria();
   ativo?: string = '';
 
+  @HostListener('document:keydown.enter', ['$event'])
+  onEscapeKey(event: KeyboardEvent) {
+    if (this.produto != null) {
+      this.salvarProdutoMateria();
+    }
+    if (this.observacoes != null) {
+      this.salvarObservacaoMateria();
+    }
+  }
   ngOnInit() {
     if (this.produtoMateria) {
       this.produtoMateriaLocal = Object.assign({}, this.produtoMateria);

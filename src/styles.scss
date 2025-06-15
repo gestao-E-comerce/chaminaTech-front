@@ -134,6 +134,7 @@ textarea,
 input:disabled {
     background-color: var(--cor-cinza-escuro) !important;
     cursor: not-allowed;
+    filter: brightness(0.6);
 }
 
 .btn-close:focus {
@@ -634,6 +635,7 @@ textarea {
     background-color: var(--cor-cinza-calro);
     border-color: var(--cor-cinza-medio);
     cursor: not-allowed;
+    filter: brightness(0.6);
 }
 
 .checkmark {
@@ -992,6 +994,7 @@ label {
 
 .btn-comum-laranja:disabled {
     cursor: not-allowed;
+    filter: brightness(0.6);
 }
 
 .btn-comum-vermelho {

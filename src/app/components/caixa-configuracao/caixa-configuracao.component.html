@@ -192,7 +192,7 @@
                           <span class="hover-text">Editar</span>
                         </button>
                         } @if ((usuario && usuario.permissao &&
-                        usuario.permissao.imprimir) && matriz.usarImpressora) {
+                        usuario.permissao.imprimir) && matriz.configuracaoImpressao.usarImpressora) {
                         <button
                           type="button"
                           name="{{ sangria.dataSangria }}"
@@ -271,7 +271,7 @@
                           <span class="hover-text">Editar</span>
                         </button>
                         } @if ((usuario && usuario.permissao &&
-                        usuario.permissao.imprimir) && matriz.usarImpressora) {
+                        usuario.permissao.imprimir) && matriz.configuracaoImpressao.usarImpressora) {
                         <button
                           type="button"
                           name="{{ suprimento.dataSuprimento }}"
@@ -361,7 +361,7 @@
         </div>
       </div>
       <div class="d-flex justify-content-end align-items-center w-100 h-btn gap-3">
-        @if ((usuario && usuario.permissao && usuario.permissao.imprimir) && matriz.usarImpressora) {
+        @if ((usuario && usuario.permissao && usuario.permissao.imprimir) && matriz.configuracaoImpressao.usarImpressora) {
         <button
           type="button"
           name="impremir"

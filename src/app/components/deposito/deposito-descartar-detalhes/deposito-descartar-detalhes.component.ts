@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, inject, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MateriaListComponent } from '../../materia/materia-list/materia-list.component';
 import { NgClass } from '@angular/common';
@@ -26,6 +26,11 @@ export class DepositoDescartarDetalhesComponent {
   modalService = inject(NgbModal);
   modalRef!: NgbModalRef;
 
+  @HostListener('document:keydown.enter', ['$event'])
+  onEscapeKey(event: KeyboardEvent) {
+    this.salvar();
+  }
+
   retornoMateria(materia: any) {
     this.toastr.success('Matéria vinculada com sucesso');
     this.depositoDescartar.materia = materia;
@@ -43,10 +48,10 @@ export class DepositoDescartarDetalhesComponent {
     } else if (this.depositoDescartar.quantidade == null) {
       this.toastr.error('Quantidade Obrigatório!');
       return;
-    } else if (!this.depositoDescartar.motivo && !this.depositoDescartar.motivo.trim()) {
+    } else if (!this.depositoDescartar.motivo?.trim()) {
       this.toastr.error('Motivo Obrigatório!');
       return;
-    } 
+    }
     this.depositoService.descartar(this.depositoDescartar).subscribe({
       next: (mensagem) => {
         this.toastr.success(mensagem.mensagem);

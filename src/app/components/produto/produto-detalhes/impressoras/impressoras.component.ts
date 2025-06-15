@@ -39,7 +39,7 @@ export class ImpressorasComponent implements OnInit {
       .subscribe({
         next: (matriz) => {
           this.matriz = matriz;
-          matriz.impressoras = matriz.impressoras.filter(
+          matriz.configuracaoImpressao.impressoras = matriz.configuracaoImpressao.impressoras.filter(
             imp => !this.produto.impressoras.some(p => p.apelidoImpressora === imp.apelidoImpressora)
           );
         },

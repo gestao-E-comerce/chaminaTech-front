@@ -121,7 +121,7 @@ export class HomeComponent {
     } else if (this.acao === 'config') {
       if (this.usuario.permissao.editarConfiguracoes == true) {
         this.modalService.dismissAll();
-        this.router.navigate(['/config']);
+        this.router.navigate(['/config/perfil']);
       } else {
         this.toastr.error('Acesso negado pra este usuario!');
       }
@@ -163,7 +163,7 @@ export class HomeComponent {
   }
 
   usuarioCaixa(modalAbrirCaixa: any) {
-    if (this.matriz.usarImpressora == true) {
+    if (this.matriz.configuracaoImpressao.usarImpressora == true) {
       const identificadorLocal = localStorage.getItem('identificador');
       if (!identificadorLocal) {
         this.toastr.warning(
@@ -172,16 +172,20 @@ export class HomeComponent {
         return;
       }
     }
-    this.globalService.getCaixaAsync().subscribe({
-      next: (caixaAtivo) => {
-        if (caixaAtivo) {
-          this.router.navigate(['/caixa/balcao']);
-        } else {
-          this.usuario = Object.assign({}, this.usuario);
-          this.modalService.open(modalAbrirCaixa, { size: 'mm' });
-          this.tituloModal = 'Abrir Caixa';
-        }
-      },
-    });
+    this.globalService
+      .getCaixaAsync()
+      .pipe(take(1))
+      .subscribe({
+        next: (caixaAtivo) => {
+          
+          if (caixaAtivo) {
+            this.router.navigate(['/caixa/balcao']);
+          } else {
+            this.usuario = Object.assign({}, this.usuario);
+            this.modalService.open(modalAbrirCaixa, { size: 'mm' });
+            this.tituloModal = 'Abrir Caixa';
+          }
+        },
+      });
   }
 }

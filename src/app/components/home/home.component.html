@@ -3,8 +3,11 @@
     <div class="gap-3 p-0 m-0">
       <img src="../../../assets/images/logo-da-empresa.png" class="logo" />
       @if (usuario != null) {
-      <div>
-        <label>Usuário Logado: {{ usuario.nome }}</label>
+      <div class="d-flex flex-column p-0 m-0 align-items-start">
+        @if (matriz.nome != null) {
+          <label>Empressa: {{ matriz.nome }}</label>
+        }
+        <label>Usuário: {{ usuario.nome }}</label>
       </div>
       }
     </div>

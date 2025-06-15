@@ -1,0 +1,127 @@
+<form #formulario="ngForm" (ngSubmit)="salvar(formulario)">
+  <div class="d-flex align-items-center justify-content-between header-fixo">
+    <div class="d-flex align-items-center">
+      <h2 class="titulo m-0">Perfil</h2>
+    </div>
+    <div class="d-flex align-items-center">
+      <button
+        type="submit"
+        class="btn-comum btn-comum-laranja"
+        [disabled]="!isModified()"
+      >
+        Salvar
+      </button>
+    </div>
+  </div>
+  <div class="d-flex flex-column gap-3 p-2">
+    <div class="col-lg-12 d-flex align-items-center gap-3 w-100 area-pesquisa">
+      <div class="div4 d-flex flex-column w-25">
+        <label for="cep" class="form-label">CEP</label>
+        <div class="filtro-pesquisa">
+          <input
+            autocomplete="off"
+            #cep="ngModel"
+            required
+            type="text"
+            inputmode="numeric"
+            class="form-control"
+            name="cep"
+            [(ngModel)]="matrizOriginal.cep"
+            mask="00000-000"
+            (keydown.Space)="buscarCEP()"
+            [ngClass]="{ 'borda-vermelha': !cep.valid && cep.touched }"
+          />
+          <button type="button" class="botao_cep" (click)="buscarCEP()">
+            <img src="../../../../assets/images/search.svg" class="busca" />
+          </button>
+        </div>
+      </div>
+      <div class="div5 d-flex flex-column w-50">
+        <label for="rua" class="form-label">Rua</label>
+        <input
+          autocomplete="off"
+          #rua="ngModel"
+          required
+          type="text"
+          class="form-control w-100"
+          name="rua"
+          [(ngModel)]="matrizOriginal.rua"
+          [ngClass]="{ 'borda-vermelha': !rua.valid && rua.touched }"
+        />
+      </div>
+      <div class="div6 d-flex flex-column w-25">
+        <label for="numero" class="form-label">Numero</label>
+        <input
+          autocomplete="off"
+          #numero="ngModel"
+          required
+          type="number"
+          inputmode="numeric"
+          min="0"
+          step="1"
+          onkeydown="return !['e', 'E', '-', '+' , ',' , '.'].includes(event.key)"
+          oninput="if (this.value.length > 10) this.value = this.value.slice(0, 10)"
+          class="form-control no-spin w-100"
+          name="numero"
+          [(ngModel)]="matrizOriginal.numero"
+          [ngClass]="{ 'borda-vermelha': !numero.valid && numero.touched }"
+        />
+      </div>
+    </div>
+    <div class="col-lg-12 d-flex align-items-center gap-3 w-100 area-pesquisa">
+      <div class="div1 d-flex flex-column w-25">
+        <label for="bairro" class="form-label">Bairro</label>
+        <input
+          autocomplete="off"
+          #bairro="ngModel"
+          required
+          type="text"
+          class="form-control"
+          name="bairro"
+          [(ngModel)]="matrizOriginal.bairro"
+          [ngClass]="{ 'borda-vermelha': !bairro.valid && bairro.touched }"
+        />
+      </div>
+      <div class="div2 d-flex flex-column w-25">
+        <label for="cidade" class="form-label">Cidade</label>
+        <input
+          autocomplete="off"
+          #cidade="ngModel"
+          required
+          type="text"
+          class="form-control"
+          name="cidade"
+          [(ngModel)]="matrizOriginal.cidade"
+          [ngClass]="{ 'borda-vermelha': !cidade.valid && cidade.touched }"
+        />
+      </div>
+      <div class="div3 d-flex flex-column w-25">
+        <label for="estado" class="form-label">Estado</label>
+        <input
+          autocomplete="off"
+          #estado="ngModel"
+          required
+          type="text"
+          class="form-control"
+          name="estado"
+          [(ngModel)]="matrizOriginal.estado"
+          [ngClass]="{ 'borda-vermelha': !estado.valid && estado.touched }"
+        />
+      </div>
+    </div>
+  </div>
+</form>
+
+<ng-template #modalCancelar let-modal>
+  <div class="modal-body">
+    Você tem alterações não salvas. Deseja sair mesmo assim?
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-danger" (click)="modal.close('confirmado')">
+      Sair sem salvar
+    </button>
+    <button class="btn btn-secondary" (click)="modal.dismiss()">
+      Cancelar
+    </button>
+  </div>
+</ng-template>

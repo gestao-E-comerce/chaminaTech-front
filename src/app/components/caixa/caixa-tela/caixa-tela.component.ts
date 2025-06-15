@@ -148,6 +148,7 @@ export class CaixaTelaComponent implements OnInit {
   kmEntregaCalculado: number | null = null;
   vendaTransferidaAssumida: boolean = false;
   horaEntregaPrevista: string = '';
+  taxaServico?: number;
 
   ngOnInit() {
     this.onResize();
@@ -343,13 +344,13 @@ export class CaixaTelaComponent implements OnInit {
     const salvarPagamento = () => {
       this.venda.caixa = this.caixa;
 
-      if (this.matriz.imprimirNotaFiscal === 0) {
+      if (this.matriz.configuracaoImpressao.imprimirNotaFiscal === 0) {
         this.venda.imprimirNotaFiscal = true;
         this.salvarVenda();
-      } else if (this.matriz.imprimirNotaFiscal === 1) {
+      } else if (this.matriz.configuracaoImpressao.imprimirNotaFiscal === 1) {
         this.venda.imprimirNotaFiscal = false;
         this.salvarVenda();
-      } else if (this.matriz.imprimirNotaFiscal === 2) {
+      } else if (this.matriz.configuracaoImpressao.imprimirNotaFiscal === 2) {
         this.abrirModalConfirmarImpressao(
           'notaFiscal',
           modalConfirmarImpressao
@@ -373,13 +374,13 @@ export class CaixaTelaComponent implements OnInit {
         this.lancarVenda(modalConfirmarImpressao);
       }
     } else if (this.tipoCaixa === 'balcao') {
-      if (this.matriz.imprimirCadastrar === 0) {
+      if (this.matriz.configuracaoImpressao.imprimirCadastrar === 0) {
         this.venda.imprimirCadastrar = true;
         salvarPagamento();
-      } else if (this.matriz.imprimirCadastrar === 1) {
+      } else if (this.matriz.configuracaoImpressao.imprimirCadastrar === 1) {
         this.venda.imprimirCadastrar = false;
         salvarPagamento();
-      } else if (this.matriz.imprimirCadastrar === 2) {
+      } else if (this.matriz.configuracaoImpressao.imprimirCadastrar === 2) {
         if (this.funcionario.preferenciaImpressaoProdutoNovo === 'SEMPRE') {
           this.venda.imprimirCadastrar = true;
           this.salvarVenda();
@@ -477,7 +478,9 @@ export class CaixaTelaComponent implements OnInit {
         this.venda.produtoVendas.splice(index, 1);
         this.valorTotal();
       } else {
-        if (this.matriz.mostarMotivoDeletarProduto == true) {
+        if (
+          this.matriz.configuracaoImpressao.mostarMotivoDeletarProduto == true
+        ) {
           this.modalService.open(modalDelatarProduto, { size: 'md' });
         } else {
           const salvarEVoltar = () => {
@@ -509,13 +512,13 @@ export class CaixaTelaComponent implements OnInit {
             });
           };
 
-          if (this.matriz.imprimirDeletar === 0) {
+          if (this.matriz.configuracaoImpressao.imprimirDeletar === 0) {
             this.venda.imprimirDeletar = true;
             salvarEVoltar();
-          } else if (this.matriz.imprimirDeletar === 1) {
+          } else if (this.matriz.configuracaoImpressao.imprimirDeletar === 1) {
             this.venda.imprimirDeletar = false;
             salvarEVoltar();
-          } else if (this.matriz.imprimirDeletar === 2) {
+          } else if (this.matriz.configuracaoImpressao.imprimirDeletar === 2) {
             if (
               this.funcionario.preferenciaImpressaoProdutoDeletado === 'SEMPRE'
             ) {
@@ -554,7 +557,7 @@ export class CaixaTelaComponent implements OnInit {
     }
   }
   confirmarDeletarProduto(index: number, modalConfirmarImpressao: any) {
-    if (!this.motivoDeletar && !this.motivoDeletar.trim()) {
+    if (!this.motivoDeletar?.trim()) {
       this.toastr.error('Motivo indefinido!!');
     } else {
       const salvarEVoltar = () => {
@@ -584,13 +587,13 @@ export class CaixaTelaComponent implements OnInit {
         });
       };
 
-      if (this.matriz.imprimirDeletar === 0) {
+      if (this.matriz.configuracaoImpressao.imprimirDeletar === 0) {
         this.venda.imprimirDeletar = true;
         salvarEVoltar();
-      } else if (this.matriz.imprimirDeletar === 1) {
+      } else if (this.matriz.configuracaoImpressao.imprimirDeletar === 1) {
         this.venda.imprimirDeletar = false;
         salvarEVoltar();
-      } else if (this.matriz.imprimirDeletar === 2) {
+      } else if (this.matriz.configuracaoImpressao.imprimirDeletar === 2) {
         if (this.funcionario.preferenciaImpressaoProdutoDeletado === 'SEMPRE') {
           this.venda.imprimirDeletar = true;
           salvarEVoltar();
@@ -869,6 +872,28 @@ export class CaixaTelaComponent implements OnInit {
     modalPagamentos: any,
     modalVendaSelecionada: any
   ) {
+    if (
+      this.venda.id != null &&
+      (!this.venda.produtoVendas || this.venda.produtoVendas.length === 0)
+    ) {
+      this.venda.mesa == this.venda.mesa;
+      this.venda.retirada = false;
+      this.venda.entrega = false;
+      this.venda.balcao = false;
+      this.venda.statusEmAberto = false;
+      this.venda.ativo = true;
+      this.venda.nomeImpressora = null;
+      this.venda.imprimirCadastrar = false;
+      this.venda.imprimirDeletar = false;
+      this.venda.imprimirNotaFiscal = false;
+      this.venda.motivo = '';
+      this.vendaService.deletar(this.venda).subscribe({
+        next: (mensagem) => {
+          this.modalService.dismissAll();
+          this.motivoDeletar = '';
+        },
+      });
+    }
     // Verifique se o evento contém uma venda ou um gestaoCaixa
     if (this.tipoCaixa === 'mesa' && event.venda) {
       this.abrirNumeroMesa(
@@ -986,8 +1011,7 @@ export class CaixaTelaComponent implements OnInit {
         if (cupom.venda.dataVenda && cupom.venda.tempoEstimado) {
           const dataVenda = new Date(cupom.venda.dataVenda);
           const entregaFinal = new Date(
-            dataVenda.getTime() +
-              cupom.venda.tempoEstimado * 60000
+            dataVenda.getTime() + cupom.venda.tempoEstimado * 60000
           );
           this.horaEntregaPrevista = entregaFinal.toLocaleTimeString([], {
             hour: '2-digit',
@@ -1041,8 +1065,7 @@ export class CaixaTelaComponent implements OnInit {
         if (cupom.venda.dataVenda && cupom.venda.tempoEstimado) {
           const dataVenda = new Date(cupom.venda.dataVenda);
           const entregaFinal = new Date(
-            dataVenda.getTime() +
-              cupom.venda.tempoEstimado * 60000
+            dataVenda.getTime() + cupom.venda.tempoEstimado * 60000
           );
           this.horaEntregaPrevista = entregaFinal.toLocaleTimeString([], {
             hour: '2-digit',
@@ -1061,7 +1084,7 @@ export class CaixaTelaComponent implements OnInit {
     modalConfirmarImpressao: any
   ) {
     this.venda = Object.assign({}, venda);
-    if (this.matriz.mostarMotivoDeletarVenda == true) {
+    if (this.matriz.configuracaoImpressao.mostarMotivoDeletarVenda == true) {
       this.modalService.open(modalDelatarVenda, { size: 'md' });
     } else {
       const deletarVenda = () => {
@@ -1078,13 +1101,13 @@ export class CaixaTelaComponent implements OnInit {
         });
       };
 
-      if (this.matriz.imprimirDeletar === 0) {
+      if (this.matriz.configuracaoImpressao.imprimirDeletar === 0) {
         this.venda.imprimirDeletar = true;
         deletarVenda();
-      } else if (this.matriz.imprimirDeletar === 1) {
+      } else if (this.matriz.configuracaoImpressao.imprimirDeletar === 1) {
         this.venda.imprimirDeletar = false;
         deletarVenda();
-      } else if (this.matriz.imprimirDeletar === 2) {
+      } else if (this.matriz.configuracaoImpressao.imprimirDeletar === 2) {
         if (this.funcionario.preferenciaImpressaoProdutoDeletado === 'SEMPRE') {
           this.venda.imprimirDeletar = true;
           deletarVenda();
@@ -1118,7 +1141,7 @@ export class CaixaTelaComponent implements OnInit {
     }
   }
   confirmarDeletarVenda(modalConfirmarImpressao: any) {
-    if (!this.motivoDeletar && !this.motivoDeletar.trim()) {
+    if (!this.motivoDeletar?.trim()) {
       this.toastr.error('Motivo indefinido!!');
     } else {
       const deletarVenda = () => {
@@ -1135,13 +1158,13 @@ export class CaixaTelaComponent implements OnInit {
         });
       };
 
-      if (this.matriz.imprimirDeletar === 0) {
+      if (this.matriz.configuracaoImpressao.imprimirDeletar === 0) {
         this.venda.imprimirDeletar = true;
         deletarVenda();
-      } else if (this.matriz.imprimirDeletar === 1) {
+      } else if (this.matriz.configuracaoImpressao.imprimirDeletar === 1) {
         this.venda.imprimirDeletar = false;
         deletarVenda();
-      } else if (this.matriz.imprimirDeletar === 2) {
+      } else if (this.matriz.configuracaoImpressao.imprimirDeletar === 2) {
         if (this.funcionario.preferenciaImpressaoProdutoDeletado === 'SEMPRE') {
           this.venda.imprimirDeletar = true;
           deletarVenda();
@@ -1358,14 +1381,10 @@ export class CaixaTelaComponent implements OnInit {
               }
             }
             this.kmEntregaCalculado = this.calcularKmEntregaSeAplicavel();
-            if (
-              cupom.venda.dataVenda &&
-              cupom.venda.tempoEstimado
-            ) {
+            if (cupom.venda.dataVenda && cupom.venda.tempoEstimado) {
               const dataVenda = new Date(cupom.venda.dataVenda);
               const entregaFinal = new Date(
-                dataVenda.getTime() +
-                  cupom.venda.tempoEstimado * 60000
+                dataVenda.getTime() + cupom.venda.tempoEstimado * 60000
               );
               this.horaEntregaPrevista = entregaFinal.toLocaleTimeString([], {
                 hour: '2-digit',
@@ -1406,14 +1425,10 @@ export class CaixaTelaComponent implements OnInit {
               }
             }
             this.kmEntregaCalculado = this.calcularKmEntregaSeAplicavel();
-            if (
-              cupom.venda.dataVenda &&
-              cupom.venda.tempoEstimado
-            ) {
+            if (cupom.venda.dataVenda && cupom.venda.tempoEstimado) {
               const dataVenda = new Date(cupom.venda.dataVenda);
               const entregaFinal = new Date(
-                dataVenda.getTime() +
-                  cupom.venda.tempoEstimado * 60000
+                dataVenda.getTime() + cupom.venda.tempoEstimado * 60000
               );
               this.horaEntregaPrevista = entregaFinal.toLocaleTimeString([], {
                 hour: '2-digit',
@@ -1608,8 +1623,12 @@ export class CaixaTelaComponent implements OnInit {
       this.modalService.dismissAll();
     }
 
-    if (this.tipoCaixa === 'retirada' && this.matriz.tempoEstimadoRetidara != null) {
-      this.venda.tempoEstimado = this.matriz.tempoEstimadoRetidara;
+    if (
+      this.tipoCaixa === 'retirada' &&
+      this.matriz.configuracaoRetirada.tempoEstimadoRetidara != null
+    ) {
+      this.venda.tempoEstimado =
+        this.matriz.configuracaoRetirada.tempoEstimadoRetidara;
     }
 
     if (this.tipoCaixa === 'entrega') {
@@ -1617,7 +1636,7 @@ export class CaixaTelaComponent implements OnInit {
       const matriz = this.matriz;
 
       if (
-        matriz.calcular === 0 &&
+        matriz.configuracaoEntrega.calcular === 0 &&
         endereco.latitude != null &&
         endereco.longitude != null &&
         matriz.latitude != null &&
@@ -1637,7 +1656,7 @@ export class CaixaTelaComponent implements OnInit {
         let tempoEstimado: number | null = null;
         let maiorFaixaKm = 0;
 
-        for (const faixa of matriz.taxasEntregaKm) {
+        for (const faixa of matriz.configuracaoEntrega.taxasEntregaKm) {
           if (faixa.km != null && faixa.valor != null) {
             if (faixa.km > maiorFaixaKm) maiorFaixaKm = faixa.km;
 
@@ -1765,8 +1784,9 @@ export class CaixaTelaComponent implements OnInit {
       }
     });
 
-    const imprimirCadastrar = this.matriz.imprimirCadastrar;
-    const imprimirDeletar = this.matriz.imprimirDeletar;
+    const imprimirCadastrar =
+      this.matriz.configuracaoImpressao.imprimirCadastrar;
+    const imprimirDeletar = this.matriz.configuracaoImpressao.imprimirDeletar;
     const prefNovo = this.funcionario.preferenciaImpressaoProdutoNovo;
     const prefDel = this.funcionario.preferenciaImpressaoProdutoDeletado;
 
@@ -1951,13 +1971,13 @@ export class CaixaTelaComponent implements OnInit {
         });
       }
     } else if (contadorDeletar > 0) {
-      if (this.matriz.imprimirDeletar === 0) {
+      if (this.matriz.configuracaoImpressao.imprimirDeletar === 0) {
         this.venda.imprimirDeletar = true;
         this.salvarVenda();
-      } else if (this.matriz.imprimirDeletar === 1) {
+      } else if (this.matriz.configuracaoImpressao.imprimirDeletar === 1) {
         this.venda.imprimirDeletar = false;
         this.salvarVenda();
-      } else if (this.matriz.imprimirDeletar === 2) {
+      } else if (this.matriz.configuracaoImpressao.imprimirDeletar === 2) {
         if (prefDel === 'SEMPRE') {
           this.venda.imprimirDeletar = true;
           this.salvarVenda();
@@ -1983,13 +2003,13 @@ export class CaixaTelaComponent implements OnInit {
         }
       }
     } else if (contadorCadastrar > 0) {
-      if (this.matriz.imprimirCadastrar === 0) {
+      if (this.matriz.configuracaoImpressao.imprimirCadastrar === 0) {
         this.venda.imprimirCadastrar = true;
         this.salvarVenda();
-      } else if (this.matriz.imprimirCadastrar === 1) {
+      } else if (this.matriz.configuracaoImpressao.imprimirCadastrar === 1) {
         this.venda.imprimirCadastrar = false;
         this.salvarVenda();
-      } else if (this.matriz.imprimirCadastrar === 2) {
+      } else if (this.matriz.configuracaoImpressao.imprimirCadastrar === 2) {
         if (prefNovo === 'SEMPRE') {
           this.venda.imprimirCadastrar = true;
           this.salvarVenda();
@@ -2342,6 +2362,7 @@ export class CaixaTelaComponent implements OnInit {
   }
   valorTotal() {
     let valorTotal = 0;
+    let taxa = 0;
 
     if (this.venda.produtoVendas && this.venda.produtoVendas.length > 0) {
       for (const produtoVenda of this.venda.produtoVendas) {
@@ -2367,8 +2388,28 @@ export class CaixaTelaComponent implements OnInit {
         valorTotal += valorProduto;
       }
     }
+    this.venda.valorBruto = valorTotal;
     valorTotal += this.venda.taxaEntrega ?? 0;
+    if (
+      this.tipoCaixa === 'mesa' &&
+      this.matriz.configuracaoTaxaServicio.aplicar
+    ) {
+      if (
+        this.matriz.configuracaoTaxaServicio.tipo === 'PERCENTUAL' &&
+        this.matriz.configuracaoTaxaServicio.percentual > 0
+      ) {
+        taxa =
+          (valorTotal * this.matriz.configuracaoTaxaServicio.percentual) / 100;
+      } else if (
+        this.matriz.configuracaoTaxaServicio.tipo === 'FIXO' &&
+        this.matriz.configuracaoTaxaServicio.valorFixo > 0
+      ) {
+        taxa = this.matriz.configuracaoTaxaServicio.valorFixo;
+      }
+      valorTotal += taxa;
+    }
 
+    this.venda.valorServico = taxa;
     this.venda.valorTotal = valorTotal;
   }
   tipoVenda() {
@@ -2383,7 +2424,7 @@ export class CaixaTelaComponent implements OnInit {
     }
   }
   vendaBalcao() {
-    if (this.matriz.usarImpressora == false) {
+    if (this.matriz.configuracaoImpressao.usarImpressora == false) {
       this.venda.mesa == null;
       this.venda.retirada = false;
       this.venda.entrega = false;
@@ -2401,7 +2442,7 @@ export class CaixaTelaComponent implements OnInit {
     }
   }
   vendaMesa() {
-    if (this.matriz.usarImpressora == false) {
+    if (this.matriz.configuracaoImpressao.usarImpressora == false) {
       this.venda.mesa == this.venda.mesa;
       this.venda.retirada = false;
       this.venda.entrega = false;
@@ -2423,7 +2464,7 @@ export class CaixaTelaComponent implements OnInit {
     }
   }
   vendaEntrega() {
-    if (this.matriz.usarImpressora == false) {
+    if (this.matriz.configuracaoImpressao.usarImpressora == false) {
       this.venda.mesa == null;
       this.venda.retirada = false;
       this.venda.entrega = true;
@@ -2445,7 +2486,7 @@ export class CaixaTelaComponent implements OnInit {
     }
   }
   vendaRetirada() {
-    if (this.matriz.usarImpressora == false) {
+    if (this.matriz.configuracaoImpressao.usarImpressora == false) {
       this.venda.mesa == null;
       this.venda.retirada = true;
       this.venda.entrega = false;

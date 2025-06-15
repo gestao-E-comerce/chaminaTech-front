@@ -24,11 +24,11 @@ import { Config } from '../../config';
   providedIn: 'root',
 })
 export class GlobalService {
-  private readonly API_ADMIN_FUNCIONARIO = `${Config.BACKEND_URL}/api/adminFuncionario`;
-  private readonly API_ADMIN = `${Config.BACKEND_URL}/api/admin`;
-  private readonly API_FUNCIONARIO = `${Config.BACKEND_URL}/api/funcionario`;
-  private readonly API_MATRIZ = `${Config.BACKEND_URL}/api/matriz`;
-  private readonly API_CAIXA = `${Config.BACKEND_URL}/api/caixa`;
+  private readonly API_ADMIN_FUNCIONARIO = `${Config.BACKEND_URL}/adminFuncionario`;
+  private readonly API_ADMIN = `${Config.BACKEND_URL}/admin`;
+  private readonly API_FUNCIONARIO = `${Config.BACKEND_URL}/funcionario`;
+  private readonly API_MATRIZ = `${Config.BACKEND_URL}/matriz`;
+  private readonly API_CAIXA = `${Config.BACKEND_URL}/caixa`;
   http = inject(HttpClient);
   injector = inject(Injector);
   adminService = inject(AdminService);
@@ -131,6 +131,10 @@ export class GlobalService {
     );
 
     return this.caixaObs$;
+  }
+  setCaixa(caixa: Caixa): void {
+    this.caixa = caixa;
+    this.caixaObs$ = of(caixa); // Atualiza o observable do caixa
   }
 
   buscarCaixaAtivaPorFuncionario(

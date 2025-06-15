@@ -1,0 +1,42 @@
+ .header-fixo {
+     position: sticky;
+     top: 0;
+     z-index: 100;
+     background-color: var(--cor-cinza-escuro);
+     padding: 1rem;
+     border-bottom: 1px solid var(--cor-laranja);
+ }
+
+ @media (max-width: 1024px) {
+     .area-pesquisa {
+         flex-wrap: wrap;
+
+         .div6 {
+             width: 20% !important;
+         }
+     }
+ }
+
+ @media (max-width: 768px) {
+     .area-pesquisa {
+         flex-wrap: wrap;
+
+         div {
+             width: 100% !important;
+         }
+
+         .div6 {
+             width: 100% !important;
+         }
+     }
+ }
+
+ @media (max-width: 480px) {
+     .area-pesquisa {
+         flex-wrap: wrap;
+
+         div {
+             width: 100% !important;
+         }
+     }
+ }

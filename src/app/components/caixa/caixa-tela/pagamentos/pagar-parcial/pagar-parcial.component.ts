@@ -87,10 +87,9 @@ export class PagarParcialComponent implements OnInit {
     return observacoesLista + observacaoIndividual;
   }
   salvar() {
+    console.log(this.venda);
     if (!this.vendaParcial.produtoVendas) {
       this.vendaParcial.produtoVendas = [];
-    } else {
-      this.vendaParcial.produtoVendas.length = 0; // Limpa lista anterior
     }
 
     let produtoFoiSelecionado = false;
@@ -121,6 +120,12 @@ export class PagarParcialComponent implements OnInit {
         }
       }
     }
+    this.vendaParcial.produtoVendas.forEach((pv) => {
+      delete (pv as any)['selecionado'];
+    });
+    this.venda.produtoVendas.forEach((pv) => {
+      delete (pv as any)['selecionado'];
+    });
 
     if (!produtoFoiSelecionado) {
       this.toastr.error('Selecione um produto!');

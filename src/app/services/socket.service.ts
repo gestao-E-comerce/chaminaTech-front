@@ -17,7 +17,7 @@ export class SocketService {
 
     this.stompClient = new Client({
       // ⚠️ aponta para o mesmo /ws (SockJS) que o Spring expõe
-      webSocketFactory: () => new SockJS(`${Config.BACKEND_URL}/api/ws`),
+      webSocketFactory: () => new SockJS(`${Config.BACKEND_URL}/ws`),
       // 📨 só aqui no CONNECT enviamos o JWT
       connectHeaders: { Authorization: `Bearer ${jwt}` },
       reconnectDelay: 5000,

@@ -10,7 +10,7 @@ import { Config } from '../../config';
   providedIn: 'root',
 })
 export class AdminFuncionarioService {
-  private readonly API = `${Config.BACKEND_URL}/api/adminFuncionario`;
+  private readonly API = `${Config.BACKEND_URL}/adminFuncionario`;
   http = inject(HttpClient);
   globalService = inject(GlobalService);
 

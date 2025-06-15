@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  HostListener,
+  Input,
+  Output,
+  inject,
+} from '@angular/core';
 import { Matriz } from '../../../models/matriz';
 import { Mensagem } from '../../../models/mensagem';
 import { FormsModule } from '@angular/forms';
@@ -31,6 +38,10 @@ export class MatrizDetalhesComponent {
 
   tituloModal!: string;
   enderecoOriginal: string = '';
+  @HostListener('document:keydown.enter', ['$event'])
+  onEscapeKey(event: KeyboardEvent) {
+    this.salvar();
+  }
 
   ngOnChanges() {
     const endereco = this.matriz;
@@ -136,27 +147,25 @@ export class MatrizDetalhesComponent {
       return;
     }
 
-    this.globalService
-      .buscarCoordenadasPorEndereco(enderecoAtual)
-      .subscribe({
-        next: (coords) => {
-          this.matriz.latitude = coords.lat;
-          this.matriz.longitude = coords.lng;
-          this.matrizService.save(this.matriz).subscribe({
-            next: (mensagem) => {
-              this.toastr.success(mensagem.mensagem);
-              this.retorno.emit(mensagem);
-            },
-            error: (erro) => {
-              this.toastr.error(erro.error.mensagem);
-            },
-          });
-        },
-        error: () => {
-          this.toastr.error(
-            'Endereço inválido ou não encontrado. Verifique os dados.'
-          );
-        },
-      });
+    this.globalService.buscarCoordenadasPorEndereco(enderecoAtual).subscribe({
+      next: (coords) => {
+        this.matriz.latitude = coords.lat;
+        this.matriz.longitude = coords.lng;
+        this.matrizService.save(this.matriz).subscribe({
+          next: (mensagem) => {
+            this.toastr.success(mensagem.mensagem);
+            this.retorno.emit(mensagem);
+          },
+          error: (erro) => {
+            this.toastr.error(erro.error.mensagem);
+          },
+        });
+      },
+      error: () => {
+        this.toastr.error(
+          'Endereço inválido ou não encontrado. Verifique os dados.'
+        );
+      },
+    });
   }
 }

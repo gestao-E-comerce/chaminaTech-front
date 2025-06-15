@@ -16,10 +16,15 @@ import { caixaTelaGuard } from './guards/caixa-tela.guard';
 import { CaixaConfiguracaoComponent } from './components/caixa-configuracao/caixa-configuracao.component';
 import { ProdutoListComponent } from './components/produto/produto-list/produto-list.component';
 import { CategoriaListComponent } from './components/categoria/categoria-list/categoria-list.component';
-import { confTelaGuard } from './guards/conf-tela.guard';
 import { AdminConfigComponent } from './components/admin/admin-config/admin-config.component';
 import { AdminFuncionarioComponent } from './components/admin/admin-funcionario/admin-funcionario.component';
 import { AuditoriaComponent } from './components/auditoria/auditoria.component';
+import { ConfiguracaoPerfilComponent } from './components/matriz/configuracao/configuracao-perfil/configuracao-perfil.component';
+import { ConfiguracaoEntregaComponent } from './components/matriz/configuracao/configuracao-entrega/configuracao-entrega.component';
+import { ConfiguracaoRetiradaComponent } from './components/matriz/configuracao/configuracao-retirada/configuracao-retirada.component';
+import { ConfiguracaoImpressaoComponent } from './components/matriz/configuracao/configuracao-impressao/configuracao-impressao.component';
+import { ConfiguracaoTaxaServicoComponent } from './components/matriz/configuracao/configuracao-taxa-servico/configuracao-taxa-servico.component';
+import { confTelaGuard } from './guards/conf-tela.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -68,10 +73,42 @@ export const routes: Routes = [
     canActivate: [rotaguardGuard],
   },
   {
-    path: 'config',
+    path: '',
     component: ConfiguracaoComponent,
     canActivate: [rotaguardGuard],
     canDeactivate: [confTelaGuard],
+    children: [
+      {
+        path: 'config/perfil',
+        component: ConfiguracaoPerfilComponent,
+        canActivate: [rotaguardGuard],
+        canDeactivate: [confTelaGuard],
+      },
+      {
+        path: 'config/entrega',
+        component: ConfiguracaoEntregaComponent,
+        canActivate: [rotaguardGuard],
+        canDeactivate: [confTelaGuard],
+      },
+      {
+        path: 'config/retirada',
+        component: ConfiguracaoRetiradaComponent,
+        canActivate: [rotaguardGuard],
+        canDeactivate: [confTelaGuard],
+      },
+      {
+        path: 'config/impressao',
+        component: ConfiguracaoImpressaoComponent,
+        canActivate: [rotaguardGuard],
+        canDeactivate: [confTelaGuard],
+      },
+      {
+        path: 'config/taxa',
+        component: ConfiguracaoTaxaServicoComponent,
+        canActivate: [rotaguardGuard],
+        canDeactivate: [confTelaGuard],
+      },
+    ],
   },
   {
     path: 'caixaConf',

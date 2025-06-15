@@ -1,12 +1,11 @@
 import {
   Component,
   EventEmitter,
+  HostListener,
   inject,
   Input,
   OnInit,
-  Output,
-  ViewChild,
-  ViewChildren,
+  Output
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ProdutoComposto } from '../../../../models/produto-composto';
@@ -17,7 +16,6 @@ import { Observacoes } from '../../../../models/observacoes';
 import { ObservacaoProduto } from '../../../../models/observacao-produto';
 import { NgClass } from '@angular/common';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { ProdutoListComponent } from '../../produto-list/produto-list.component';
 import { ListaProdutosSelecionarComponent } from "./lista-produtos-selecionar/lista-produtos-selecionar.component";
 
 @Component({
@@ -47,6 +45,16 @@ export class SelecionarProdutosComponent implements OnInit {
   obcervacaoProdutoLocal: ObservacaoProduto = new ObservacaoProduto();
   ativo?: string = '';
 
+  @HostListener('document:keydown.enter', ['$event'])
+    onEscapeKey(event: KeyboardEvent) {
+      if (this.produto != null) {
+        this.salvarProdutoComposto();
+      }
+      if (this.observacoes != null) {
+        this.salvarObservacaoProduto();
+      }
+    }
+    
   ngOnInit() {
     if (this.produtoComposto) {
       this.produtoCompostoLocal = Object.assign({}, this.produtoComposto);

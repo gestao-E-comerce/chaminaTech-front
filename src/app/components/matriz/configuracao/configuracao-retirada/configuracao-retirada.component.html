@@ -1,0 +1,49 @@
+<form #formulario="ngForm" (ngSubmit)="salvar()">
+  <div class="d-flex align-items-center justify-content-between header-fixo">
+    <div class="d-flex align-items-center">
+      <h2 class="titulo m-0">Retirada</h2>
+    </div>
+    <div class="d-flex align-items-center">
+      <button
+        type="submit"
+        class="btn-comum btn-comum-laranja"
+        [disabled]="!isModified()"
+      >
+        Salvar
+      </button>
+    </div>
+  </div>
+  <div class="d-flex flex-column h-100 col-12 gap-2 p-2">
+    <div class="d-flex flex-column w-50">
+      <label for="tempo" class="form-label">Previsão De Tempo Retirada:</label>
+      <input
+        autocomplete="off"
+        #tempo="ngModel"
+        required
+        type="number"
+        inputmode="numeric"
+        min="0"
+        step="1"
+        onkeydown="return !['e', 'E', '-', '+' , ',' , '.'].includes(event.key)"
+        oninput="if (this.value.length > 10) this.value = this.value.slice(0, 10)"
+        class="form-control no-spin w-50"
+        name="tempo"
+        [(ngModel)]="confRetirada.tempoEstimadoRetidara"
+        [ngClass]="{ 'borda-vermelha': !tempo.valid && tempo.touched }"
+      />
+    </div>
+  </div>
+</form>
+<ng-template #modalCancelar let-modal>
+  <div class="modal-body">
+    Você tem alterações não salvas. Deseja sair mesmo assim?
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-danger" (click)="modal.close('confirmado')">
+      Sair sem salvar
+    </button>
+    <button class="btn btn-secondary" (click)="modal.dismiss()">
+      Cancelar
+    </button>
+  </div>
+</ng-template>
