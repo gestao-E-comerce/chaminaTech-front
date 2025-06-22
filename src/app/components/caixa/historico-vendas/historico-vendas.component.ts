@@ -83,6 +83,7 @@ export class HistoricoVendasComponent implements OnInit {
   selecionarCupom(cupom: any) {
     this.cupomSelecionado = cupom;
     this.active = cupom;
+    this.menuAberto = false;
   }
 
   pesquisarCupom(termo: number) {
@@ -120,12 +121,13 @@ export class HistoricoVendasComponent implements OnInit {
   confirmarDeletarVenda() {
     if (!this.motivoDeletar?.trim()) {
       this.toastr.error('Motivo indefinido!!');
+      return;
     } else {
       this.venda.imprimirCadastrar = false;
       this.venda.imprimirDeletar = false;
       this.venda.imprimirNotaFiscal = false;
       this.venda.deletado = true;
-      this.venda.motivo = this.motivoDeletar;
+      this.venda.motivoDeletar = this.motivoDeletar;
       this.vendaService.deletar(this.venda).subscribe({
         next: (mensagem) => {
           this.toastr.success(mensagem.mensagem);

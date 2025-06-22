@@ -36,6 +36,10 @@ export class Permissao {
   editarSuprimento: boolean = false;
   deletarSuprimento: boolean = false;
 
+  cadastrarGorjeta: boolean = false;
+  editarGorjeta: boolean = false;
+  deletarGorjeta: boolean = false;
+
   categoria: boolean = false;
   cadastrarCategoria: boolean = false;
   editarCategoria: boolean = false;

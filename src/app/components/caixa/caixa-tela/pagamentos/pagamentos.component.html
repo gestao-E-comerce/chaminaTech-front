@@ -1,11 +1,13 @@
 @if(!telaPequena){
-<form (ngSubmit)="salvar()" class="d-flex flex-column h-100">
-  <div class="d-flex justify-content-between col-12 flex-grow-1">
-    <div class="d-flex flex-column">
+<form (ngSubmit)="salvar()" class="d-flex flex-column h-100 w-100 p-2">
+  <div class="d-flex justify-content-between w-100 flex-grow-1">
+    <div class="d-flex flex-column col-6">
       @for (item of dinheiroLista; track $index) {
       <div class="d-flex align-items-center justify-content-between p-2 w-100">
-        <label>Dinheiro</label>
-        <div class="d-flex align-items-center gap-2">
+        <div
+          class="d-flex align-items-center justify-content-start gap-2 w-100"
+        >
+          <label style="width: 150px">Dinheiro</label>
           <input
             autocomplete="off"
             type="number"
@@ -17,26 +19,23 @@
             [(ngModel)]="dinheiroLista[$index]"
             name="dinheiro{{ $index }}"
             [attr.name]="'dinheiro' + $index"
-            class="form-control"
+            class="form-control w-50"
           />
-
-          <div>
-            @if ($index === 0) {
-            <button
-              type="button"
-              class="botao-mais"
-              (click)="adicionarCampo('dinheiro')"
-            >
-              +
-            </button>
-            }
-          </div>
+          @if ($index === 0) {
+          <button
+            type="button"
+            class="botao-mais"
+            (click)="adicionarCampo('dinheiro')"
+          >
+            +
+          </button>
+          }
         </div>
       </div>
       } @for (item of creditoLista; track $index) {
       <div class="d-flex align-items-center justify-content-between p-2 w-100">
-        <label>Credito</label>
-        <div class="d-flex align-items-center gap-2">
+        <div class="d-flex align-items-center gap-2 w-100">
+          <label style="width: 150px">Credito</label>
           <input
             autocomplete="off"
             #creditoInput
@@ -48,26 +47,23 @@
             [(ngModel)]="creditoLista[$index]"
             name="credito{{ $index }}"
             [attr.name]="'credito' + $index"
-            class="form-control"
+            class="form-control w-50"
           />
-
-          <div>
-            @if ($index === 0) {
-            <button
-              type="button"
-              class="botao-mais"
-              (click)="adicionarCampo('credito')"
-            >
-              +
-            </button>
-            }
-          </div>
+          @if ($index === 0) {
+          <button
+            type="button"
+            class="botao-mais"
+            (click)="adicionarCampo('credito')"
+          >
+            +
+          </button>
+          }
         </div>
       </div>
       } @for (item of debitoLista; track $index) {
       <div class="d-flex align-items-center justify-content-between p-2 w-100">
-        <label>Debito</label>
-        <div class="d-flex align-items-center gap-2">
+        <div class="d-flex align-items-center gap-2 w-100">
+          <label style="width: 150px">Debito</label>
           <input
             autocomplete="off"
             #debitoInput
@@ -79,26 +75,23 @@
             [(ngModel)]="debitoLista[$index]"
             name="debito{{ $index }}"
             [attr.name]="'debito' + $index"
-            class="form-control"
+            class="form-control w-50"
           />
-
-          <div>
-            @if ($index === 0) {
-            <button
-              type="button"
-              class="botao-mais"
-              (click)="adicionarCampo('debito')"
-            >
-              +
-            </button>
-            }
-          </div>
+          @if ($index === 0) {
+          <button
+            type="button"
+            class="botao-mais"
+            (click)="adicionarCampo('debito')"
+          >
+            +
+          </button>
+          }
         </div>
       </div>
       } @for (item of pixLista; track $index) {
       <div class="d-flex align-items-center justify-content-between p-2 w-100">
-        <label>Pix</label>
-        <div class="d-flex align-items-center gap-2">
+        <div class="d-flex align-items-center gap-2 w-100">
+          <label style="width: 150px">Pix</label>
           <input
             autocomplete="off"
             #pixInput
@@ -110,74 +103,75 @@
             [(ngModel)]="pixLista[$index]"
             name="pix{{ $index }}"
             [attr.name]="'pix' + $index"
-            class="form-control"
+            class="form-control w-50"
           />
-
-          <div>
-            @if ($index === 0) {
-            <button
-              type="button"
-              class="botao-mais"
-              (click)="adicionarCampo('pix')"
-            >
-              +
-            </button>
-            }
-          </div>
+          @if ($index === 0) {
+          <button
+            type="button"
+            class="botao-mais"
+            (click)="adicionarCampo('pix')"
+          >
+            +
+          </button>
+          }
         </div>
       </div>
       }
     </div>
-    <div class="d-flex flex-column gap-2 p-2">
-      <div class="d-flex justify-content-between gap-2 col-12">
-        <label>Subtotal </label>
-        <p>R$ {{ venda.valorTotal }}</p>
-      </div>
-      @if (tipoCaixa === 'mesa') {
-      <div class="d-flex justify-content-between gap-2 col-12">
-        <label>Serviço </label>
-        <p>R$ {{ venda.valorServico }}</p>
-      </div>
-      }
-      <div class="d-flex justify-content-between gap-2 col-12">
-        <label>Desconto </label>
-        <p>R$ 0</p>
-      </div>
-      <div class="d-flex justify-content-between gap-2 col-12">
-        <label>Total </label>
-        <p>R$ {{ venda.valorTotal }}</p>
-      </div>
-      <div class="d-flex justify-content-between gap-2 col-12">
-        <label>{{ tipoTrocoOuDiferenca }}</label>
-        <p>R$ {{ valorTrocoOuDiferenca }}</p>
-      </div>
+    <div class="d-flex flex-column gap-2 col-4">
+      <table class="table w-100">
+        <tbody>
+          <tr>
+            <td class="text-start w-25">Subtotal</td>
+            <td class="text-start w-75">R$ {{ venda.valorBruto }}</td>
+          </tr>
+          <tr>
+            <td class="text-start w-25">Serviço</td>
+            <td class="text-start w-75">R$ {{ venda.valorServico }}</td>
+          </tr>
+          <tr>
+            <td class="text-start w-25">Desconto</td>
+            <td class="text-start w-75">R$ {{ venda.desconto || 0 }}</td>
+          </tr>
+          <tr>
+            <td class="text-start w-25">Total</td>
+            <td class="text-start w-75">R$ {{ venda.valorTotal }}</td>
+          </tr>
+          <tr>
+            <td class="text-start w-25">{{ tipoTrocoOuDiferenca }}</td>
+            <td class="text-start w-75">R$ {{ valorTrocoOuDiferenca }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </form>
 } @if (telaPequena) {
 <form (ngSubmit)="salvar()" class="d-flex flex-column h-100">
-  <div class="d-flex flex-column col-12 flex-grow-1">
-    <div class="d-flex justify-content-between gap-2 p-2">
-      <div>
-        <div class="d-flex justify-content-between gap-2 col-12">
-          <label>Subtotal </label>
-          <p>R$ {{ venda.valorTotal }}</p>
-        </div>
-        <div class="d-flex justify-content-between gap-2 col-12">
-          <label>Desconto </label>
-          <p>R$ 0.00</p>
-        </div>
-      </div>
-      <div>
-        <div class="d-flex justify-content-between gap-2 col-12">
-          <label>Total </label>
-          <p>R$ {{ venda.valorTotal }}</p>
-        </div>
-        <div class="d-flex justify-content-between gap-2 col-12">
-          <label>{{ tipoTrocoOuDiferenca }}</label>
-          <p>R$ {{ valorTrocoOuDiferenca }}</p>
-        </div>
-      </div>
+  <div class="d-flex flex-column col-12 flex-grow-1 w-100">
+    <div class="d-flex flex-column gap-2 p-2 w-100">
+      <table class="table w-100">
+        <tbody>
+          <tr>
+            <td class="text-start w-25">Serviço</td>
+            <td class="text-start w-25">R$ {{ venda.valorServico }}</td>
+            <td class="text-start w-25">Desconto</td>
+            <td class="text-start w-25">R$ {{ venda.desconto || 0 }}</td>
+          </tr>
+          <tr>
+            <td class="text-start w-25">Subtotal</td>
+            <td class="text-start w-25">R$ {{ venda.valorBruto }}</td>
+            <td class="text-start w-25">Total</td>
+            <td class="text-start w-25">R$ {{ venda.valorTotal }}</td>
+          </tr>
+          <tr>
+            <td class="text-start w-25">{{ tipoTrocoOuDiferenca }}</td>
+            <td class="text-start w-25">R$ {{ valorTrocoOuDiferenca }}</td>
+            <td class="text-start w-25"></td>
+            <td class="text-start w-25"></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
     <div class="d-flex flex-column">
       @for (item of dinheiroLista; track $index) {
@@ -323,12 +317,70 @@
     ></button>
   </div>
   <div class="modal-body modal-style">
-    <app-pagar-parcial
-      #pagarParcial
-      [venda]="venda"
-      [vendaParcial]="vendaParcial"
-      (retorno)="retornoProdutosParcial(vendaParcial, modalPagamentosParcial)"
-    ></app-pagar-parcial>
+    <div class="w-100 h-100 d-flex flex-column">
+      <div class="lista">
+        <table class="table">
+          <thead>
+            <th class="text-start col-2">Nome</th>
+            <th class="text-center col-1">Valor</th>
+            <th class="text-center col-1">Quantidade</th>
+            <th class="text-start col-2">Observação</th>
+            <th class="text-center col-2">Qtd. Transferir</th>
+            <th class="text-center col-1">Selecionar</th>
+          </thead>
+          <tbody>
+            @for (produto of venda.produtoVendas; track $index) {
+            <tr>
+              <td class="text-start">{{ produto.produto.nome }}</td>
+              <td class="text-center">R${{ produto.produto.valor }}</td>
+              <td class="text-center">{{ produto.quantidade }}</td>
+              <td class="text-wrap" style="white-space: normal">
+                {{ getObservacoesFormatadas(produto) }}
+              </td>
+              <td class="text-center">
+                <div class="col-acoes">
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-outline-danger"
+                    (click)="decrementarQuantidade(produto)"
+                    [disabled]="produto.quantidadeTransferir === 0"
+                  >
+                    -
+                  </button>
+                  <span>
+                    {{ produto.quantidadeTransferir || 0 }}
+                  </span>
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-outline-success"
+                    (click)="incrementarQuantidade(produto)"
+                    [disabled]="
+                      produto.quantidadeTransferir === produto.quantidade
+                    "
+                  >
+                    +
+                  </button>
+                </div>
+              </td>
+
+              <td class="text-center">
+                <label class="custom-checkbox">
+                  <input
+                    autocomplete="off"
+                    type="checkbox"
+                    [(ngModel)]="produto.selecionado"
+                    name="produtoSelecionado{{ $index }}"
+                    (change)="atualizarQuantidadeTransferir(produto)"
+                  />
+                  <span class="checkmark"></span>
+                </label>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
   <div
     class="modal-footer d-flex justify-content-center align-items-center border-0"
@@ -336,39 +388,7 @@
     <button
       type="button"
       class="btn-comum btn-comum-laranja"
-      [disabled]="pagarParcial.vendaParcial.produtoVendas"
-      (click)="pagarParcial.salvar()"
-    >
-      Salvar
-    </button>
-  </div>
-</ng-template>
-<ng-template #modalPagamentosParcial let-modal>
-  <div class="modal-header modal-style">
-    <h4 class="modal-title">{{ tituloModal }} Mesa {{ this.venda.mesa }}</h4>
-    <button
-      type="button"
-      class="btn-close"
-      aria-label="Close"
-      (click)="
-        modal.dismiss('Cross click'); fecharModalPagamentoERestaurarVenda()
-      "
-    ></button>
-  </div>
-  <div class="modal-body p-0 modal-style">
-    <app-pagamento-parcial
-      #pagamentoParcial
-      [vendaParcial]="vendaParcial"
-      (retorno)="retornoVendaPagamentoParcial($event, modalConfirmarImpressao)"
-    ></app-pagamento-parcial>
-  </div>
-  <div
-    class="modal-footer d-flex justify-content-center align-items-center border-0"
-  >
-    <button
-      type="button"
-      class="btn-comum btn-comum-verde"
-      (click)="pagamentoParcial.salvar()"
+      (click)="salvarProdutosParcial()"
     >
       Salvar
     </button>
@@ -405,4 +425,62 @@
       Sim
     </button>
   </div>
+</ng-template>
+<ng-template #modalDesconto let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">{{ tituloModal }}</h4>
+  </div>
+  <form (ngSubmit)="aplicarOuRemoverDesconto()">
+    <div class="modal-body d-flex gap-3">
+      <div>
+        <span>Valor do desconto (R$)</span>
+        <input
+          type="number"
+          inputmode="numeric"
+          min="0"
+          step="1"
+          oninput="if (this.value.length > 10) this.value = this.value.slice(0, 10)"
+          onkeydown="return !['e', 'E', '-', '+' , ','].includes(event.key)"
+          [(ngModel)]="descontoValor"
+          name="descontoValor"
+          min="0"
+          class="form-control"
+        />
+      </div>
+      <div>
+        <span>Percentual do desconto (%)</span>
+        <input
+          type="number"
+          inputmode="numeric"
+          min="0"
+          step="1"
+          oninput="if (this.value.length > 10) this.value = this.value.slice(0, 10)"
+          onkeydown="return !['e', 'E', '-', '+' , ','].includes(event.key)"
+          [(ngModel)]="descontoPercentual"
+          name="descontoPercentual"
+          min="0"
+          max="100"
+          class="form-control"
+        />
+      </div>
+      <div>
+        <span>Motivo:</span>
+        <input
+          type="text"
+          [(ngModel)]="venda.motivoDesconto"
+          name="motivoDesconto"
+          class="form-control"
+        />
+      </div>
+    </div>
+    <div class="modal-footer d-flex justify-content-center align-items-center">
+      <button
+        type="submit"
+        name="aplicar"
+        class="botaoModal btn-imprimir-geral"
+      >
+        Aplicar
+      </button>
+    </div>
+  </form>
 </ng-template>

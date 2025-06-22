@@ -126,7 +126,7 @@
           <td>
             <div class="col-acoes">
               @if (usuario && usuario.permissao &&
-              usuario.permissao.editarEstoque && estoque.valorTotal > 0) {
+              usuario.permissao.editarEstoque) {
               <button
                 type="button"
                 (click)="editarEstoque(modalEstoque, estoque, $index)"

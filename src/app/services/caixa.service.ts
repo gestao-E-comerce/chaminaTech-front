@@ -102,4 +102,13 @@ export class CaixaService {
   getTotalSuprimentosByCaixaId(caixaId: number): Observable<number> {
     return this.http.get<number>(`${this.API}/${caixaId}/totalSuprimentos`);
   }
+  getTotalGorjetasByCaixaId(caixaId: number): Observable<number> {
+    return this.http.get<number>(`${this.API}/${caixaId}/totalGorjetas`);
+  }
+  getTotalDescontosByCaixaId(caixaId: number): Observable<number> {
+    return this.http.get<number>(`${this.API}/${caixaId}/totalDescontos`);
+  }
+  getTotalServicosByCaixaId(caixaId: number): Observable<number> {
+    return this.http.get<number>(`${this.API}/${caixaId}/totalServicios`);
+  }
 }

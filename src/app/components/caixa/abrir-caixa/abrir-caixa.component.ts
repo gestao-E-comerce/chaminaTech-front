@@ -16,6 +16,8 @@ import { Usuario } from '../../../models/usuario';
 import { GlobalService } from '../../../services/global.service';
 import { Funcionario } from '../../../models/funcionario';
 import { GestaoCaixaService } from '../../../services/gestao-caixa.service';
+import { take } from 'rxjs';
+import { Matriz } from '../../../models/matriz';
 
 @Component({
   selector: 'app-abrir-caixa',
@@ -28,6 +30,7 @@ export class AbrirCaixaComponent implements OnInit {
   caixa: Caixa = new Caixa();
   @Input() usuario: Usuario = new Usuario();
   funsionario: Funcionario = new Funcionario();
+  matriz!: Matriz;
 
   @ViewChild('valorAbertura', { static: false })
   valorAbertura!: ElementRef<HTMLInputElement>;
@@ -50,6 +53,14 @@ export class AbrirCaixaComponent implements OnInit {
         this.valorAbertura.nativeElement.select();
       }
     }, 0);
+    this.globalService
+      .getMatrizAsync()
+      .pipe(take(1))
+      .subscribe({
+        next: (matriz) => {
+          this.matriz = matriz;
+        },
+      });
   }
   abrir(modalConfermacao: any) {
     if (this.caixa.valorAbertura == null) {
@@ -60,7 +71,9 @@ export class AbrirCaixaComponent implements OnInit {
   }
   confirmarAbrir() {
     this.caixa.funcionario = this.funsionario;
-    this.caixa.nomeImpressora = this.getNomeImpressora();
+    if (this.matriz.configuracaoImpressao.imprimirAberturaCaixa) {
+      this.caixa.nomeImpressora = this.getNomeImpressora();
+    }
 
     this.caixaService.abrirCaixa(this.caixa).subscribe({
       next: (caixaSalvo) => {

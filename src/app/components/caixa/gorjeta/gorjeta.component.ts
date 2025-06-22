@@ -6,33 +6,32 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { Suprimento } from '../../../models/suprimento';
+import { FormsModule } from '@angular/forms';
+import { Gorjeta } from '../../../models/gorjeta';
 import { Funcionario } from '../../../models/funcionario';
 import { ToastrService } from 'ngx-toastr';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { FormsModule } from '@angular/forms';
-import { NgClass } from '@angular/common';
+import { GorjetaService } from '../../../services/gorjeta.service';
 import { LoginService } from '../../../services/login.service';
-import { SuprimentoService } from '../../../services/suprimento.service';
 import { GlobalService } from '../../../services/global.service';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { take } from 'rxjs';
 import { Matriz } from '../../../models/matriz';
 
 @Component({
-  selector: 'app-suprimento',
+  selector: 'app-gorjeta',
   standalone: true,
-  imports: [FormsModule, NgClass],
-  templateUrl: './suprimento.component.html',
-  styleUrl: './suprimento.component.scss',
+  imports: [FormsModule],
+  templateUrl: './gorjeta.component.html',
+  styleUrl: './gorjeta.component.scss',
 })
-export class SuprimentoComponent implements OnInit {
+export class GorjetaComponent implements OnInit {
   @Output() retorno = new EventEmitter<any>();
-  @Input() suprimento: Suprimento = new Suprimento();
+  @Input() gorjeta: Gorjeta = new Gorjeta();
   funcionario: Funcionario = new Funcionario();
   matriz!: Matriz;
 
   toastr = inject(ToastrService);
-  suprimentoService = inject(SuprimentoService);
+  gorjetaService = inject(GorjetaService);
   loginService = inject(LoginService);
   globalService = inject(GlobalService);
   modalService = inject(NgbModal);
@@ -68,16 +67,16 @@ export class SuprimentoComponent implements OnInit {
       this.modalRef = this.modalService.open(modalConfermacao, { size: 'mm' });
     }
   }
-  confirmarSuprimento() {
+  confirmarGorjeta() {
     this.globalService.getCaixaAsync().subscribe({
       next: (caixa) => {
         if (caixa) {
-          this.suprimento.funcionario = this.funcionario;
-          this.suprimento.caixa = caixa;
-          if (this.matriz.configuracaoImpressao.imprimirSuprimento) {
-            this.suprimento.nomeImpressora = this.getNomeImpressora();
+          this.gorjeta.funcionario = this.funcionario;
+          this.gorjeta.caixa = caixa;
+          if (this.matriz.configuracaoImpressao.imprimirGorjeta) {
+            this.gorjeta.nomeImpressora = this.getNomeImpressora();
           }
-          this.suprimentoService.save(this.suprimento).subscribe({
+          this.gorjetaService.save(this.gorjeta).subscribe({
             next: (mensagem) => {
               this.toastr.success(mensagem.mensagem);
               this.modalService.dismissAll();

@@ -22,12 +22,12 @@ h4 {
     position: fixed;
     left: 0;
     top: 0;
-    height: 100vh;
+    bottom: 0;
     width: 4vw;
     background-color: var(--cor-cinza-escuro);
     overflow: hidden;
-    transition: width 0.3s ease-in-out;
     z-index: 1050;
+    border-right: 1px solid var(--cor-laranja);
 }
 
 .menu-container.expanded {
@@ -36,7 +36,7 @@ h4 {
 
 .abrir-menu {
     background-color: var(--cor-laranja);
-    color:  var(--cor-white);
+    color: var(--cor-white);
     border: none;
     font-size: 1.8rem;
     cursor: pointer;
@@ -44,7 +44,7 @@ h4 {
 
 .fechar-menu {
     background: none;
-    color:  var(--cor-white);
+    color: var(--cor-white);
     border: none;
     font-size: 1.4rem;
     margin: 5px 10px;
@@ -59,6 +59,8 @@ h4 {
 .content-container {
     margin-left: 4vw;
     width: 96vw !important;
+    height: 100vh;
+    overflow-y: auto;
 }
 
 
@@ -88,6 +90,7 @@ h4 {
     .menu-container {
         width: 15vw;
     }
+
     .content-container {
         margin-left: 15vw;
         width: 85vw !important;

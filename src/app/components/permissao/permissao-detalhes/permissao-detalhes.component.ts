@@ -83,6 +83,9 @@ export class PermissaoDetalhesComponent {
       'cadastrarSuprimento',
       'editarSuprimento',
       'deletarSuprimento',
+      'cadastrarGorjeta',
+      'editarGorjeta',
+      'deletarGorjeta',
       'categoria',
       'cadastrarCategoria',
       'editarCategoria',
@@ -159,6 +162,9 @@ export class PermissaoDetalhesComponent {
       'cadastrarSuprimento',
       'editarSuprimento',
       'deletarSuprimento',
+      'cadastrarGorjeta',
+      'editarGorjeta',
+      'deletarGorjeta',
       'categoria',
       'cadastrarCategoria',
       'editarCategoria',
@@ -238,6 +244,9 @@ export class PermissaoDetalhesComponent {
       this.permissao.cadastrarSuprimento = false;
       this.permissao.editarSuprimento = false;
       this.permissao.deletarSuprimento = false;
+      this.permissao.cadastrarGorjeta = false;
+      this.permissao.editarGorjeta = false;
+      this.permissao.deletarGorjeta = false;
       this.permissao.historicoCaixa = false;
       this.permissao.editarCaixa = false;
       this.permissao.deletarCaixa = false;
@@ -252,6 +261,9 @@ export class PermissaoDetalhesComponent {
       'cadastrarSuprimento',
       'editarSuprimento',
       'deletarSuprimento',
+      'cadastrarGorjeta',
+      'editarGorjeta',
+      'deletarGorjeta',
       'historicoCaixa',
       'editarCaixa',
       'deletarCaixa',
@@ -459,8 +471,15 @@ export class PermissaoDetalhesComponent {
   }
   verificarCaixa() {
     const permissoesCaixa = [
-      'sangria',
-      'suprimento',
+      'cadastrarSangria',
+      'editarSangria',
+      'deletarSangria',
+      'cadastrarSuprimento',
+      'editarSuprimento',
+      'deletarSuprimento',
+      'cadastrarGorjeta',
+      'editarGorjeta',
+      'deletarGorjeta',
       'historicoCaixa',
       'editarCaixa',
       'deletarCaixa',

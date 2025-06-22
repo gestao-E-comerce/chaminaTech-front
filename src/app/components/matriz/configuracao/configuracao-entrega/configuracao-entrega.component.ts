@@ -121,6 +121,7 @@ export class ConfiguracaoEntregaComponent implements OnInit {
         this.globalService.limparMatrizSalva();
         this.confEntregaOriginal = JSON.parse(JSON.stringify(this.confEntrega));
         this.listaKmOrginal = JSON.parse(JSON.stringify(this.listaKm));
+        this.buscarConfiguracaoEntrega();
       },
       error: (erro) => {
         this.toastr.error(

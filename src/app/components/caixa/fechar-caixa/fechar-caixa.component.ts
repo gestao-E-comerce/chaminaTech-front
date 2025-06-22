@@ -7,6 +7,8 @@ import { Caixa } from '../../../models/caixa';
 import { CaixaService } from '../../../services/caixa.service';
 import { LoginService } from '../../../services/login.service';
 import { GlobalService } from '../../../services/global.service';
+import { take } from 'rxjs';
+import { Matriz } from '../../../models/matriz';
 
 @Component({
   selector: 'app-fechar-caixa',
@@ -19,15 +21,21 @@ export class FecharCaixaComponent implements OnInit {
   @Output() retorno = new EventEmitter<Mensagem>();
   caixa: Caixa = new Caixa();
   funcionario: Funcionario = new Funcionario();
+  matriz!: Matriz;
 
   caixaService = inject(CaixaService);
-  loginService = inject(LoginService);
   globalService = inject(GlobalService);
   toastr = inject(ToastrService);
 
   ngOnInit() {
-    this.funcionario.id = this.loginService.getUser().id;
-    this.funcionario.nome = this.loginService.getUser().nome;
+    this.globalService
+      .getFuncionarioAsync()
+      .pipe(take(1))
+      .subscribe({
+        next: (funcionario) => {
+          this.funcionario = funcionario;
+        },
+      });
 
     this.globalService.getCaixaAsync().subscribe({
       next: (caixa) => {
@@ -39,11 +47,21 @@ export class FecharCaixaComponent implements OnInit {
         this.toastr.error('Erro ao buscar o caixa.');
       },
     });
+    this.globalService
+      .getMatrizAsync()
+      .pipe(take(1))
+      .subscribe({
+        next: (matriz) => {
+          this.matriz = matriz;
+        },
+      });
   }
 
   fechar() {
     this.caixa.funcionario = this.funcionario;
-    this.caixa.nomeImpressora = this.getNomeImpressora();
+    if (this.matriz.configuracaoImpressao.imprimirConferenciaCaixa) {
+      this.caixa.nomeImpressora = this.getNomeImpressora();
+    }
 
     this.caixaService.fecharCaixa(this.caixa).subscribe({
       next: (mensagem) => {

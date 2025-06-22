@@ -1,18 +1,16 @@
 <div class="row h-100">
-  <div
-    class="menu-container"
-    [class.expanded]="menuPrincipalAberto"
-    (focusin)="menuPrincipalAberto = true"
-    (mouseenter)="menuPrincipalAberto = true"
-    (mouseleave)="menuPrincipalAberto = false"
-    tabindex="0"
-  >
+  <div class="menu-container" [class.expanded]="menuPrincipalAberto">
     @if (!menuPrincipalAberto) {
     <div
       class="d-flex flex-column align-items-center justify-content-between text-center h-100 w-100"
-      (click)="menuPrincipalAberto = true"
     >
-      <button class="abrir-menu w-100">☰</button>
+      <button
+        type="button"
+        class="abrir-menu w-100"
+        (click)="menuPrincipalAberto = true"
+      >
+        ☰
+      </button>
 
       <div
         class="logo-container d-flex justify-content-center align-items-center flex-grow-1 w-100"
@@ -60,6 +58,7 @@
             [class.active]="router.url === '/' + urlString + '/balcao'"
             class="mb-3 w-100 text-start d-flex align-items-center botao"
             [routerLink]="['/' + urlString, 'balcao']"
+            (click)="menuPrincipalAberto = false"
           >
             <img
               src="../../../assets/images/bolcao.svg"
@@ -74,6 +73,7 @@
             [class.active]="router.url === '/' + urlString + '/mesa'"
             class="mb-3 w-100 text-start d-flex align-items-center botao"
             [routerLink]="['/' + urlString, 'mesa']"
+            (click)="menuPrincipalAberto = false"
           >
             <img src="../../../assets/images/mesa.svg" class="pe-2 icon-img" />
             <span class="texto-balcao">Mesas</span>
@@ -85,6 +85,7 @@
             [class.active]="router.url === '/' + urlString + '/retirada'"
             class="mb-3 w-100 text-start d-flex align-items-center botao"
             [routerLink]="['/' + urlString, 'retirada']"
+            (click)="menuPrincipalAberto = false"
           >
             <img
               src="../../../assets/images/retirada.svg"
@@ -99,6 +100,7 @@
             [class.active]="router.url === '/' + urlString + '/entrega'"
             class="mb-3 w-100 text-start d-flex align-items-center botao"
             [routerLink]="['/' + urlString, 'entrega']"
+            (click)="menuPrincipalAberto = false"
           >
             <img
               src="../../../assets/images/entrega.svg"
@@ -142,6 +144,15 @@
               <span class="texto-balcao">Sangria</span>
             </button>
             } @if (usuario && usuario.permissao &&
+            (usuario.permissao.cadastrarGorjeta && urlString === 'caixa')) {
+            <button
+              type="button"
+              class="mb-1 w-100 text-start d-flex align-items-center botao_opc"
+              (click)="gorjeta(modalGorjeta)"
+            >
+              <span class="texto-balcao">Gorjeta</span>
+            </button>
+            }@if (usuario && usuario.permissao &&
             (usuario.permissao.cadastrarSuprimento && urlString === 'caixa')) {
             <button
               type="button"
@@ -217,84 +228,82 @@
   </div>
 </ng-template>
 <ng-template #modalLiberarVenda let-modal>
-  <div class="modal-header p-3">
-    <h4 class="modal-title">{{ tituloModal }}</h4>
-    <button
-      type="button"
-      class="btn-close"
-      aria-label="Close"
-      (click)="modal.dismiss('Cross click')"
-    ></button>
-  </div>
-  <div class="modal-body p-3">
-    <label class="d-block fw-bold mb-2">Escolha o tipo:</label>
-    <div class="mb-3 d-flex justify-content-between flex-wrap">
-      <label class="radio-personalizado">
-        <input
-          type="radio"
-          id="radioMesa"
-          name="tipoVenda"
-          value="mesa"
-          [(ngModel)]="tipoLiberacao"
-        />
-        <span class="bolinha"></span>
-        <span>Mesa</span>
-      </label>
+  <form (ngSubmit)="confirmarLiberacao()">
+    <div class="modal-header p-3">
+      <h4 class="modal-title">{{ tituloModal }}</h4>
+      <button
+        type="button"
+        class="btn-close"
+        aria-label="Close"
+        (click)="modal.dismiss('Cross click')"
+      ></button>
+    </div>
+    <div class="modal-body p-3">
+      <label class="d-block fw-bold mb-2">Escolha o tipo:</label>
+      <div class="mb-3 d-flex justify-content-between flex-wrap">
+        <label class="radio-personalizado">
+          <input
+            type="radio"
+            id="radioMesa"
+            name="tipoVenda"
+            value="mesa"
+            [(ngModel)]="tipoLiberacao"
+          />
+          <span class="bolinha"></span>
+          <span>Mesa</span>
+        </label>
 
-      <label class="radio-personalizado">
-        <input
-          type="radio"
-          id="radioRetirada"
-          name="tipoVenda"
-          value="retirada"
-          [(ngModel)]="tipoLiberacao"
-        />
-        <span class="bolinha"></span>
-        <span>Retirada</span>
-      </label>
+        <label class="radio-personalizado">
+          <input
+            type="radio"
+            id="radioRetirada"
+            name="tipoVenda"
+            value="retirada"
+            [(ngModel)]="tipoLiberacao"
+          />
+          <span class="bolinha"></span>
+          <span>Retirada</span>
+        </label>
 
-      <label class="radio-personalizado">
+        <label class="radio-personalizado">
+          <input
+            type="radio"
+            id="radioEntrega"
+            name="tipoVenda"
+            value="entrega"
+            [(ngModel)]="tipoLiberacao"
+          />
+          <span class="bolinha"></span>
+          <span>Entrega</span>
+        </label>
+      </div>
+
+      <div class="mb-3">
+        <label for="numeroVendaInput" class="fw-bold mb-2">
+          {{ tipoLiberacao === "mesa" ? "Número da Mesa" : "Número do Cupom" }}
+        </label>
         <input
-          type="radio"
-          id="radioEntrega"
-          name="tipoVenda"
-          value="entrega"
-          [(ngModel)]="tipoLiberacao"
+          #numeroVendaInput
+          autocomplete="off"
+          type="number"
+          oninput="if (this.value.length > 10) this.value = this.value.slice(0, 10)"
+          id="numeroVendaInput"
+          class="form-control p-2"
+          [(ngModel)]="numeroVenda"
+          name="numeroVendaInput"
+          inputmode="numeric"
+          min="0"
+          step="1"
+          onkeydown="return !['e', 'E', '-', '+' , ','].includes(event.key)"
+          placeholder="Digite o número"
         />
-        <span class="bolinha"></span>
-        <span>Entrega</span>
-      </label>
+      </div>
     </div>
 
-    <div class="mb-3">
-      <label for="numeroVenda" class="fw-bold mb-2">
-        {{ tipoLiberacao === "mesa" ? "Número da Mesa" : "Número do Cupom" }}
-      </label>
-      <input
-        autocomplete="off"
-        type="number"
-        oninput="if (this.value.length > 10) this.value = this.value.slice(0, 10)"
-        id="numeroVenda"
-        class="form-control p-2"
-        [(ngModel)]="numeroVenda"
-        inputmode="numeric"
-        min="0"
-        step="1"
-        onkeydown="return !['e', 'E', '-', '+' , ','].includes(event.key)"
-        placeholder="Digite o número"
-      />
+    <div class="modal-footer d-flex justify-content-center border-0 mb-4">
+      <button type="submit" class="btn-comum btn-comum-laranja">Liberar</button>
     </div>
-  </div>
-
-  <div class="modal-footer d-flex justify-content-center border-0 mb-4">
-    <button
-      type="button"
-      class="btn-comum btn-comum-laranja"
-      (click)="confirmarLiberacao()"
-    >
-      Liberar
-    </button>
-  </div>
+  </form>
 </ng-template>
 <ng-template #modalSangria let-modal>
   <div class="modal-header modal-style justify-content-between p-3">
@@ -307,6 +316,19 @@
   </div>
   <div class="modal-body modal-style p-3">
     <app-sangria></app-sangria>
+  </div>
+</ng-template>
+<ng-template #modalGorjeta let-modal>
+  <div class="modal-header modal-style justify-content-between p-3">
+    <h4 class="modal-title">{{ tituloModal }}</h4>
+    <i
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+      class="bi bi-x-lg close"
+    ></i>
+  </div>
+  <div class="modal-body modal-style p-3">
+    <app-gorjeta></app-gorjeta>
   </div>
 </ng-template>
 <ng-template #modalSuprimento let-modal>

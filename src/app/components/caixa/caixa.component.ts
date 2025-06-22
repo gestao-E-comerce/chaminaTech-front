@@ -1,11 +1,13 @@
 import {
   ChangeDetectorRef,
   Component,
+  ElementRef,
   EventEmitter,
   HostListener,
   inject,
   OnInit,
   Output,
+  ViewChild,
 } from '@angular/core';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -23,6 +25,7 @@ import { VendaService } from '../../services/venda.service';
 import { Usuario } from '../../models/usuario';
 import { HistoricoVendasComponent } from './historico-vendas/historico-vendas.component';
 import { take } from 'rxjs';
+import { GorjetaComponent } from './gorjeta/gorjeta.component';
 
 @Component({
   selector: 'app-caixa',
@@ -36,12 +39,15 @@ import { take } from 'rxjs';
     SangriaComponent,
     SuprimentoComponent,
     HistoricoVendasComponent,
+    GorjetaComponent,
   ],
   templateUrl: './caixa.component.html',
   styleUrl: './caixa.component.scss',
 })
 export class CaixaComponent implements OnInit {
   @Output() retorno = new EventEmitter<any>();
+  @ViewChild('numeroVendaInput', { static: false })
+  numeroVendaInput!: ElementRef<HTMLInputElement>;
 
   identificador: Identificador = new Identificador();
   urlString!: string;
@@ -89,23 +95,31 @@ export class CaixaComponent implements OnInit {
 
   trocarModoTouch() {
     if (this.podeMudarModo) {
+      this.menuPrincipalAberto = false;
       this.globalService.setModoTouch(!this.modoTouch);
     }
   }
 
   abrirModalLiberarVenda(modal: any) {
+    this.menuPrincipalAberto = false;
     this.tipoLiberacao = 'mesa'; // Reset ao abrir o modal
     this.numeroVenda = null;
     this.tituloModal = 'Liberar Venda';
     this.modalRef = this.modalService.open(modal, { size: 'md' });
+    this.focoNumeroVenda();
   }
   abrirModalHistoricoVendas(modalHistoricoVendas: any) {
+    this.menuPrincipalAberto = false;
     this.modalRef = this.modalService.open(modalHistoricoVendas, {
       size: 'fullscreen',
     });
   }
   confirmarLiberacao() {
-    if (!this.numeroVenda) {
+    if (
+      this.numeroVenda === null ||
+      this.numeroVenda === undefined ||
+      isNaN(Number(this.numeroVenda))
+    ) {
       this.toastr.error('Digite um número válido.');
       return;
     }
@@ -135,6 +149,7 @@ export class CaixaComponent implements OnInit {
   }
 
   fechar(modalFecharCaixa: any, modalConfermacao: any) {
+    this.menuPrincipalAberto = false;
     this.caixaService.verificarVendaAtiva().subscribe(
       (vendaAtiva) => {
         if (vendaAtiva) {
@@ -160,12 +175,28 @@ export class CaixaComponent implements OnInit {
     this.router.navigate(['/home']);
   }
   sangria(modalSangria: any) {
+    this.menuPrincipalAberto = false;
     this.modalRef = this.modalService.open(modalSangria, { size: 'md' });
     this.tituloModal = 'Sangria';
   }
 
+  gorjeta(modalGorjeta: any) {
+    this.menuPrincipalAberto = false;
+    this.modalRef = this.modalService.open(modalGorjeta, { size: 'md' });
+    this.tituloModal = 'Gorjeta';
+  }
   suprimento(modalSuprimento: any) {
+    this.menuPrincipalAberto = false;
     this.modalRef = this.modalService.open(modalSuprimento, { size: 'md' });
     this.tituloModal = 'Adicionar Troco';
+  }
+
+  focoNumeroVenda() {
+    setTimeout(() => {
+      if (this.numeroVendaInput && this.numeroVendaInput.nativeElement) {
+        this.numeroVendaInput.nativeElement.focus();
+        this.numeroVendaInput.nativeElement.value = '';
+      }
+    }, 0);
   }
 }

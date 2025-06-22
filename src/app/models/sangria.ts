@@ -8,6 +8,8 @@ export class Sangria {
   valor!: number;
   dataSangria!: Date;
   nomeImpressora!: string | null;
+  tipo!: string;
+  nomeFuncionario!: string;
   funcionario!: Funcionario;
   caixa!: Caixa;
 }

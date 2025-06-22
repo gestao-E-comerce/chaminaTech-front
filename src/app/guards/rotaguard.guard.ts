@@ -34,11 +34,11 @@ export const rotaguardGuard: CanActivateFn = (route, state) => {
     config: 'editarConfiguracoes',
     caixaConf: 'historicoCaixa',
     venda: 'venda',
-    
+
     conf: 'editarConfiguracoes',
     funcionarios: 'funcionario',
     audit: 'auditoria',
-    matriz: 'matrizPermissao'
+    matriz: 'matrizPermissao',
   };
 
   if (state.url === '/home') {
@@ -48,8 +48,26 @@ export const rotaguardGuard: CanActivateFn = (route, state) => {
 
   return globalService.getUsuarioAsync().pipe(
     map((usuario) => {
+      const partesUrl = state.url.split('/').filter(Boolean);
       const rotaBase = state.url.split('/')[1]; // ex: 'produtos'
       const permissaoNecessaria = rotaParaPermissao[rotaBase];
+      const tipoCaixaOuVenda = partesUrl[1];
+
+      if (rotaBase === 'venda') {
+        const tiposValidos = ['mesa', 'retirada', 'entrega'];
+        if (!tiposValidos.includes(tipoCaixaOuVenda)) {
+          router.navigate(['/home']);
+          return false;
+        }
+      }
+
+      if (rotaBase === 'caixa') {
+        const tiposValidos = ['mesa', 'retirada', 'entrega', 'balcao'];
+        if (!tipoCaixaOuVenda || !tiposValidos.includes(tipoCaixaOuVenda)) {
+          router.navigate(['/home']);
+          return false;
+        }
+      }
 
       if (!permissaoNecessaria || !usuario.permissao?.[permissaoNecessaria]) {
         toastr.error('Você não tem permissão para acessar esta rota.');

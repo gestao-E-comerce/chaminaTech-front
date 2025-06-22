@@ -20,6 +20,7 @@ export class ConfiguracaoImpressao {
   imprimirAberturaCaixa: boolean = true;
   imprimirSangria: boolean = true;
   imprimirSuprimento: boolean = true;
+  imprimirGorjeta: boolean = true;
   mostarMotivoDeletarVenda: boolean = true;
   mostarMotivoDeletarProduto: boolean = true;
   identificador: Identificador[] = [];

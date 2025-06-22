@@ -52,7 +52,7 @@ export class ConfiguracaoTaxaServicoComponent {
     }
 
     if (this.confTaxaServico.aplicar) {
-      if (!this.confTaxaServico.tipo.trim()) {
+      if (!this.confTaxaServico.tipo?.trim()) {
         this.toastr.error('Tipo da taxa obrigatório!');
         return;
       }

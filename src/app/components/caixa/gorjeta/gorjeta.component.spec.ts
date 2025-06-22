@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PagarParcialComponent } from './pagar-parcial.component';
+import { GorjetaComponent } from './gorjeta.component';
 
-describe('PagarParcialComponent', () => {
-  let component: PagarParcialComponent;
-  let fixture: ComponentFixture<PagarParcialComponent>;
+describe('GorjetaComponent', () => {
+  let component: GorjetaComponent;
+  let fixture: ComponentFixture<GorjetaComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PagarParcialComponent]
+      imports: [GorjetaComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(PagarParcialComponent);
+    fixture = TestBed.createComponent(GorjetaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

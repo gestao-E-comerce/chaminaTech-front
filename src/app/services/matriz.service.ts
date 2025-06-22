@@ -5,6 +5,7 @@ import { Mensagem } from '../models/mensagem';
 import { Matriz } from '../models/matriz';
 import { GlobalService } from './global.service';
 import { Config } from '../../config';
+import { Impressao } from '../models/impressao';
 
 @Injectable({
   providedIn: 'root',
@@ -41,12 +42,28 @@ export class MatrizService {
     return this.globalService.getMatrizAsync().pipe(
       switchMap((matriz) => {
         return this.http.get(
-          `http://localhost:8080/installer/download?matrizId=${matriz.id}`,
+          `${Config.BACKEND_URL}/installer/download?matrizId=${matriz.id}`,
           {
             responseType: 'blob',
           }
         );
       })
+    );
+  }
+
+  buscarImpressoesPorMatrizId(): Observable<Impressao[]> {
+    return this.globalService.getMatrizAsync().pipe(
+      switchMap((matriz) => {
+        return this.http.get<Impressao[]>(
+          `${Config.BACKEND_URL}/impressao/pendentes/${matriz.id}`
+        );
+      })
+    );
+  }
+
+  deletarImpressaoPorId(id: number): Observable<void> {
+    return this.http.delete<void>(
+      `${Config.BACKEND_URL}/impressao/deletar/${id}`
     );
   }
 }

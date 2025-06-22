@@ -65,7 +65,7 @@ export class SelecionarProdutosComponent implements OnInit {
 
   }
   retornoProduto(produto: any) {
-    this.toastr.success('Matéria vinculada com sucesso');
+    this.toastr.success('Produto vinculada com sucesso');
     if (this.produtoComposto) {
       this.produtoCompostoLocal.produtoComposto = produto;
     }

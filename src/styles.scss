@@ -49,6 +49,7 @@
     /* Font sizes responsivos */
     --fs-h1: clamp(1.5rem, 2.5vw, 2.2rem) !important;
     --fs-span: clamp(0.3rem, .8vw, .8rem) !important;
+    --fs-span-atalho: clamp(0.3rem, .6vw, .6rem) !important;
     --fs-input: clamp(1rem, 1.2vw, 1.25rem) !important;
     --fs-button: clamp(.8rem, 1vw, 1rem) !important;
     --fs-label: clamp(0.85rem, 1.2vw, 1rem) !important;
@@ -69,6 +70,11 @@
 
 .detalhes {
     filter: var(--cor-white-filter-icon);
+}
+
+.span-atalho {
+    font-size: var(--fs-span-atalho);
+    color: var(--cor-white);
 }
 
 .corfundo {
@@ -99,11 +105,25 @@
     box-sizing: border-box;
 }
 
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
+p {
+    margin: 0px !important;
+}
+
 .col-acoes {
     display: flex;
     justify-content: center;
     gap: 1rem;
     align-items: center;
+
+    user-select: none;
+    -webkit-user-drag: none;
 }
 
 input[type="number"]::-webkit-inner-spin-button,
@@ -834,6 +854,12 @@ textarea {
         width: 20px;
         height: 20px;
     }
+}
+
+.botao_cep {
+    user-select: none;
+    pointer-events: none;
+    -webkit-user-drag: none;
 }
 
 .espaco-impressoras {

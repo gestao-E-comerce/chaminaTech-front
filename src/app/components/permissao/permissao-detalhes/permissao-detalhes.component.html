@@ -430,6 +430,56 @@
             </label>
           </td>
         </tr>
+        <tr>
+          <td class="text-start">CADASTRAR GORJETA</td>
+          <td class="text-start">Permite emissão de gorjeta</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="cadastrarGorjeta"
+                [(ngModel)]="permissao.cadastrarGorjeta"
+                (ngModelChange)="verificarCaixa()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">EDITAR GORJETA</td>
+          <td class="text-start">Permite editar gorjeta</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="editarGorjeta"
+                [(ngModel)]="permissao.editarGorjeta"
+                (ngModelChange)="verificarCaixa()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">DELETAR GORJETA</td>
+          <td class="text-start">Permite deletar gorjeta</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="deletarGorjeta"
+                [(ngModel)]="permissao.deletarGorjeta"
+                (ngModelChange)="verificarCaixa()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
         } @if (usuario && usuario.permissao && usuario.permissao.categoria) {
         <tr>
           <td class="text-start">CATEGORIA</td>

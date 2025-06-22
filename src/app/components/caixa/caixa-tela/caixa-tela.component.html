@@ -258,7 +258,7 @@
 } @else if (!modoTouch) {
 <div class="tela col-lg-12 w-100">
   <div
-    class="d-flex flex-column h-100"
+    class="d-flex flex-column h-100 pb-0"
     [ngClass]="{
       'col-lg-12 p-3': tipoCaixa == 'balcao',
       'col-lg-10': tipoCaixa != 'balcao'
@@ -267,15 +267,21 @@
     <div class="d-flex flex-column w-100">
       <div class="d-flex justify-content-between w-100">
         <div class="w-75 d-flex flex-column gap-2">
-          <div class="w-50">
+          <div class="w-75">
             @if ((tipoCaixa == "mesa" && !venda.mesa && !transferir) ||
             ((tipoCaixa == "retirada" || tipoCaixa == "entrega") &&
             !venda.cliente)) {
+            <h4 for="numeroVenda">
+              @if (tipoCaixa == "mesa") { Mesa } @else if(tipoCaixa ==
+              "retirada"){ Cupom Retirada }@else if(tipoCaixa == "entrega"){
+              Cupom Entrega }
+            </h4>
             <input
               autocomplete="off"
               class="w-100 w-100 input-group py-2 py-2"
               type="number"
               #numeroVenda
+              id="numeroVenda"
               (input)="validarNumero($event)"
               placeholder="{{ tituloInput }}"
               (keydown.enter)="
@@ -287,12 +293,16 @@
               "
             />
             } @if (transferir) {
+            <h4 for="numeroMesaTransferir">
+              @if (tipoCaixa == "mesa") { Trensferir para: }
+            </h4>
             <input
               name="transferir"
               autocomplete="off"
               class="w-100 input-group py-2"
               type="number"
               #numeroMesaTransferir
+              id="numeroMesaTransferir"
               (input)="validarNumero($event)"
               placeholder="Para qual mesa"
               (keydown.enter)="
@@ -308,11 +318,13 @@
             !transferir) || (tipoCaixa == "balcao" && !produtoSelecionado) ||
             ((tipoCaixa == "entrega" || tipoCaixa == "retirada") &&
             !produtoSelecionado && venda.cliente)) {
+            <h4 for="codigoProduto">Produto</h4>
             <input
               autocomplete="off"
               class="w-100 input-group py-2"
               type="number"
               #codigoProduto
+              id="codigoProduto"
               (input)="validarNumero($event)"
               placeholder="Digite o código do produto"
               (keydown.enter)="
@@ -330,12 +342,14 @@
               (keydown)="abrirModalProdutos($event, modalSelecionarProdutos)"
             />
             } @if (produtoSelecionado && !modoQuantidade) {
+            <h4 for="quantidadeProduto">Quantidade</h4>
             <input
               autocomplete="off"
               class="w-100 input-group py-2"
               type="number"
               name="quantedade"
               #quantidadeProduto
+              id="quantidadeProduto"
               (input)="validarNumero($event)"
               (keydown)="
                 observacao(
@@ -350,12 +364,14 @@
               value="1"
             />
             } @if (produtoSelecionado && modoQuantidade) {
+            <h4 for="quantidadeProdutoPeso">Peso</h4>
             <input
               autocomplete="off"
               class="w-100 input-group py-2"
               type="text"
               name="quantedadePeso"
               #quantidadeProdutoPeso
+              id="quantidadeProdutoPeso"
               (input)="validarNumeroPeso($event)"
               (keydown)="
                 observacao(
@@ -401,7 +417,7 @@
           </div>
         </div>
         <div class="w-50 d-flex gap-3 justify-content-end">
-          @if ((tipoCaixa =='mesa' && !produtoSelecionado && venda.mesa) ||
+          @if ((tipoCaixa =='mesa' && !produtoSelecionado && venda.mesa && !transferir) ||
           ((tipoCaixa =='retirada' || tipoCaixa =='entrega') &&
           !produtoSelecionado && venda.cliente) || (tipoCaixa == 'balcao' &&
           !produtoSelecionado)) {
@@ -416,7 +432,7 @@
           </div>
           } @if ( (tipoCaixa =='mesa' && !vendaAlterada() && venda.mesa &&
           venda.dataVenda != null && venda.deletado == false) && (usuario &&
-          usuario.permissao && usuario.permissao.transferirVenda)) {
+          usuario.permissao && usuario.permissao.transferirVenda) && !produtoSelecionado) {
           <div>
             <button
               class="btn-comum btn-comum-laranja"
@@ -557,7 +573,9 @@
           <th class="text-center col-1">N. item</th>
           }
           <th class="text-start col-2">Nome</th>
+          @if (tipoCaixa === 'mesa') {
           <th class="text-center col-1">Transf.Da</th>
+          }
           <th class="text-center col-1">Valor Un.</th>
           <th class="text-center col-1">Quantidade</th>
           <th class="text-center col-1">Valor It.</th>
@@ -576,9 +594,11 @@
             <td class="text-center">{{ $index + 1 + "." }}</td>
             }
             <td class="text-start">{{ produtoVenda.produto.nome }}</td>
+            @if (tipoCaixa === 'mesa') {
             <td class="text-center">
-              {{ produtoVenda.origemTransferenciaNumero || ''}}
+              {{ produtoVenda.origemTransferenciaNumero || "" }}
             </td>
+            }
             <td class="text-center">R${{ produtoVenda.produto.valor }}</td>
             <td class="text-center">{{ produtoVenda.quantidade }}</td>
             <td class="text-center">R${{ produtoVenda.valor }}</td>
@@ -597,7 +617,7 @@
             <td>
               <div class="col-acoes">
                 @if (usuario && usuario.permissao &&
-                usuario.permissao.editarProdutoVenda || produtoVenda.id == null)
+                usuario.permissao.editarProdutoVenda || produtoVenda.id == null && !produtoSelecionado)
                 {
                 <button
                   type="button"
@@ -612,7 +632,7 @@
                 </button>
                 } @if (usuario && usuario.permissao &&
                 usuario.permissao.deletarProdutoVenda || produtoVenda.id ==
-                null) {
+                null && !produtoSelecionado) {
                 <button
                   type="button"
                   (click)="
@@ -671,7 +691,7 @@
           "entrega") && !vendaAlterada() && venda.dataVenda != null &&
           venda.deletado == false ) && (usuario && usuario.permissao &&
           (usuario.permissao.imprimir && urlString === 'caixa'))) &&
-          matriz.configuracaoImpressao.usarImpressora) {
+          matriz.configuracaoImpressao.usarImpressora && !produtoSelecionado && !transferir) {
           <button
             type="button"
             class="hover-btn btn-imprimir"
@@ -706,7 +726,7 @@
           == "entrega") && !vendaAlterada() && venda.dataVenda != null &&
           venda.deletado == false ) || (tipoCaixa == "balcao" &&
           venda.produtoVendas != null) ) && (usuario && usuario.permissao &&
-          (usuario.permissao.caixa && urlString === 'caixa')) ) {
+          (usuario.permissao.caixa && urlString === 'caixa')) && !produtoSelecionado && !transferir) {
           <button
             type="button"
             class="btn-comum btn-comum-verde"
@@ -719,7 +739,7 @@
         <div>
           @if ((tipoCaixa != "balcao" && !vendaAlterada() && venda.dataVenda !=
           null && venda.deletado == false) && ((usuario && usuario.permissao &&
-          usuario.permissao.deletarVenda) && urlString === 'caixa' )) {
+          usuario.permissao.deletarVenda) && urlString === 'caixa' ) && !produtoSelecionado && !transferir) {
           <button
             type="button"
             class="btn-comum btn-comum-vermelho"
@@ -732,6 +752,20 @@
           }
         </div>
       </div>
+    </div>
+
+    <div class="d-flex justify-content-start gap-2 mt-1">
+      <span class="span-atalho">Focar(ALT + 0)</span>
+      <span class="span-atalho">Lançar(ALT + 1)</span>
+      <span class="span-atalho">Conta(ALT + 4)</span>
+      <span class="span-atalho">Pagar(ALT + 5)</span>
+      <span class="span-atalho">Transferir(ALT + 7)</span>
+      <span class="span-atalho">Fechar(ALT + 8)</span>
+      <span class="span-atalho">Del.Venda(ALT + 9)</span>
+      <span class="span-atalho">Tel.Balcao(ALT + z)</span>
+      <span class="span-atalho">Tel.Mesa(ALT + x)</span>
+      <span class="span-atalho">Tel.Retirada(ALT + c)</span>
+      <span class="span-atalho">Tel.Entrega(ALT + v)</span>
     </div>
   </div>
   @if (tipoCaixa != "balcao") {
@@ -996,12 +1030,37 @@
   <div class="modal-header modal-style justify-content-between">
     <h4 class="modal-title">{{ tituloModal }} {{ tipoPagamento }}</h4>
     <div class="d-flex align-items-center gap-2">
-      @if (tipoCaixa === 'mesa' && matriz.configuracaoTaxaServicio.aplicar) {
+      @if (tipoCaixa === 'mesa' && matriz.configuracaoTaxaServicio.aplicar &&
+      vendaPagamento.taxaAplicada) {
       <button
         class="btn-comum btn-comum-vermelho"
-        (click)="vendaPagamento.removerTaxaServico()"
+        (click)="vendaPagamento.removerTaxaServico(vendaPagamento.venda)"
       >
-        Remover Taxa
+        Remover Serviço
+      </button>
+      } @if (tipoCaixa === 'mesa' && matriz.configuracaoTaxaServicio.aplicar &&
+      !vendaPagamento.taxaAplicada) {
+      <button
+        class="btn-comum btn-comum-verde"
+        (click)="vendaPagamento.valorTotal(vendaPagamento.venda)"
+      >
+        Aplicar Serviço
+      </button>
+      } @if (!vendaPagamento.descontoAplicado) {
+      <button
+        type="button"
+        class="btn-comum btn-comum-vermelho"
+        (click)="vendaPagamento.abrirModalDesconto()"
+      >
+        Desconto
+      </button>
+      } @if (vendaPagamento.descontoAplicado) {
+      <button
+        type="button"
+        class="btn-comum btn-comum-vermelho"
+        (click)="vendaPagamento.aplicarOuRemoverDesconto()"
+      >
+        Remover Desconto
       </button>
       }
       <button
@@ -1014,7 +1073,7 @@
       ></button>
     </div>
   </div>
-  <div class="modal-body p-0 modal-style">
+  <div class="modal-body">
     <app-pagamentos
       #vendaPagamento
       [chaveUnico]="chaveUnico"
@@ -1024,23 +1083,32 @@
     ></app-pagamentos>
   </div>
   <div class="modal-footer d-flex justify-content-center border-0">
-    <button
-      type="button"
-      class="btn-comum btn-comum-verde"
-      (click)="vendaPagamento.salvar()"
-    >
-      Salvar
-    </button>
-    @if (tipoCaixa === 'mesa') {
-    <button
-      class="btn-comum btn-comum-laranja"
-      type="button"
-      (click)="vendaPagamento.abrirModalPagarParcial()"
-      [disabled]="!vendaPagamento.podePagarParcial"
-    >
-      Pagar Parcial
-    </button>
-    }
+    <div class="d-flex flex-column gap-2 w-100">
+      <div class="d-flex justify-content-center gap-3">
+        <button
+          type="button"
+          class="btn-comum btn-comum-verde"
+          (click)="vendaPagamento.salvar()"
+        >
+          Pagar
+        </button>
+        @if (tipoCaixa === 'mesa' && !vendaPagamento.pagamentoParcial) {
+        <button
+          class="btn-comum btn-comum-laranja"
+          type="button"
+          (click)="vendaPagamento.abrirModalPagarParcial()"
+          [disabled]="!vendaPagamento.podePagarParcial"
+        >
+          Pagar Parcial
+        </button>
+        }
+      </div>
+      <div class="d-flex justify-content-start gap-2">
+        <span class="span-atalho">Serviço(ALT + 2)</span>
+        <span class="span-atalho">Desconto(ALT + 3)</span>
+        <span class="span-atalho">Pagar(ALT + 5)</span>
+      </div>
+    </div>
   </div>
 </ng-template>
 <ng-template #modalCliente let-modal>
@@ -1184,7 +1252,9 @@
           <th class="text-center col-1">Código</th>
           <th class="text-center col-1">N. item</th>
           <th class="text-start col-2">Nome</th>
+          @if (tipoCaixa === 'mesa') {
           <th class="text-center col-1">Transf.Da</th>
+          }
           <th class="text-center col-1">Valor Un.</th>
           <th class="text-center col-1">Quantidade</th>
           <th class="text-center col-1">Valor It.</th>
@@ -1198,9 +1268,11 @@
             <td class="text-center">{{ produtoVenda.produto.codigo }}</td>
             <td class="text-center">{{ $index + 1 + "." }}</td>
             <td class="text-start">{{ produtoVenda.produto.nome }}</td>
+            @if (tipoCaixa === 'mesa') {
             <td class="text-center">
-              {{ produtoVenda.origemTransferenciaNumero || ''}}
+              {{ produtoVenda.origemTransferenciaNumero || "" }}
             </td>
+            }
             <td class="text-center">R${{ produtoVenda.produto.valor }}</td>
             <td class="text-center">{{ produtoVenda.quantidade }}</td>
             <td class="text-center">R${{ produtoVenda.valor }}</td>
@@ -1394,9 +1466,10 @@
               } @if (tamanhoTela > 483) {
               <th class="text-center col-1">N. item</th>
               }
-              <th class="text-center col-1">Transf.Da</th>
               <th class="text-start col-2">Nome</th>
-              @if (tamanhoTela > 563) {
+              @if (tipoCaixa === 'mesa' && tamanhoTela > 563) {
+              <th class="text-center col-1">Transf.Da</th>
+              } @if (tamanhoTela > 563) {
               <th class="text-center col-1">Valor Un.</th>
               }
               <th class="text-center col-1">Quantidade</th>
@@ -1423,10 +1496,11 @@
                 <td class="text-center">{{ $index + 1 + "." }}</td>
                 }
                 <td class="text-start">{{ produtoVenda.produto.nome }}</td>
+                @if (tipoCaixa === 'mesa' && tamanhoTela > 563) {
                 <td class="text-center">
-              {{ produtoVenda.origemTransferenciaNumero || ''}}
-            </td>
-                @if (tamanhoTela > 563) {
+                  {{ produtoVenda.origemTransferenciaNumero || "" }}
+                </td>
+                } @if (tamanhoTela > 563) {
                 <td class="text-center">R${{ produtoVenda.produto.valor }}</td>
                 }
                 <td class="text-center">{{ produtoVenda.quantidade }}</td>
@@ -1636,7 +1710,7 @@
                   Obs:{{ getObservacoesFormatadas(produtoVenda) }}
                 </p>
                 <div class="d-flex gap-2">
-                  @if (produto.categoria.obsObrigatotio == false) {
+                  @if (produto.categoria.obsObrigatotio == false && !produtoSelecionado) {
                   <button
                     type="button"
                     (click)="
@@ -1653,7 +1727,7 @@
                     />
                     <span class="hover-text">Editar</span>
                   </button>
-                  } @else if (produto.categoria.obsObrigatotio == true) {
+                  } @else if (produto.categoria.obsObrigatotio == true && !produtoSelecionado) {
                   <button
                     type="button"
                     (click)="
@@ -1702,9 +1776,10 @@
               } @if (tamanhoTela > 483) {
               <th class="text-center col-1">N. item</th>
               }
-              <th class="text-center col-1">Transf.Da</th>
               <th class="text-start col-2">Nome</th>
-              @if (tamanhoTela > 563) {
+              @if (tipoCaixa === 'mesa' && tamanhoTela > 635) {
+              <th class="text-center col-1">Transf.Da</th>
+              } @if (tamanhoTela > 563) {
               <th class="text-center col-1">Valor Un.</th>
               }
               <th class="text-center col-1">Quantidade</th>
@@ -1731,10 +1806,11 @@
                 <td class="text-center">{{ $index + 1 + "." }}</td>
                 }
                 <td class="text-start">{{ produtoVenda.produto.nome }}</td>
+                @if (tipoCaixa === 'mesa' && tamanhoTela > 635) {
                 <td class="text-center">
-              {{ produtoVenda.origemTransferenciaNumero || ''}}
-            </td>
-                @if (tamanhoTela > 563) {
+                  {{ produtoVenda.origemTransferenciaNumero || "" }}
+                </td>
+                } @if (tamanhoTela > 563) {
                 <td class="text-center">R${{ produtoVenda.produto.valor }}</td>
                 }
                 <td class="text-center">{{ produtoVenda.quantidade }}</td>
@@ -2103,12 +2179,10 @@
       <div><strong>N. item:</strong> {{ indice }}</div>
       <div><strong>Codigo:</strong> {{ produtoVenda.produto.codigo }}</div>
       <div><strong>Nome Produto:</strong> {{ produtoVenda.produto.nome }}</div>
-      @if (produtoVenda.origemTransferenciaNumero >0 ) {
+      @if (tipoCaixa === 'mesa') {
       <div>
         <strong>Transf.Da</strong>
-        <td class="text-start">
-          {{ produtoVenda.origemTransferenciaNumero }}
-        </td>
+        {{ produtoVenda.origemTransferenciaNumero || 0 }}
       </div>
       }
       <div>

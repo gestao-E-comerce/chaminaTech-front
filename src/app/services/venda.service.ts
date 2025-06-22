@@ -59,14 +59,6 @@ export class VendaService {
       })
     );
   }
-  saveParcial(venda: Venda): Observable<Mensagem> {
-    return this.globalService.getMatrizAsync().pipe(
-      switchMap((matriz) => {
-        venda.matriz = matriz;
-        return this.http.post<Mensagem>(`${this.API}/cadastrarParcial`, venda);
-      })
-    );
-  }
   saveSimples(venda: Venda): Observable<Venda> {
     return this.globalService.getMatrizAsync().pipe(
       switchMap((matriz) => {
@@ -87,6 +79,24 @@ export class VendaService {
         return this.http.post<Mensagem>(
           `${this.API}/transferir`,
           transferenciaDTO
+        );
+      })
+    );
+  }
+
+  pagamentoParcial(parcialDTO: {
+    vendaOriginal: Venda;
+    vendaParcial: Venda;
+    chaveUnico: string;
+  }): Observable<Mensagem> {
+    return this.globalService.getMatrizAsync().pipe(
+      switchMap((matriz) => {
+        parcialDTO.vendaOriginal.matriz = matriz;
+        parcialDTO.vendaParcial.matriz = matriz;
+
+        return this.http.post<Mensagem>(
+          `${this.API}/parcial`,
+          parcialDTO
         );
       })
     );

@@ -1,0 +1,107 @@
+<form #formulario="ngForm" (ngSubmit)="salvar(modalConfermacao, formulario)">
+  <div class="d-flex flex-column gap-3 p-2">
+    <div class="w-100">
+      <label for="dinheiro" class="form-label">Dinheiro</label>
+      <input
+        autocomplete="off"
+        #dinheiro="ngModel"
+        type="number"
+        inputmode="numeric"
+        min="0"
+        step="0.01"
+        oninput="if (this.value.length > 10) this.value = this.value.slice(0, 10)"
+        onkeydown="return !['e', 'E', '-', '+', ','].includes(event.key)"
+        class="form-control"
+        name="dinheiro"
+        [(ngModel)]="gorjeta.dinheiro"
+      />
+    </div>
+    <div class="w-100">
+      <label for="debito" class="form-label">Débito</label>
+      <input
+        autocomplete="off"
+        #debito="ngModel"
+        type="number"
+        inputmode="numeric"
+        min="0"
+        step="0.01"
+        oninput="if (this.value.length > 10) this.value = this.value.slice(0, 10)"
+        onkeydown="return !['e', 'E', '-', '+', ','].includes(event.key)"
+        class="form-control"
+        name="debito"
+        [(ngModel)]="gorjeta.debito"
+      />
+    </div>
+    <div class="w-100">
+      <label for="credito" class="form-label">Crédito</label>
+      <input
+        autocomplete="off"
+        #credito="ngModel"
+        type="number"
+        inputmode="numeric"
+        min="0"
+        step="0.01"
+        oninput="if (this.value.length > 10) this.value = this.value.slice(0, 10)"
+        onkeydown="return !['e', 'E', '-', '+', ','].includes(event.key)"
+        class="form-control"
+        name="credito"
+        [(ngModel)]="gorjeta.credito"
+      />
+    </div>
+    <div class="w-100">
+      <label for="pix" class="form-label">Pix</label>
+      <input
+        autocomplete="off"
+        #pix="ngModel"
+        type="number"
+        inputmode="numeric"
+        min="0"
+        step="0.01"
+        oninput="if (this.value.length > 10) this.value = this.value.slice(0, 10)"
+        onkeydown="return !['e', 'E', '-', '+', ','].includes(event.key)"
+        class="form-control"
+        name="pix"
+        [(ngModel)]="gorjeta.pix"
+      />
+    </div>
+    <div class="d-flex justify-content-center">
+      <button type="submit" class="btn-comum btn-comum-laranja">Salvar</button>
+    </div>
+  </div>
+</form>
+<ng-template #modalConfermacao let-modal>
+  <div class="modal-header modal-style p-3">
+    <h4 class="modal-title">Confirmação!</h4>
+  </div>
+  <div class="modal-body modal-style p-3">
+    <h5>
+      Confirmar gorjeta com:
+      <br />
+      @if (gorjeta.dinheiro > 0) {
+      <span>Dinheiro: {{ gorjeta.dinheiro }}<br /></span>
+      } @if (gorjeta.debito > 0) {
+      <span>Débito: {{ gorjeta.debito }}<br /></span>
+      } @if (gorjeta.credito > 0) {
+      <span>Crédito: {{ gorjeta.credito }}<br /></span>
+      } @if (gorjeta.pix > 0) {
+      <span>Pix: {{ gorjeta.pix }}<br /></span>
+      }
+    </h5>
+  </div>
+  <div class="modal-footer modal-style d-flex justify-content-center p-2 gap-3">
+    <button
+      type="button"
+      class="btn-comum btn-comum-laranja"
+      (click)="confirmarGorjeta()"
+    >
+      Sim
+    </button>
+    <button
+      type="button"
+      class="btn-comum btn-comum-vermelho"
+      (click)="modal.close('Close click')"
+    >
+      Não
+    </button>
+  </div>
+</ng-template>

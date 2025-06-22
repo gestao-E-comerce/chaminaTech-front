@@ -83,7 +83,7 @@ export class GlobalService {
     const localValue = localStorage.getItem('modoTouch');
 
     if (localValue === null) {
-      localStorage.setItem('modoTouch', 'false');
+      this.setModoTouch(false);
       this.modoTouchSubject = new BehaviorSubject<boolean>(false);
     } else {
       this.modoTouchSubject = new BehaviorSubject<boolean>(
@@ -109,6 +109,7 @@ export class GlobalService {
   setModoTouch(valor: boolean) {
     localStorage.setItem('modoTouch', valor.toString());
     this.modoTouchSubject.next(valor);
+    window.location.reload(); 
   }
 
   getModoTouch(): boolean {

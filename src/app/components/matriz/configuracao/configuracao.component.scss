@@ -3,36 +3,6 @@ h5 {
     color: var(--cor-white) !important;
 }
 
-// .header-fixo {
-//     position: sticky;
-//     top: 0;
-//     z-index: 1050;
-//     background-color: var(--cor-cinza-escuro);
-//     padding: 1rem;
-//     border-bottom: 1px solid var(--cor-laranja);
-// }
-
-// .largura {
-//     width: 20vw !important;
-// }
-
-// .usar {
-//     background-color: var(--cor-laranja);
-//     border: 0px;
-//     padding: 5px 15px;
-//     border-radius: 10px;
-//     color: var(--cor-white);
-//     &:hover{
-//         background-color: var(--cor-laranja-hover);
-//     }
-// }
-
-// .em_uso {
-//     background-color: var(--cor-cinza-hover);
-//     padding: 5px;
-//     border-radius: 10px;
-// }
-
 .titulo-vertical {
     writing-mode: vertical-rl;
     transform: rotate(180deg);
@@ -46,11 +16,10 @@ h5 {
     position: fixed;
     left: 0;
     top: 0;
-    height: 100vh;
+    bottom: 0;
     width: 4vw;
     background-color: var(--cor-cinza-escuro);
     overflow: hidden;
-    transition: width 0.3s ease-in-out;
     z-index: 1050;
     border-right: 1px solid var(--cor-laranja);
 }
@@ -84,6 +53,8 @@ h5 {
 .content-container {
     margin-left: 4vw;
     width: 96vw !important;
+    height: 100vh;
+    overflow-y: auto;
 }
 
 @media (max-width: 1024px) {

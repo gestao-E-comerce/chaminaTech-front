@@ -30,7 +30,7 @@
             class="botao_voltar me-2"
             routerLink="/home"
           >
-            <i class="bi bi-arrow-left "></i>
+            <i class="bi bi-arrow-left"></i>
           </button>
 
           <h2 class="titulo m-0">Caixa Configuração</h2>
@@ -38,7 +38,7 @@
         <button class="fechar-menu" (click)="menuAberto = false">✕</button>
       </div>
       <div
-        class="col-lg-12 d-flex align-items-center gap-3 pb-2 w-100 area-pesquisa"
+        class="col-lg-12 d-flex align-items-center gap-3 pb-2 w-100 flex-column"
       >
         <div class="d-flex flex-column w-100">
           <label for="nome">Funcionário</label>
@@ -60,7 +60,7 @@
             </button>
           </div>
         </div>
-        <div class="d-flex flex-column w-25">
+        <div class="d-flex flex-column w-100">
           <label>Tipo</label>
           <select
             class="select-filtro p-1"
@@ -106,7 +106,7 @@
   </div>
   <div class="h-100 p-3 pb-0 w-100 content-container">
     @if (caixaSelecionado) {
-    <div class="d-flex flex-column h-100 w-100">
+    <div class="d-flex flex-column gap-2 h-100 w-100">
       <div class="d-flex justify-content-between w-100 h-dados">
         <div class="w-50 h-100">
           <h4>Detalhes do Caixa ID: {{ caixaSelecionado.id }}</h4>
@@ -150,10 +150,23 @@
               <p><strong>Suprimentos: </strong> {{ saldoSuprimentos || 0 }}</p>
             </div>
           </div>
+          <div class="d-flex justify-content-between w-100">
+            <div class="w-50">
+              <p><strong>Gorjetas: </strong> {{ saldoGorjetas || 0 }}</p>
+            </div>
+            <div class="w-50">
+              <p><strong>Descontos: </strong> {{ saldoDescontos || 0 }}</p>
+            </div>
+          </div>
+          <div class="d-flex justify-content-between w-100">
+            <div class="w-100">
+              <p><strong>Serviçios: </strong> {{ saldoServicos || 0 }}</p>
+            </div>
+          </div>
           <h4 class="mt-4">Saldo: {{ saldo || 0 }}</h4>
         </div>
       </div>
-      <div class="h-listas w-100">
+      <div class="h-listas w-100 d-flex flex-column gap-3">
         <div
           class="d-flex flex-wrap flex-md-nowrap justify-content-center gap-3 w-100 h-50"
         >
@@ -162,9 +175,10 @@
               <h4>Sangrias</h4>
             </div>
             <div class="lista">
-              <table class="table ">
+              <table class="table">
                 <thead>
                   <th class="text-center col-1">#</th>
+                  <th class="text-center col-1">Data</th>
                   <th class="text-start col-2">Motivo</th>
                   <th class="text-center col-1">Valor</th>
                   <th class="text-center col-2">Ações</th>
@@ -173,6 +187,9 @@
                   @for (sangria of caixaSelecionado.sangrias; track $index) {
                   <tr>
                     <td class="text-center">{{ $index + 1 + "." }}</td>
+                    <td class="text-center">
+                      {{ sangria.dataSangria | date : "dd/MM/yyyy HH:mm" }}
+                    </td>
                     <td class="text-start">{{ sangria.motivo }}</td>
                     <td class="text-center">{{ sangria.valor }}</td>
                     <td>
@@ -192,7 +209,8 @@
                           <span class="hover-text">Editar</span>
                         </button>
                         } @if ((usuario && usuario.permissao &&
-                        usuario.permissao.imprimir) && matriz.configuracaoImpressao.usarImpressora) {
+                        usuario.permissao.imprimir) &&
+                        matriz.configuracaoImpressao.usarImpressora) {
                         <button
                           type="button"
                           name="{{ sangria.dataSangria }}"
@@ -234,9 +252,10 @@
               <h4>Suprimentos</h4>
             </div>
             <div class="lista">
-              <table class="table ">
+              <table class="table">
                 <thead>
                   <th class="text-center col-1">#</th>
+                  <th class="text-center col-1">Data</th>
                   <th class="text-start col-2">Motivo</th>
                   <th class="text-center col-1">Valor</th>
                   <th class="text-center col-2">Ações</th>
@@ -246,6 +265,9 @@
                   $index) {
                   <tr>
                     <td class="text-center">{{ $index + 1 + "." }}</td>
+                    <td class="text-center">
+                      {{ suprimento.dataSuprimento | date : "dd/MM/yyyy HH:mm" }}
+                    </td>
                     <td class="text-start">{{ suprimento.motivo }}</td>
                     <td class="text-center">{{ suprimento.valor }}</td>
                     <td>
@@ -271,7 +293,8 @@
                           <span class="hover-text">Editar</span>
                         </button>
                         } @if ((usuario && usuario.permissao &&
-                        usuario.permissao.imprimir) && matriz.configuracaoImpressao.usarImpressora) {
+                        usuario.permissao.imprimir) &&
+                        matriz.configuracaoImpressao.usarImpressora) {
                         <button
                           type="button"
                           name="{{ suprimento.dataSuprimento }}"
@@ -309,13 +332,100 @@
             </div>
           </div>
         </div>
-        <div class="h-50 mt-2">
-          <div class="d-flex flex-column h-100">
+        <div
+          class="d-flex flex-wrap flex-md-nowrap justify-content-center gap-3 w-100 h-50"
+        >
+          <div class="d-flex flex-column lista-col">
+            <div class="d-flex justify-content-start">
+              <h4>Gorjetas</h4>
+            </div>
+            <div class="lista">
+              <table class="table">
+                <thead>
+                  <th class="text-center col-1">#</th>
+                  <th class="text-center col-3">Data</th>
+                  <th class="text-center col-4">Pagamentos</th>
+                  <th class="text-center col-2">Ações</th>
+                </thead>
+                <tbody>
+                  @for (gorjeta of caixaSelecionado.gorjetas; track $index) {
+                  <tr>
+                    <td class="text-center">{{ $index + 1 + "." }}</td>
+                    <td class="text-center">
+                      {{ gorjeta.dataGorjeta | date : "dd/MM/yyyy HH:mm" }}
+                    </td>
+                    <td class="text-center">
+                      @if (gorjeta.dinheiro > 0) {
+                      <span>Dinheiro: {{ gorjeta.dinheiro }}</span>
+                      } @if (gorjeta.debito > 0) {
+                      <span> Débito: {{ gorjeta.debito }}</span>
+                      } @if (gorjeta.credito > 0) {
+                      <span> Crédito: {{ gorjeta.credito }}</span>
+                      } @if (gorjeta.pix > 0) {
+                      <span> Pix: {{ gorjeta.pix }}</span>
+                      }
+                    </td>
+                    <td>
+                      <div class="col-acoes">
+                        @if (usuario && usuario.permissao &&
+                        usuario.permissao.editarGorjeta) {
+                        <button
+                          type="button"
+                          name="{{ gorjeta.dataGorjeta }}"
+                          (click)="editarGorjeta(modalGorjeta, gorjeta, $index)"
+                          class="hover-btn"
+                        >
+                          <img
+                            src="../../../assets/images/botao_editar.svg"
+                            alt="Editar"
+                          />
+                          <span class="hover-text">Editar</span>
+                        </button>
+                        } @if ((usuario && usuario.permissao &&
+                        usuario.permissao.imprimir) &&
+                        matriz.configuracaoImpressao.usarImpressora) {
+                        <button
+                          type="button"
+                          name="{{ gorjeta.dataGorjeta }}"
+                          (click)="imprimirGorjeta(gorjeta)"
+                          class="hover-btn"
+                        >
+                          <img
+                            class="icon-impressora"
+                            src="../../../assets/images/impressora.svg"
+                            alt="Imprimir"
+                          />
+                          <span class="hover-text">Imprimir</span>
+                        </button>
+                        } @if (usuario && usuario.permissao &&
+                        usuario.permissao.deletarGorjeta) {
+                        <button
+                          type="button"
+                          name="{{ gorjeta.dataGorjeta }}"
+                          (click)="deletarGorjeta(modalDeletar, gorjeta)"
+                          class="hover-btn"
+                        >
+                          <img
+                            src="../../../assets/images/botao_deletar.svg"
+                            alt="Deletar"
+                          />
+                          <span class="hover-text">Deletar</span>
+                        </button>
+                        } @else { &nbsp; }
+                      </div>
+                    </td>
+                  </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="d-flex flex-column lista-col">
             <div class="d-flex justify-content-start">
               <h4>Vendas</h4>
             </div>
             <div class="lista">
-              <table class="table ">
+              <table class="table">
                 <thead>
                   <th class="text-center col-1">#</th>
                   <th class="text-center col-1">Venda</th>
@@ -360,8 +470,11 @@
           </div>
         </div>
       </div>
-      <div class="d-flex justify-content-end align-items-center w-100 h-btn gap-3">
-        @if ((usuario && usuario.permissao && usuario.permissao.imprimir) && matriz.configuracaoImpressao.usarImpressora) {
+      <div
+        class="d-flex justify-content-end align-items-center w-100 h-btn gap-3"
+      >
+        @if ((usuario && usuario.permissao && usuario.permissao.imprimir) &&
+        matriz.configuracaoImpressao.usarImpressora) {
         <button
           type="button"
           name="impremir"
@@ -479,6 +592,19 @@
   </div>
   <div class="modal-body modal-style p-3">
     <app-sangria [sangria]="sangria" (retorno)="atualizar()"></app-sangria>
+  </div>
+</ng-template>
+<ng-template #modalGorjeta let-modal>
+  <div class="modal-header modal-style justify-content-between p-3">
+    <h4 class="modal-title">{{ tituloModal }}</h4>
+    <i
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+      class="bi bi-x-lg close"
+    ></i>
+  </div>
+  <div class="modal-body modal-style p-3">
+    <app-gorjeta [gorjeta]="gorjeta" (retorno)="atualizar()"></app-gorjeta>
   </div>
 </ng-template>
 <ng-template #modalSuprimento let-modal>

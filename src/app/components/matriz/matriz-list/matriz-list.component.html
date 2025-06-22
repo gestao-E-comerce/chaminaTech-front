@@ -73,6 +73,7 @@
       <thead>
         <th class="text-center col-1">#</th>
         <th class="text-center col-1">Nome</th>
+        <th class="text-center col-1">Funcionários</th>
         <th class="text-center col-1">Permissão</th>
         <th class="text-center col-2">Ações</th>
       </thead>
@@ -81,6 +82,7 @@
         <tr>
           <td class="text-center">{{ $index }}</td>
           <td class="text-center">{{ matriz?.nome }}</td>
+          <td class="text-center">{{ matriz?.limiteFuncionarios }}</td>
           <td class="text-center">{{ matriz?.permissao?.nome }}</td>
           <td>
             <div class="col-acoes">

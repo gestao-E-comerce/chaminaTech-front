@@ -1,6 +1,15 @@
+span {
+    font-size: var(--fs-input) !important;
+}
+
 label,
-p {
-    font-size: 30px !important;
+.table.w-100 {
+    td {
+        font-size: var(--fs-h1) !important;
+        color: var(--cor-white);
+    }
+
+    font-size: var(--fs-h1) !important;
     color: var(--cor-white);
 }
 

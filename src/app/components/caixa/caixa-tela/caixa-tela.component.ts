@@ -88,6 +88,14 @@ export class CaixaTelaComponent implements OnInit {
   @ViewChild('vendasListagem') vendasListagem!: VendaListaComponent;
   @ViewChild('salvarPagamento') salvarPagamento!: PagamentosComponent;
   @ViewChild('modalCancelar') modalCancelar!: TemplateRef<any>;
+  @ViewChild('modalPagamentos') modalPagamentos!: TemplateRef<any>;
+  @ViewChild('modalDeletarVenda') modalDeletarVenda!: TemplateRef<any>;
+  @ViewChild('modalConfirmarImpressao')
+  modalConfirmarImpressao!: TemplateRef<any>;
+  @ViewChild('modalTransferirNumero')
+  modalTransferirNumero!: TemplateRef<any>;
+  @ViewChild('modalQuantedade')
+  modalQuantedade!: TemplateRef<any>;
 
   @Output() retorno = new EventEmitter<any>();
   @Input() venda: Venda = new Venda();
@@ -226,6 +234,159 @@ export class CaixaTelaComponent implements OnInit {
       size: 'fullscreen',
     });
   }
+  @HostListener('document:keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent) {
+    if (this.modalService.hasOpenModals()) {
+      return; // Impede atalho quando o modal está aberto
+    }
+    if (event.altKey) {
+      const key = event.key.toLowerCase();
+      switch (key) {
+        case '5':
+          this.atalhoPagar();
+          break;
+        case '9':
+          this.atalhoDeletarVenda();
+          break;
+        case '8':
+          this.atalhoFechar();
+          break;
+        case '7':
+          this.atalhoTransferir();
+          break;
+        case '4':
+          this.atalhoImprimirConta();
+          break;
+        case '1':
+          this.atlahoLancarVenda();
+          break;
+        case '0':
+          this.atlahoFocar();
+          break;
+        case 'z':
+          if (this.usuario.permissao.vendaBalcao) {
+            this.router.navigate([`/${this.urlString}/balcao`]);
+          }
+          break;
+        case 'x':
+          if (this.usuario.permissao.vendaMesa) {
+            this.router.navigate([`/${this.urlString}/mesa`]);
+          }
+          break;
+        case 'c':
+          if (this.usuario.permissao.vendaRetirada) {
+            this.router.navigate([`/${this.urlString}/retirada`]);
+          }
+          break;
+        case 'v':
+          if (this.usuario.permissao.vendaEntrega) {
+            this.router.navigate([`/${this.urlString}/entrega`]);
+          }
+          break;
+        default:
+          break;
+      }
+    }
+  }
+  atalhoPagar() {
+    if (
+      (((this.tipoCaixa == 'mesa' ||
+        this.tipoCaixa == 'retirada' ||
+        this.tipoCaixa == 'entrega') &&
+        !this.vendaAlterada() &&
+        this.venda.dataVenda != null &&
+        this.venda.deletado == false) ||
+        (this.tipoCaixa == 'balcao' && this.venda.produtoVendas != null)) &&
+      this.usuario &&
+      this.usuario.permissao &&
+      this.usuario.permissao.caixa &&
+      this.urlString === 'caixa'
+    ) {
+      this.pagar(this.chaveUnico, this.modalPagamentos);
+    }
+  }
+
+  atalhoDeletarVenda() {
+    if (
+      this.tipoCaixa != 'balcao' &&
+      !this.vendaAlterada() &&
+      this.venda.dataVenda != null &&
+      this.venda.deletado == false &&
+      this.usuario &&
+      this.usuario.permissao &&
+      this.usuario.permissao.deletarVenda &&
+      this.urlString === 'caixa'
+    ) {
+      this.deletarVenda(
+        this.venda,
+        this.modalDeletarVenda,
+        this.modalConfirmarImpressao
+      );
+    }
+  }
+
+  atalhoFechar() {
+    if (
+      (this.tipoCaixa == 'mesa' && this.venda.mesa != null) ||
+      (this.tipoCaixa == 'balcao' && this.venda.produtoVendas != null) ||
+      ((this.tipoCaixa == 'entrega' || this.tipoCaixa == 'retirada') &&
+        this.venda.cliente != null)
+    ) {
+      this.cancelar();
+    }
+  }
+
+  atalhoTransferir() {
+    if (
+      this.tipoCaixa == 'mesa' &&
+      !this.vendaAlterada() &&
+      this.venda.mesa &&
+      this.venda.dataVenda != null &&
+      this.venda.deletado == false &&
+      this.usuario &&
+      this.usuario.permissao &&
+      this.usuario.permissao.transferirVenda
+    ) {
+      this.transferirMesa(this.modalTransferirNumero);
+    }
+  }
+
+  atalhoImprimirConta() {
+    if (
+      (this.tipoCaixa == 'mesa' ||
+        this.tipoCaixa == 'retirada' ||
+        this.tipoCaixa == 'entrega') &&
+      !this.vendaAlterada() &&
+      this.venda.dataVenda != null &&
+      this.venda.deletado == false &&
+      this.usuario &&
+      this.usuario.permissao &&
+      this.usuario.permissao.imprimir &&
+      this.urlString === 'caixa' &&
+      this.matriz.configuracaoImpressao.usarImpressora
+    ) {
+      this.abrirModalImprimirConta(this.modalQuantedade);
+    }
+  }
+
+  atlahoLancarVenda() {
+    if (
+      (this.tipoCaixa == 'mesa' && this.vendaAlterada() && !this.transferir) ||
+      ((this.tipoCaixa == 'retirada' || this.tipoCaixa == 'entrega') &&
+        this.vendaAlterada() &&
+        this.venda.produtoVendas)
+    ) {
+      this.lancarVendaTipo(this.modalConfirmarImpressao, this.modalPagamentos);
+    }
+  }
+
+  atlahoFocar() {
+    this.focoQuantedadeProduto();
+    this.focoQuantedadeProdutoPeso();
+    this.focoCodigoProduto();
+    this.focoNumeroVenda();
+  }
+
   @HostListener('window:resize', [])
   onResize() {
     const valor = window.innerWidth;
@@ -559,6 +720,7 @@ export class CaixaTelaComponent implements OnInit {
   confirmarDeletarProduto(index: number, modalConfirmarImpressao: any) {
     if (!this.motivoDeletar?.trim()) {
       this.toastr.error('Motivo indefinido!!');
+      return;
     } else {
       const salvarEVoltar = () => {
         this.venda.produtoVendas[index].motivoExclusao = this.motivoDeletar;
@@ -886,7 +1048,7 @@ export class CaixaTelaComponent implements OnInit {
       this.venda.imprimirCadastrar = false;
       this.venda.imprimirDeletar = false;
       this.venda.imprimirNotaFiscal = false;
-      this.venda.motivo = '';
+      this.venda.motivoDeletar = '';
       this.vendaService.deletar(this.venda).subscribe({
         next: (mensagem) => {
           this.modalService.dismissAll();
@@ -1089,7 +1251,7 @@ export class CaixaTelaComponent implements OnInit {
     } else {
       const deletarVenda = () => {
         this.tipoVenda();
-        this.venda.motivo = '';
+        this.venda.motivoDeletar = '';
         this.vendaService.deletar(this.venda).subscribe({
           next: (mensagem) => {
             this.toastr.success(mensagem.mensagem);
@@ -1143,10 +1305,11 @@ export class CaixaTelaComponent implements OnInit {
   confirmarDeletarVenda(modalConfirmarImpressao: any) {
     if (!this.motivoDeletar?.trim()) {
       this.toastr.error('Motivo indefinido!!');
+      return;
     } else {
       const deletarVenda = () => {
         this.tipoVenda();
-        this.venda.motivo = this.motivoDeletar;
+        this.venda.motivoDeletar = this.motivoDeletar;
         this.vendaService.deletar(this.venda).subscribe({
           next: (mensagem) => {
             this.toastr.success(mensagem.mensagem);
@@ -2425,7 +2588,6 @@ export class CaixaTelaComponent implements OnInit {
   }
   vendaBalcao() {
     if (this.matriz.configuracaoImpressao.usarImpressora == false) {
-      this.venda.mesa == null;
       this.venda.retirada = false;
       this.venda.entrega = false;
       this.venda.balcao = true;
@@ -2434,7 +2596,6 @@ export class CaixaTelaComponent implements OnInit {
       this.venda.imprimirDeletar = false;
       this.venda.imprimirNotaFiscal = false;
     } else {
-      this.venda.mesa == null;
       this.venda.retirada = false;
       this.venda.entrega = false;
       this.venda.balcao = true;
@@ -2465,7 +2626,6 @@ export class CaixaTelaComponent implements OnInit {
   }
   vendaEntrega() {
     if (this.matriz.configuracaoImpressao.usarImpressora == false) {
-      this.venda.mesa == null;
       this.venda.retirada = false;
       this.venda.entrega = true;
       this.venda.balcao = false;
@@ -2476,7 +2636,6 @@ export class CaixaTelaComponent implements OnInit {
       this.venda.imprimirDeletar = false;
       this.venda.imprimirNotaFiscal = false;
     } else {
-      this.venda.mesa == null;
       this.venda.retirada = false;
       this.venda.entrega = true;
       this.venda.balcao = false;
@@ -2487,7 +2646,6 @@ export class CaixaTelaComponent implements OnInit {
   }
   vendaRetirada() {
     if (this.matriz.configuracaoImpressao.usarImpressora == false) {
-      this.venda.mesa == null;
       this.venda.retirada = true;
       this.venda.entrega = false;
       this.venda.balcao = false;
@@ -2498,7 +2656,6 @@ export class CaixaTelaComponent implements OnInit {
       this.venda.imprimirDeletar = false;
       this.venda.imprimirNotaFiscal = false;
     } else {
-      this.venda.mesa == null;
       this.venda.retirada = true;
       this.venda.entrega = false;
       this.venda.balcao = false;

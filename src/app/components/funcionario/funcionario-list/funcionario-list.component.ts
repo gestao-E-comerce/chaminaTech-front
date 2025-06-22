@@ -11,6 +11,7 @@ import { PermissaoListaComponent } from '../../permissao/permissao-lista/permiss
 import { Usuario } from '../../../models/usuario';
 import { GlobalService } from '../../../services/global.service';
 import { take } from 'rxjs';
+import { Matriz } from '../../../models/matriz';
 
 @Component({
   selector: 'app-funcionario-list',
@@ -31,6 +32,7 @@ export class FuncionarioListComponent implements OnInit {
   listaFuncionariosFiltrada: Funcionario[] = [];
   funcionario!: Funcionario;
   usuario!: Usuario;
+  matriz!: Matriz;
 
   modalService = inject(NgbModal);
   toastr = inject(ToastrService);
@@ -51,6 +53,15 @@ export class FuncionarioListComponent implements OnInit {
       .subscribe({
         next: (usuario) => {
           this.usuario = usuario;
+        },
+      });
+
+    this.globalService
+      .getMatrizAsync()
+      .pipe(take(1))
+      .subscribe({
+        next: (matriz) => {
+          this.matriz = matriz;
         },
       });
   }
@@ -102,6 +113,9 @@ export class FuncionarioListComponent implements OnInit {
         next: (mensagem) => {
           this.toastr.success(mensagem.mensagem);
           this.filtrarFuncionarios();
+        },
+        error: (erro) => {
+          this.toastr.error(erro.error.mensagem);
         },
       });
   }

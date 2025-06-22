@@ -14,6 +14,7 @@ export class Matriz extends Usuario {
   numero!: number;
   latitude?: number;
   longitude?: number;
+  limiteFuncionarios!: number;
 
   configuracaoEntrega!: ConfiguracaoEntrega;
   configuracaoRetirada!: ConfiguracaoRetirada;

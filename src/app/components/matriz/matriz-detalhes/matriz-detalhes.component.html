@@ -149,6 +149,24 @@
       [ngClass]="{ 'borda-vermelha': !estado.valid && estado.touched }"
     />
   </div>
+  <div class="d-flex flex-column w-100">
+    <label for="limite" class="form-label">Limite funcionários</label>
+    <input
+      autocomplete="off"
+      #limite="ngModel"
+      required
+      type="number"
+      inputmode="numeric"
+      min="0"
+      step="1"
+      onkeydown="return !['e', 'E', '-', '+' , ',' , '.'].includes(event.key)"
+      oninput="if (this.value.length > 10) this.value = this.value.slice(0, 10)"
+      class="form-control"
+      name="limite"
+      [(ngModel)]="matriz.limiteFuncionarios"
+      [ngClass]="{ 'borda-vermelha': !limite.valid && limite.touched }"
+    />
+  </div>
   <div class="d-flex align-items-center gap-3 w-100">
     <div class="d-flex flex-column w-50">
       <label for="username" class="form-label">UserName</label>

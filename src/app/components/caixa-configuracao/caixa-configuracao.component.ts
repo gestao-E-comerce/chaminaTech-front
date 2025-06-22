@@ -17,6 +17,9 @@ import { SangriaService } from '../../services/sangria.service';
 import { SuprimentoService } from '../../services/suprimento.service';
 import { GlobalService } from '../../services/global.service';
 import { Matriz } from '../../models/matriz';
+import { Gorjeta } from '../../models/gorjeta';
+import { GorjetaService } from '../../services/gorjeta.service';
+import { GorjetaComponent } from "../caixa/gorjeta/gorjeta.component";
 
 @Component({
   selector: 'app-caixa-configuracao',
@@ -28,7 +31,8 @@ import { Matriz } from '../../models/matriz';
     SangriaComponent,
     SuprimentoComponent,
     RouterLink,
-  ],
+    GorjetaComponent
+],
   templateUrl: './caixa-configuracao.component.html',
   styleUrl: './caixa-configuracao.component.scss',
 })
@@ -39,6 +43,7 @@ export class CaixaConfiguracaoComponent implements OnInit {
   caixaService = inject(CaixaService);
   sangriaService = inject(SangriaService);
   suprimentoService = inject(SuprimentoService);
+  gorjetaService = inject(GorjetaService);
   impressaoService = inject(ImpressaoService);
   globalService = inject(GlobalService);
   modalService = inject(NgbModal);
@@ -49,6 +54,7 @@ export class CaixaConfiguracaoComponent implements OnInit {
   usuario!: Usuario;
   sangria!: Sangria;
   suprimento!: Suprimento;
+  gorjeta!: Gorjeta;
   caixa!: Caixa;
   matriz!: Matriz;
 
@@ -66,6 +72,9 @@ export class CaixaConfiguracaoComponent implements OnInit {
   saldoPix: number = 0;
   saldoSangrias: number = 0;
   saldoSuprimentos: number = 0;
+  saldoGorjetas: number = 0;
+  saldoDescontos: number = 0;
+  saldoServicos: number = 0;
   idCaixaSelecionado!: number | null;
   deletar!: number;
   menuAberto = true;
@@ -124,6 +133,7 @@ export class CaixaConfiguracaoComponent implements OnInit {
   selecionarCaixa(caixa: any) {
     this.caixaSelecionado = caixa;
     this.active = caixa;
+    this.menuAberto = false;
 
     this.defenirSaldos(caixa);
   }
@@ -213,6 +223,8 @@ export class CaixaConfiguracaoComponent implements OnInit {
       this.confirmarDeletarSuprimento();
     } else if (this.deletar == 2) {
       this.confirmarDeletarCaixa();
+    } else if (this.deletar === 3) {
+      this.confirmarDeletarGorjeta();
     }
   }
 
@@ -254,6 +266,31 @@ export class CaixaConfiguracaoComponent implements OnInit {
       },
     });
   }
+  editarGorjeta(modalGorjeta: any, gorjeta: Gorjeta, indice: number) {
+    this.gorjeta = Object.assign({}, gorjeta);
+    this.indice = indice;
+
+    this.modalRef = this.modalService.open(modalGorjeta, { size: 'md' });
+    this.tituloModal = 'Editar Gorjeta';
+  }
+
+  deletarGorjeta(modalDelatarGorjeta: any, gorjeta: Gorjeta) {
+    this.gorjeta = Object.assign({}, gorjeta);
+    this.deletar = 3;
+    this.modalRef = this.modalService.open(modalDelatarGorjeta, {
+      size: 'md',
+    });
+    this.tituloModal = 'Deletar Gorjeta';
+  }
+  confirmarDeletarGorjeta() {
+    this.gorjetaService.deletar(this.gorjeta.id).subscribe({
+      next: (mensagem) => {
+        this.toastr.success(mensagem.mensagem);
+        this.modalRef.close();
+        this.atualizar();
+      },
+    });
+  }
   abrirModalImpressao(modalImpressao: any) {
     this.modalRef = this.modalService.open(modalImpressao, {
       size: 'md',
@@ -261,6 +298,14 @@ export class CaixaConfiguracaoComponent implements OnInit {
     this.tituloModal = 'Impressao';
   }
 
+  imprimirGorjeta(gorjeta: Gorjeta) {
+    gorjeta.nomeImpressora = this.getNomeImpressora();
+    this.impressaoService.imprimirGorjeta(gorjeta).subscribe({
+      next: (mensagem) => {
+        this.toastr.success(mensagem.mensagem);
+      },
+    });
+  }
   imprimirSangria(sangria: Sangria) {
     sangria.nomeImpressora = this.getNomeImpressora();
     this.impressaoService.imprimirSangria(sangria).subscribe({
@@ -316,6 +361,9 @@ export class CaixaConfiguracaoComponent implements OnInit {
     this.saldoPix = 0;
     this.saldoSangrias = 0;
     this.saldoSuprimentos = 0;
+    this.saldoGorjetas = 0;
+    this.saldoDescontos = 0;
+    this.saldoServicos = 0;
 
     forkJoin({
       dinheiro: this.caixaService.getTotalDinheiroByCaixaId(caixa.id),
@@ -324,6 +372,9 @@ export class CaixaConfiguracaoComponent implements OnInit {
       pix: this.caixaService.getTotalPixByCaixaId(caixa.id),
       sangrias: this.caixaService.getTotalSangriasByCaixaId(caixa.id),
       suprimentos: this.caixaService.getTotalSuprimentosByCaixaId(caixa.id),
+      gorjetas: this.caixaService.getTotalGorjetasByCaixaId(caixa.id),
+      descontos: this.caixaService.getTotalDescontosByCaixaId(caixa.id),
+      servicos: this.caixaService.getTotalServicosByCaixaId(caixa.id),
     }).subscribe({
       next: (results) => {
         this.saldoDinheiro = results.dinheiro || 0;
@@ -332,6 +383,9 @@ export class CaixaConfiguracaoComponent implements OnInit {
         this.saldoPix = results.pix || 0;
         this.saldoSangrias = results.sangrias || 0;
         this.saldoSuprimentos = results.suprimentos || 0;
+        this.saldoGorjetas = results.gorjetas || 0;
+        this.saldoDescontos = results.descontos || 0;
+        this.saldoServicos = results.servicos || 0;
 
         this.calcularSaldoTotal();
       },
@@ -348,8 +402,10 @@ export class CaixaConfiguracaoComponent implements OnInit {
       this.saldoPix +
       this.saldoDebito +
       this.saldoSuprimentos +
+      this.saldoGorjetas +
       (this.caixaSelecionado ? this.caixaSelecionado.valorAbertura : 0);
 
     this.saldo = this.saldo - this.saldoSangrias;
+    this.saldo = this.saldo - this.saldoDescontos;
   }
 }

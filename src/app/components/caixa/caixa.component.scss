@@ -8,12 +8,12 @@
     position: fixed;
     left: 0;
     top: 0;
-    height: 100vh;
+    bottom: 0;
     width: 4vw;
     background-color: var(--cor-cinza-escuro);
     overflow: hidden;
-    transition: width 0.3s ease-in-out;
     z-index: 1050;
+    border-right: 1px solid var(--cor-laranja);
 }
 
 .menu-container.expanded {
@@ -23,6 +23,8 @@
 .content-container {
     margin-left: 4vw;
     width: calc(100% - 4vw);
+    height: 100vh;
+    overflow-y: auto;
 }
 
 .logo {

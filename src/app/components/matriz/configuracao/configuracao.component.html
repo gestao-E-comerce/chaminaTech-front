@@ -30,7 +30,8 @@
             [class.active]="router.url === '/perfil'"
             class="w-100 text-start d-flex align-items-center botao"
             routerLink="/config/perfil"
-          >
+            (click)="menuAberto = false"
+            >
             <h4 class="texto-balcao m-0 p-2">Perfil</h4>
           </button>
           <button
@@ -38,7 +39,8 @@
             [class.active]="router.url === '/entrega'"
             class="w-100 text-start d-flex align-items-center botao"
             routerLink="/config/entrega"
-          >
+            (click)="menuAberto = false"
+            >
             <h4 class="texto-balcao m-0 p-2">Entrega</h4>
           </button>
           <button
@@ -46,7 +48,8 @@
             [class.active]="router.url === '/retirada'"
             class="w-100 text-start d-flex align-items-center botao"
             routerLink="/config/retirada"
-          >
+            (click)="menuAberto = false"
+            >
             <h4 class="texto-balcao m-0 p-2">Retirada</h4>
           </button>
           <button
@@ -54,7 +57,8 @@
             [class.active]="router.url === '/impressao'"
             class="w-100 text-start d-flex align-items-center botao"
             routerLink="/config/impressao"
-          >
+            (click)="menuAberto = false"
+            >
             <h4 class="texto-balcao m-0 p-2">Impressão</h4>
           </button>
 
@@ -63,7 +67,8 @@
             [class.active]="router.url === '/taxa'"
             class="w-100 text-start d-flex align-items-center botao"
             routerLink="/config/taxa"
-          >
+            (click)="menuAberto = false"
+            >
             <h4 class="texto-balcao m-0 p-2">Taxa de Serviço</h4>
           </button>
 

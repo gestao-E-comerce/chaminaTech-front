@@ -23,6 +23,7 @@ export class MateriaDetalhesComponent {
   salvar() {
     if (!this.materia.nome?.trim()) {
       this.toastr.error('Nome obrigatório!');
+      return;
     } else {
       this.materiaService.save(this.materia).subscribe({
         next: mensagem => {

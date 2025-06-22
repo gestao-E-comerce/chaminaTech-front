@@ -1,8 +1,104 @@
-<form
-  #formulario="ngForm"
-  (ngSubmit)="salvar(modalConfermacao, formulario)"
->
+<form #formulario="ngForm" (ngSubmit)="salvar(modalConfermacao, formulario)">
   <div class="d-flex flex-column gap-3 p-2">
+    <div class="d-flex flex-column w-100">
+      <label for="tipo" class="form-label">Tipo</label>
+      <select
+        id="tipo"
+        [compareWith]="byId"
+        class="select-filtro p-1"
+        name="tipo"
+        required
+        #tipo="ngModel"
+        [ngClass]="{
+          'borda-vermelha': !tipo.valid && tipo.touched
+        }"
+        [(ngModel)]="sangria.tipo"
+      >
+        <option [ngValue]="undefined">Selecione...</option>
+        <option ngValue="FUNCIONARIO">Adiantamento para Funcionário</option>
+        <option ngValue="GASTO">Despesa Geral</option>
+        @if (usuario && usuario.permissao && usuario.permissao.cadastrarEstoque)
+        {
+        <option ngValue="MERCADORIA">Compra de Mercadoria</option>
+        }
+      </select>
+    </div>
+    @if (sangria.tipo === 'FUNCIONARIO') {
+    <div class="d-flex flex-column w-100">
+      <label for="funcionario" class="form-label">Funcionário</label>
+      <select
+        id="funcionario"
+        [compareWith]="byId"
+        class="select-filtro p-1"
+        name="funcionario"
+        required
+        #funcionario="ngModel"
+        [ngClass]="{
+          'borda-vermelha': !funcionario.valid && funcionario.touched
+        }"
+        [(ngModel)]="sangria.nomeFuncionario"
+      >
+        <option [ngValue]="undefined">Selecione...</option>
+        @for (funcionario of funcionarios; track $index) {
+        <option [ngValue]="funcionario.nome">{{ funcionario.nome }}</option>
+        }
+      </select>
+    </div>
+    } @if (sangria.tipo === 'MERCADORIA' && (usuario && usuario.permissao &&
+    usuario.permissao.cadastrarEstoque)) {
+    <div>
+      <label for="client" class="form-label">Produto:</label>
+      @if (estoque.produto == null) {
+      <p
+        class="alert alert-danger d-flex justify-content-between align-items-center m-0"
+      >
+        Produto não vinculado, é obrigatório!
+        <button
+          type="button"
+          (click)="buscar(modalProdutoSelecionar)"
+          class="btn-comum btn-comum-vermelho"
+        >
+          Buscar
+        </button>
+      </p>
+      } @if (estoque.produto != null) {
+      <p
+        class="alert alert-success d-flex justify-content-between align-items-center m-0"
+      >
+        {{ estoque.produto.nome }}
+        <button
+          type="button"
+          (click)="buscar(modalProdutoSelecionar)"
+          class="btn-comum btn-comum-cinza"
+        >
+          Trocar
+        </button>
+      </p>
+      }
+    </div>
+    <div>
+      <label for="quantidade" class="form-label">Quantidade</label>
+      <input
+        id="quantidade"
+        autocomplete="off"
+        type="number"
+        class="form-control"
+        name="quantidade"
+        [(ngModel)]="estoque.quantidade"
+        required
+        #quantidade="ngModel"
+        [ngClass]="{
+          'borda-vermelha': !quantidade.valid && quantidade.touched
+        }"
+        inputmode="numeric"
+        min="0"
+        step="1"
+        oninput="if (this.value.length > 10) this.value = this.value.slice(0, 10)"
+        onkeydown="return !['e', 'E', '-', '+' , ','].includes(event.key)"
+      />
+    </div>
+    }
+
     <div class="w-100">
       <label for="valor" class="form-label">Valor</label>
       <input
@@ -62,5 +158,22 @@
     >
       Não
     </button>
+  </div>
+</ng-template>
+<ng-template #modalProdutoSelecionar let-modal>
+  <div class="modal-header cabecalhoModal">
+    <h4 class="modal-title">Buscar Produto</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="badyModal">
+    <app-lista-produtos-selecionar
+      [produto]="produto"
+      (retorno)="retornoProduto($event)"
+    ></app-lista-produtos-selecionar>
   </div>
 </ng-template>

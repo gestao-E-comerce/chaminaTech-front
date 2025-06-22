@@ -16,19 +16,19 @@ import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { Venda } from '../../../../models/venda';
 import { VendaPagamento } from '../../../../models/venda-pagamento';
-import { PagarParcialComponent } from './pagar-parcial/pagar-parcial.component';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { PagamentoParcialComponent } from './pagar-parcial/pagamento-parcial/pagamento-parcial.component';
 import { VendaService } from '../../../../services/venda.service';
 import { Caixa } from '../../../../models/caixa';
 import { Matriz } from '../../../../models/matriz';
 import { GlobalService } from '../../../../services/global.service';
 import { take } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { Observacoes } from '../../../../models/observacoes';
+import { ProdutoVenda } from '../../../../models/produto-venda';
 @Component({
   selector: 'app-pagamentos',
   standalone: true,
-  imports: [FormsModule, PagarParcialComponent, PagamentoParcialComponent],
+  imports: [FormsModule],
   templateUrl: './pagamentos.component.html',
   styleUrl: './pagamentos.component.scss',
 })
@@ -56,10 +56,14 @@ export class PagamentosComponent implements OnInit {
   modalService = inject(NgbModal);
   rota = inject(ActivatedRoute);
   toastr = inject(ToastrService);
-  modalPagamentoparcial!: NgbModalRef;
   modalSelecionarProdutos!: NgbModalRef;
+  modalDesconto!: NgbModalRef;
   @ViewChild('modalSelecionarProdutos', { static: true })
   modalSelecionarProdutosTemplate!: TemplateRef<any>;
+  @ViewChild('modalDesconto', { static: true })
+  modalDescontoTemplate!: TemplateRef<any>;
+  @ViewChild('modalConfirmarImpressao', { static: true })
+  modalConfirmarImpressao!: TemplateRef<any>;
 
   dinheiroLista: number[] = [NaN];
   debitoLista: number[] = [NaN];
@@ -69,17 +73,44 @@ export class PagamentosComponent implements OnInit {
   modalMessage!: string;
   modalRef!: NgbModalRef;
   tipoCaixa!: string;
+  descontoValor!: number;
+  descontoPercentual!: number;
+  descontoAplicado = false;
+  taxaAplicada = true;
+  pagamentoParcial = false;
+  isSalvarDisabled = true;
 
   @HostListener('document:keydown.escape', ['$event'])
   onEscapeKey(event: KeyboardEvent) {
-    if (this.modalPagamentoparcial && this.tituloModal === 'Pagar parcial') {
-      // Apenas para o modal de pagamento
+    if (this.pagamentoParcial) {
       this.fecharModalPagamentoERestaurarVenda();
+    }
+  }
+  @HostListener('document:keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent) {
+    if (this.modalService.hasOpenModals()) {
+      return; // Impede atalho quando o modal está aberto
+    }
+    if (event.altKey) {
+      switch (event.key) {
+        case '3':
+          this.abrirOuRemoverDesconto();
+          break;
+        case '2':
+          this.aplicarOuRemoverTaxa();
+          break;
+        case '5':
+          this.salvar();
+          break;
+        default:
+          break;
+      }
     }
   }
   fecharModalPagamentoERestaurarVenda() {
     this.vendaParcial = new Venda();
     this.venda = JSON.parse(JSON.stringify(this.vendaOriginal));
+    this.pagamentoParcial = false;
   }
 
   ngOnInit() {
@@ -128,16 +159,18 @@ export class PagamentosComponent implements OnInit {
         },
       });
 
+    this.focoInput();
+  }
+  verificarTamanho() {
+    this.telaPequena = window.innerWidth <= 768;
+  }
+  focoInput() {
     setTimeout(() => {
       if (this.dinheiroInput && this.dinheiroInput.nativeElement) {
         this.dinheiroInput.nativeElement.focus();
       }
     }, 0);
   }
-  verificarTamanho() {
-    this.telaPequena = window.innerWidth <= 768;
-  }
-
   get podePagarParcial(): boolean {
     return (
       (this.venda?.produtoVendas?.length > 1 ||
@@ -145,103 +178,161 @@ export class PagamentosComponent implements OnInit {
       false
     );
   }
+  abrirOuRemoverDesconto(): void {
+    if (this.descontoAplicado) {
+      this.removerDesconto();
+    } else {
+      this.abrirModalDesconto();
+    }
+  }
+  aplicarOuRemoverDesconto(): void {
+    if (this.descontoAplicado) {
+      this.removerDesconto();
+    } else {
+      this.aplicarDesconto();
+    }
+  }
+  aplicarOuRemoverTaxa(): void {
+    if (this.taxaAplicada) {
+      this.removerTaxaServico(this.venda);
+    } else {
+      this.valorTotal(this.venda);
+    }
+  }
+  aplicarDesconto(): void {
+    let descontoValorCalculado = this.descontoValor || 0;
+    let descontoPercentualCalculado = 0;
 
+    if (this.descontoPercentual != null && this.descontoPercentual > 0) {
+      descontoPercentualCalculado =
+        (this.venda.valorTotal * this.descontoPercentual) / 100;
+    }
+
+    const descontoCalculado =
+      descontoValorCalculado + descontoPercentualCalculado;
+
+    if (descontoCalculado > this.venda.valorTotal) {
+      this.toastr.error('Desconto maior que o valor total da venda!');
+      return;
+    }
+
+    this.venda.desconto = descontoCalculado;
+    this.venda.valorTotal = Math.max(
+      this.venda.valorTotal - descontoCalculado,
+      0
+    );
+
+    this.descontoAplicado = true;
+    this.modalDesconto.dismiss();
+    this.focoInput();
+  }
+  removerDesconto(): void {
+    if (this.venda.desconto && this.venda.desconto > 0) {
+      this.venda.valorTotal += this.venda.desconto; // Restaura o valor
+    }
+    this.venda.desconto = 0;
+    this.venda.motivoDesconto = '';
+    this.descontoAplicado = false;
+    this.focoInput();
+  }
   abrirModalPagarParcial() {
-    if (
-      this.venda.produtoVendas.length > 1 ||
-      this.venda.produtoVendas.some((p) => p.quantidade > 1)
-    ) {
+    if (this.podePagarParcial) {
       this.vendaOriginal = JSON.parse(JSON.stringify(this.venda));
-      this.venda = Object.assign({}, this.venda);
+      this.vendaParcial = new Venda();
+      this.vendaParcial.produtoVendas = [];
       this.modalSelecionarProdutos = this.modalService.open(
         this.modalSelecionarProdutosTemplate,
         { size: 'xl' }
       );
-      this.tituloModal = `Selecionar produtos`;
+      this.tituloModal = 'Selecionar produtos';
+      this.pagamentoParcial = true;
+
+      this.venda.produtoVendas.forEach((produtoVenda) => {
+        produtoVenda.quantidadeTransferir = 0;
+        produtoVenda.selecionado = false;
+      });
+      this.updateSalvarDisabledState();
     }
   }
-
-  retornoProdutosParcial(vendaParcial: Venda, modalPagamentosParcial: any) {
-    this.valorTotal(vendaParcial);
-    this.modalPagamentoparcial = this.modalService.open(
-      modalPagamentosParcial,
-      { size: 'fullscreen' }
-    );
-    this.tituloModal = `Pagar parcial`;
+  abrirModalDesconto() {
+    this.modalDesconto = this.modalService.open(this.modalDescontoTemplate, {
+      size: 'xl',
+    });
+    this.tituloModal = `Desconto`;
   }
-  retornoVendaPagamentoParcial(
-    vendaPagamento: VendaPagamento,
-    modalConfirmarImpressao: any
-  ) {
+  salvarVendaParcial(vendaPagamento: VendaPagamento) {
     let nomeImpressora: any;
     if (this.matriz.configuracaoImpressao.usarImpressora == false) {
       nomeImpressora = null;
     } else {
       nomeImpressora = this.getNomeImpressora();
     }
-    this.vendaParcial.vendaPagamento = vendaPagamento;
 
-    this.valorTotal(this.venda);
-    this.venda.statusEmAberto = true;
-    this.venda.imprimirCadastrar = false;
-    this.venda.imprimirDeletar = false;
+    const salvar = () => {
+      this.venda.vendaPagamento = vendaPagamento;
+      this.venda.funcionario = this.vendaOriginal.funcionario;
+      this.venda.caixa = this.caixa;
+      this.venda.retirada = false;
+      this.venda.entrega = false;
+      this.venda.balcao = true;
+      this.venda.ativo = false;
+      this.venda.statusEmAberto = false;
+      this.venda.imprimirCadastrar = false;
+      this.venda.imprimirDeletar = false;
+      this.venda.statusEmPagamento = false;
+      this.venda.nomeImpressora = nomeImpressora;
 
-    if (this.venda.produtoVendas) {
-      for (const produtoVenda of this.venda.produtoVendas) {
-        if (!produtoVenda.funcionario) {
-          produtoVenda.funcionario = this.venda.funcionario; // Atribuir o funcionário padrão
+      this.vendaOriginal.statusEmAberto = true;
+      this.vendaOriginal.statusEmPagamento = false;
+      this.vendaOriginal.imprimirCadastrar = false;
+      this.vendaOriginal.imprimirDeletar = false;
+
+      const parcialDTO = {
+        vendaOriginal: this.vendaOriginal,
+        vendaParcial: this.venda,
+        chaveUnico: this.chaveUnico,
+      };
+
+      this.vendaService.pagamentoParcial(parcialDTO).subscribe({
+        next: (mensagem) => {
+          this.toastr.success(mensagem.mensagem);
+          this.vendaParcial = new Venda();
+          this.venda = JSON.parse(JSON.stringify(this.vendaOriginal));
+          this.pagamentoParcial = false;
+          this.retornoPagamentoParcial.emit(this.vendaOriginal);
+
+          this.dinheiroLista = [NaN];
+          this.debitoLista = [NaN];
+          this.creditoLista = [NaN];
+          this.pixLista = [NaN];
+        },
+        error: (err) => {
+          this.toastr.error(
+            err.error?.mensagem || 'Erro ao realizar pagamento parcial'
+          );
+        },
+      });
+    };
+    if (this.matriz.configuracaoImpressao.imprimirNotaFiscal === 0) {
+      this.venda.imprimirNotaFiscal = true;
+      salvar();
+    } else if (this.matriz.configuracaoImpressao.imprimirNotaFiscal === 1) {
+      this.venda.imprimirNotaFiscal = false;
+      salvar();
+    } else if (this.matriz.configuracaoImpressao.imprimirNotaFiscal === 2) {
+      this.abrirModalConfirmarImpressao(
+        'notaFiscal',
+        this.modalConfirmarImpressao
+      ).then((result) => {
+        if (result === 'imprimir') {
+          this.venda.imprimirNotaFiscal = true;
+          salvar();
+        } else if (result === 'naoImprimir') {
+          this.venda.imprimirNotaFiscal = false;
+          salvar();
         }
-      }
+      });
     }
-
-    this.vendaService.save(this.venda, this.chaveUnico).subscribe({
-      next: (mensagem) => {
-        this.vendaOriginal = JSON.parse(JSON.stringify(this.venda));
-        this.vendaParcial.mesa = this.venda.mesa;
-        this.vendaParcial.funcionario = this.venda.funcionario;
-        this.vendaParcial.retirada = false;
-        this.vendaParcial.entrega = false;
-        this.vendaParcial.balcao = false;
-        this.vendaParcial.ativo = false;
-        this.vendaParcial.statusEmAberto = false;
-        this.vendaParcial.statusEmPagamento = false;
-        this.vendaParcial.nomeImpressora = nomeImpressora;
-        this.vendaParcial.caixa = this.caixa;
-
-        if (this.matriz.configuracaoImpressao.imprimirNotaFiscal === 0) {
-          this.vendaParcial.imprimirNotaFiscal = true;
-        } else if (this.matriz.configuracaoImpressao.imprimirNotaFiscal === 1) {
-          this.vendaParcial.imprimirNotaFiscal = false;
-        } else if (this.matriz.configuracaoImpressao.imprimirNotaFiscal === 2) {
-          this.abrirModalConfirmarImpressao(
-            'notaFiscal',
-            modalConfirmarImpressao
-          ).then((result) => {
-            if (result === 'imprimir') {
-              this.vendaParcial.imprimirNotaFiscal = true;
-            } else if (result === 'naoImprimir') {
-              this.vendaParcial.imprimirNotaFiscal = false;
-            }
-          });
-        }
-        this.vendaService.saveParcial(this.vendaParcial).subscribe({
-          next: (mensagem) => {
-            this.modalPagamentoparcial.dismiss();
-            this.modalSelecionarProdutos.dismiss();
-            this.toastr.success(mensagem.mensagem);
-            console.log('Venda Atual:', this.venda);
-            console.log('Venda Parcial:', this.vendaParcial);
-            this.vendaParcial = new Venda();
-            this.retornoPagamentoParcial.emit(this.venda);
-
-            this.dinheiroLista = [NaN];
-            this.debitoLista = [NaN];
-            this.creditoLista = [NaN];
-            this.pixLista = [NaN];
-          },
-        });
-      },
-    });
   }
   getNomeImpressora(): string | null {
     const valor = localStorage.getItem('identificador');
@@ -291,8 +382,8 @@ export class PagamentosComponent implements OnInit {
     let valorTotal = 0;
     let taxa = 0;
 
-    if (this.venda.produtoVendas && this.venda.produtoVendas.length > 0) {
-      for (const produtoVenda of this.venda.produtoVendas) {
+    if (vendaCalcular.produtoVendas && vendaCalcular.produtoVendas.length > 0) {
+      for (const produtoVenda of vendaCalcular.produtoVendas) {
         const produto = produtoVenda.produto;
         let valorProduto = 0;
 
@@ -315,8 +406,8 @@ export class PagamentosComponent implements OnInit {
         valorTotal += valorProduto;
       }
     }
-    this.venda.valorBruto = valorTotal;
-    valorTotal += this.venda.taxaEntrega ?? 0;
+    vendaCalcular.valorBruto = valorTotal;
+    valorTotal += vendaCalcular.taxaEntrega ?? 0;
     if (
       this.tipoCaixa === 'mesa' &&
       this.matriz.configuracaoTaxaServicio.aplicar
@@ -335,41 +426,15 @@ export class PagamentosComponent implements OnInit {
       }
       valorTotal += taxa;
     }
-
-    this.venda.valorServico = taxa;
-    this.venda.valorTotal = valorTotal;
+    this.taxaAplicada = true;
+    valorTotal -= this.venda.desconto ?? 0;
+    vendaCalcular.valorServico = taxa;
+    vendaCalcular.valorTotal = valorTotal;
   }
-  removerTaxaServico() {
-    let valorTotal = 0;
-
-    if (this.venda.produtoVendas && this.venda.produtoVendas.length > 0) {
-      for (const produtoVenda of this.venda.produtoVendas) {
-        const produto = produtoVenda.produto;
-        let valorProduto = 0;
-
-        if (produto.tipo) {
-          valorProduto = (produto.valor / 1000) * produtoVenda.quantidade;
-        } else {
-          valorProduto = produto.valor * produtoVenda.quantidade;
-        }
-
-        if (produtoVenda.observacoesProdutoVenda) {
-          for (const obs of produtoVenda.observacoesProdutoVenda) {
-            if (obs.valor != null) {
-              valorProduto += obs.valor * produtoVenda.quantidade;
-            }
-          }
-        }
-
-        produtoVenda.valor = valorProduto;
-
-        valorTotal += valorProduto;
-      }
-    }
-    valorTotal += this.venda.taxaEntrega ?? 0;
-
-    this.venda.valorServico = 0;
-    this.venda.valorTotal = valorTotal;
+  removerTaxaServico(vendaCalcular: Venda) {
+    this.taxaAplicada = false;
+    vendaCalcular.valorTotal -= vendaCalcular.valorServico;
+    vendaCalcular.valorServico = 0;
   }
   navegarInputs(event: KeyboardEvent, tipo: string, index: number): void {
     if (['e', 'E', '-', '+', ','].includes(event.key)) {
@@ -591,6 +656,116 @@ export class PagamentosComponent implements OnInit {
     this.vendaPagamento.credito = credito;
     this.vendaPagamento.pix = pix;
 
-    this.retorno.emit(this.vendaPagamento);
+    if (this.pagamentoParcial) {
+      this.salvarVendaParcial(this.vendaPagamento);
+    } else {
+      this.retorno.emit(this.vendaPagamento);
+    }
+  }
+
+  incrementarQuantidade(produtoVenda: any) {
+    if (produtoVenda.quantidadeTransferir < produtoVenda.quantidade) {
+      produtoVenda.quantidadeTransferir++;
+      this.updateSalvarDisabledState();
+    }
+    this.atualizarSelecionado(produtoVenda);
+  }
+  decrementarQuantidade(produtoVenda: any) {
+    if (produtoVenda.quantidadeTransferir > 0) {
+      produtoVenda.quantidadeTransferir--;
+      this.updateSalvarDisabledState();
+    }
+    this.atualizarSelecionado(produtoVenda);
+  }
+  atualizarSelecionado(produtoVenda: any) {
+    produtoVenda.selecionado =
+      produtoVenda.quantidadeTransferir === produtoVenda.quantidade;
+    this.updateSalvarDisabledState();
+  }
+  atualizarQuantidadeTransferir(produtoVenda: any) {
+    if (produtoVenda.selecionado) {
+      produtoVenda.quantidadeTransferir = produtoVenda.quantidade;
+    } else {
+      produtoVenda.quantidadeTransferir = 0;
+    }
+    this.updateSalvarDisabledState();
+  }
+  updateSalvarDisabledState() {
+    const totalItens = this.venda.produtoVendas.reduce(
+      (acc, produto) => acc + produto.quantidade,
+      0
+    );
+
+    const totalSelecionados = this.venda.produtoVendas.reduce(
+      (acc, produto) => acc + produto.quantidadeTransferir,
+      0
+    );
+    this.isSalvarDisabled =
+      totalSelecionados === 0 || totalSelecionados === totalItens;
+  }
+  getObservacoesFormatadas(produto: any): string {
+    const observacoesLista =
+      produto.observacoesProdutoVenda
+        ?.map((o: Observacoes) => o.observacao)
+        .join(', ') || '';
+    const observacaoIndividual = produto.observacaoProdutoVenda
+      ? (observacoesLista ? ', ' : '') + produto.observacaoProdutoVenda
+      : '';
+    return observacoesLista + observacaoIndividual;
+  }
+
+  salvarProdutosParcial() {
+    if (!this.vendaParcial.produtoVendas) {
+      this.vendaParcial.produtoVendas = [];
+    }
+
+    this.vendaOriginal = JSON.parse(JSON.stringify(this.venda));
+
+    let produtoFoiSelecionado = false;
+
+    for (let i = 0; i < this.vendaOriginal.produtoVendas.length; i++) {
+      const produtoVenda = this.vendaOriginal.produtoVendas[i];
+
+      if (produtoVenda.quantidadeTransferir > 0) {
+        const novoProdutoVenda = new ProdutoVenda();
+        novoProdutoVenda.quantidade = produtoVenda.quantidadeTransferir;
+        novoProdutoVenda.produto = produtoVenda.produto;
+        novoProdutoVenda.funcionario = produtoVenda.funcionario;
+        novoProdutoVenda.observacoesProdutoVenda = [
+          ...produtoVenda.observacoesProdutoVenda,
+        ];
+        novoProdutoVenda.observacaoProdutoVenda =
+          produtoVenda.observacaoProdutoVenda;
+
+        this.vendaParcial.produtoVendas.push(novoProdutoVenda);
+        produtoVenda.quantidade -= produtoVenda.quantidadeTransferir;
+        produtoVenda.quantidadeTransferir = 0;
+        produtoFoiSelecionado = true;
+
+        if (produtoVenda.quantidade === 0) {
+          this.vendaOriginal.produtoVendas.splice(i, 1);
+          i--;
+        }
+      }
+    }
+
+    if (!produtoFoiSelecionado) {
+      this.toastr.error(
+        'Selecione ao menos um produto para pagamento parcial!'
+      );
+      return;
+    }
+
+    this.valorTotal(this.vendaParcial);
+    this.valorTotal(this.vendaOriginal);
+
+    this.modalSelecionarProdutos.dismiss();
+
+    this.venda = JSON.parse(JSON.stringify(this.vendaParcial));
+    this.dinheiroLista = [NaN];
+    this.debitoLista = [NaN];
+    this.creditoLista = [NaN];
+    this.pixLista = [NaN];
+    this.focoInput();
   }
 }

@@ -1,4 +1,5 @@
 import { Funcionario } from "./funcionario";
+import { Gorjeta } from "./gorjeta";
 import { Matriz } from "./matriz";
 import { Sangria } from "./sangria";
 import { Suprimento } from "./suprimento";
@@ -21,4 +22,5 @@ export class Caixa {
     vendas!: Venda[];
     sangrias!: Sangria[];
     suprimentos!: Suprimento[];
+    gorjetas!: Gorjeta[];
 }

@@ -203,7 +203,7 @@
     <h5>Opções de Impressão Automático</h5>
     <div class="d-flex flex-column gap-3 w-100">
       <div
-        class="d-flex flex-wrap justify-content-start align-items-center gap-5"
+        class="d-flex flex-wrap justify-content-start align-items-center gap-3"
       >
         <div class="d-flex flex-column">
           <label class="form-label"
@@ -352,7 +352,7 @@
         </div>
       </div>
       <div
-        class="d-flex flex-wrap justify-content-start align-items-center gap-5"
+        class="d-flex flex-wrap justify-content-start align-items-center gap-3"
       >
         <div class="d-flex flex-column">
           <label class="form-label"
@@ -481,6 +481,159 @@
               Não
             </button>
           </div>
+        </div>
+      </div>
+      <div
+        class="d-flex flex-wrap justify-content-start align-items-center gap-3"
+      >
+        <div class="d-flex flex-column">
+          <label class="form-label"
+            >Imprimir comprovante de abertura caixa?</label
+          >
+          <div class="btn-group largura">
+            <button
+              type="button"
+              class="btn btn-borda-laranja p-2"
+              [ngClass]="{
+                'btn-comum-laranja':
+                  confImpressao.imprimirAberturaCaixa === true,
+                'btn-borda-laranja':
+                  confImpressao.imprimirAberturaCaixa !== true
+              }"
+              (click)="confImpressao.imprimirAberturaCaixa = true"
+            >
+              Sim
+            </button>
+            <button
+              type="button"
+              class="btn btn-borda-laranja p-2"
+              [ngClass]="{
+                'btn-comum-laranja':
+                  confImpressao.imprimirAberturaCaixa === false,
+                'btn-borda-laranja':
+                  confImpressao.imprimirAberturaCaixa !== false
+              }"
+              (click)="confImpressao.imprimirAberturaCaixa = false"
+            >
+              Não
+            </button>
+          </div>
+        </div>
+        <div class="d-flex flex-column">
+          <label class="form-label"
+            >Imprimir comprovante de conferencia caixa?</label
+          >
+          <div class="btn-group largura">
+            <button
+              type="button"
+              class="btn btn-borda-laranja p-2"
+              [ngClass]="{
+                'btn-comum-laranja':
+                  confImpressao.imprimirConferenciaCaixa === true,
+                'btn-borda-laranja':
+                  confImpressao.imprimirConferenciaCaixa !== true
+              }"
+              (click)="confImpressao.imprimirConferenciaCaixa = true"
+            >
+              Sim
+            </button>
+            <button
+              type="button"
+              class="btn btn-borda-laranja p-2"
+              [ngClass]="{
+                'btn-comum-laranja':
+                  confImpressao.imprimirConferenciaCaixa === false,
+                'btn-borda-laranja':
+                  confImpressao.imprimirConferenciaCaixa !== false
+              }"
+              (click)="confImpressao.imprimirConferenciaCaixa = false"
+            >
+              Não
+            </button>
+          </div>
+        </div>
+        <div class="d-flex flex-column">
+          <label class="form-label">Imprimir comprovante sangria</label>
+          <div class="btn-group largura">
+            <button
+              type="button"
+              class="btn btn-borda-laranja p-2"
+              [ngClass]="{
+                'btn-comum-laranja': confImpressao.imprimirSangria === true,
+                'btn-borda-laranja': confImpressao.imprimirSangria !== true
+              }"
+              (click)="confImpressao.imprimirSangria = true"
+            >
+              Sim
+            </button>
+            <button
+              type="button"
+              class="btn btn-borda-laranja p-2"
+              [ngClass]="{
+                'btn-comum-laranja': confImpressao.imprimirSangria === false,
+                'btn-borda-laranja': confImpressao.imprimirSangria !== false
+              }"
+              (click)="confImpressao.imprimirSangria = false"
+            >
+              Não
+            </button>
+          </div>
+        </div>
+        <div class="d-flex flex-column">
+          <label class="form-label">Imprimir comprovante subrimento?</label>
+          <div class="btn-group largura">
+            <button
+              type="button"
+              class="btn btn-borda-laranja p-2"
+              [ngClass]="{
+                'btn-comum-laranja': confImpressao.imprimirSuprimento === true,
+                'btn-borda-laranja': confImpressao.imprimirSuprimento !== true
+              }"
+              (click)="confImpressao.imprimirSuprimento = true"
+            >
+              Sim
+            </button>
+            <button
+              type="button"
+              class="btn btn-borda-laranja p-2"
+              [ngClass]="{
+                'btn-comum-laranja': confImpressao.imprimirSuprimento === false,
+                'btn-borda-laranja': confImpressao.imprimirSuprimento !== false
+              }"
+              (click)="confImpressao.imprimirSuprimento = false"
+            >
+              Não
+            </button>
+          </div>
+          
+        </div>
+        <div class="d-flex flex-column">
+          <label class="form-label">Imprimir comprovante gorjeta?</label>
+          <div class="btn-group largura">
+            <button
+              type="button"
+              class="btn btn-borda-laranja p-2"
+              [ngClass]="{
+                'btn-comum-laranja': confImpressao.imprimirGorjeta === true,
+                'btn-borda-laranja': confImpressao.imprimirGorjeta !== true
+              }"
+              (click)="confImpressao.imprimirGorjeta = true"
+            >
+              Sim
+            </button>
+            <button
+              type="button"
+              class="btn btn-borda-laranja p-2"
+              [ngClass]="{
+                'btn-comum-laranja': confImpressao.imprimirGorjeta === false,
+                'btn-borda-laranja': confImpressao.imprimirGorjeta !== false
+              }"
+              (click)="confImpressao.imprimirGorjeta = false"
+            >
+              Não
+            </button>
+          </div>
+          
         </div>
       </div>
     </div>

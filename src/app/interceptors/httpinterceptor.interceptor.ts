@@ -12,7 +12,6 @@ import { ToastrService } from 'ngx-toastr';
 import {
   catchError,
   from,
-  switchMap,
   throwError,
   tap,
   Observable,

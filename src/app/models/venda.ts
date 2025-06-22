@@ -25,12 +25,13 @@ export class Venda {
     dataVenda!: Date;
     dataEdicao!: Date;
     mesa!: number;
-    motivo!: string;
+    motivoDeletar!: string;
     nomeImpressora!: string | null;
     taxaEntrega!: number;
     tempoEstimado!: number;
     valorServico!: number;
     desconto!: number;
+    motivoDesconto!: string;
     cliente!: Cliente;
     endereco!:Endereco;
     produtoVendas!: ProdutoVenda[];
