@@ -13,7 +13,6 @@ import { ClienteListComponent } from './components/cliente/cliente-list/cliente-
 import { ConfiguracaoComponent } from './components/matriz/configuracao/configuracao.component';
 import { CaixaTelaComponent } from './components/caixa/caixa-tela/caixa-tela.component';
 import { caixaTelaGuard } from './guards/caixa-tela.guard';
-import { CaixaConfiguracaoComponent } from './components/caixa-configuracao/caixa-configuracao.component';
 import { ProdutoListComponent } from './components/produto/produto-list/produto-list.component';
 import { CategoriaListComponent } from './components/categoria/categoria-list/categoria-list.component';
 import { AdminConfigComponent } from './components/admin/admin-config/admin-config.component';
@@ -25,6 +24,11 @@ import { ConfiguracaoRetiradaComponent } from './components/matriz/configuracao/
 import { ConfiguracaoImpressaoComponent } from './components/matriz/configuracao/configuracao-impressao/configuracao-impressao.component';
 import { ConfiguracaoTaxaServicoComponent } from './components/matriz/configuracao/configuracao-taxa-servico/configuracao-taxa-servico.component';
 import { confTelaGuard } from './guards/conf-tela.guard';
+import { HistoricosComponent } from './components/historicos/historicos.component';
+import { HistoricoCaixaComponent } from './components/historicos/historico-caixa/historico-caixa.component';
+import { HistoricoVendaComponent } from './components/historicos/historico-venda/historico-venda.component';
+import { HistoricoConsumoComponent } from './components/historicos/historico-consumo/historico-consumo.component';
+import { RelatorioComponent } from './components/relatorio/relatorio.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -111,8 +115,28 @@ export const routes: Routes = [
     ],
   },
   {
-    path: 'caixaConf',
-    component: CaixaConfiguracaoComponent,
+    path: 'relatorios',
+    component: RelatorioComponent,
+    canActivate: [rotaguardGuard],
+  },
+  {
+    path: 'historicos',
+    component: HistoricosComponent,
+    canActivate: [rotaguardGuard],
+  },
+  {
+    path: 'historicos/hisCaixas',
+    component: HistoricoCaixaComponent,
+    canActivate: [rotaguardGuard],
+  },
+  {
+    path: 'historicos/hisVendas',
+    component: HistoricoVendaComponent,
+    canActivate: [rotaguardGuard],
+  },
+  {
+    path: 'historicos/hisConsumos',
+    component: HistoricoConsumoComponent,
     canActivate: [rotaguardGuard],
   },
   {

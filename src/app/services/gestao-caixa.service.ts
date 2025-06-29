@@ -41,7 +41,7 @@ export class GestaoCaixaService {
     );
   }
 
-  buscarCuponsEntregaByMatrizId(): Observable<
+  buscarCuponsEntregaByMatrizId(nome?: string): Observable<
     {
       numero: number;
       statusEmAberto: boolean;
@@ -54,6 +54,10 @@ export class GestaoCaixaService {
   > {
     return this.globalService.getMatrizAsync().pipe(
       switchMap((matriz) => {
+        let params = new HttpParams();
+        if (nome) {
+          params = params.set('nome', nome);
+        }
         return this.http.get<
           {
             numero: number;
@@ -64,12 +68,12 @@ export class GestaoCaixaService {
             dataVenda: string;
             tempoPrevisto: number;
           }[]
-        >(`${this.API}/cuponsEntregaAtivos/${matriz.id}`);
+        >(`${this.API}/cuponsEntregaAtivos/${matriz.id}`, { params });
       })
     );
   }
 
-  buscarCuponsRetiradaByMatrizId(): Observable<
+  buscarCuponsRetiradaByMatrizId(nome?: string): Observable<
     {
       numero: number;
       statusEmAberto: boolean;
@@ -82,6 +86,10 @@ export class GestaoCaixaService {
   > {
     return this.globalService.getMatrizAsync().pipe(
       switchMap((matriz) => {
+        let params = new HttpParams();
+        if (nome) {
+          params = params.set('nome', nome);
+        }
         return this.http.get<
           {
             numero: number;
@@ -92,7 +100,7 @@ export class GestaoCaixaService {
             dataVenda: string;
             tempoPrevisto: number;
           }[]
-        >(`${this.API}/cuponsRetiradaAtivos/${matriz.id}`);
+        >(`${this.API}/cuponsRetiradaAtivos/${matriz.id}`, { params });
       })
     );
   }
@@ -110,6 +118,25 @@ export class GestaoCaixaService {
           params = params.set('cupom', cupom.toString());
         }
         return this.http.get<GestaoCaixa[]>(`${this.API}/historico`, {
+          params,
+        });
+      })
+    );
+  }
+  buscarCuponsConsumosHistorico(
+    tipo?: string,
+    cupom?: number
+  ): Observable<GestaoCaixa[]> {
+    return this.globalService.getMatrizAsync().pipe(
+      switchMap((matriz) => {
+        let params = new HttpParams().set('matrizId', matriz.id.toString());
+        if (tipo) {
+          params = params.set('tipo', tipo);
+        }
+        if (cupom != null) {
+          params = params.set('cupom', cupom.toString());
+        }
+        return this.http.get<GestaoCaixa[]>(`${this.API}/consumosHistorico`, {
           params,
         });
       })

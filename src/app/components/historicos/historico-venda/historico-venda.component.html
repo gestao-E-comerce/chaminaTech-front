@@ -11,17 +11,37 @@
         <button class="abrir-menu w-100" (click)="menuAberto = true">☰</button>
         <h2 class="titulo-vertical">Histórico Vendas</h2>
       </div>
+      @if (!modoModal) {
+      <button
+        type="button"
+        name="sair"
+        class="botao_voltar mb-2"
+        routerLink="/historicos"
+      >
+        <i class="bi bi-arrow-left"></i>
+      </button>
+      }
     </div>
     } @if (menuAberto) {
     <div class="d-flex flex-column p-2 pm-0 col-12">
-      <div class="d-flex align-items-center justify-content-between mb-3">
+      <div class="d-flex align-items-center justify-content-between mb-3 gap-2">
         <div class="d-flex align-items-center">
+          @if (!modoModal) {
+          <button
+            type="button"
+            name="sair"
+            class="botao_voltar me-2"
+            routerLink="/historicos"
+          >
+            <i class="bi bi-arrow-left"></i>
+          </button>
+          }
           <h2 class="titulo m-0">Histórico Vendas</h2>
         </div>
         <button class="fechar-menu" (click)="menuAberto = false">✕</button>
       </div>
       <div
-        class="col-lg-12 d-flex align-items-center gap-3 pb-2 w-100 area-pesquisa"
+        class="col-lg-12 d-flex align-items-center gap-3 pb-2 w-100 flex-column"
       >
         <div class="d-flex flex-column w-100">
           <label for="cupom">Cupom</label>
@@ -50,7 +70,7 @@
             </button>
           </div>
         </div>
-        <div class="d-flex flex-column w-25">
+        <div class="d-flex flex-column w-100">
           <label for="filtro">Tipo</label>
           <select
             id="filtro"
@@ -59,7 +79,7 @@
             [(ngModel)]="filtroTipo"
             (change)="filtrarPorTipo()"
           >
-            <option value="">Todos</option>
+            <option [ngValue]="undefined">Todos</option>
             <option value="mesa">Mesa</option>
             <option value="retirada">Retirada</option>
             <option value="entrega">Entrega</option>
@@ -100,13 +120,10 @@
     </div>
     }
   </div>
-  <div class="h-100 p-3 pt-0 w-100 content-container">
+  <div class="h-100 p-3 w-100 content-container">
     @if (cupomSelecionado && cupomSelecionado.venda) {
     <div class="d-flex flex-column h-100 w-100">
       <div class="d-flex flex-column">
-        @if (cupomSelecionado.venda.deletado == true) {
-        <h5><strong class="text-danger">Venda Deletada</strong></h5>
-        }
         <h4>Detalhes do Cupom {{ cupomSelecionado.cupom }}</h4>
         <h4>
           Venda
@@ -124,11 +141,24 @@
           {{ cupomSelecionado.venda.mesa }}
         </h4>
         <p>
-          <strong>Data e Hora:</strong>
+          <strong>Data e Hora criar:</strong>
           {{
             cupomSelecionado.venda.dataVenda | date : "dd/MM/yyyy HH:mm:ss a"
           }}
         </p>
+        <p>
+          <strong>Data e Hora última edição:</strong>
+          {{
+            cupomSelecionado.venda.dataEdicao | date : "dd/MM/yyyy HH:mm:ss a"
+          }}
+        </p>
+        @if (cupomSelecionado.venda.deletado == true) {
+        <h5 class="m-0"><strong class="text-danger">Venda Deletada</strong></h5>
+        <strong class="text-danger"
+          >Motivo Deletar:
+          <span>{{ cupomSelecionado.venda.motivoDeletar }}</span></strong
+        >
+        }
       </div>
       <div class="lista w-100 h-100">
         <table class="table">
@@ -180,19 +210,20 @@
           </tbody>
         </table>
       </div>
+      <div class="mt-2 d-flex flex-column gap-2">
+        <strong>SubTotal: <span>{{ cupomSelecionado.venda.valorBruto || 0 }}</span></strong>
+        @if (cupomSelecionado.venda.entrega) {
+          <strong>Taxa Entrega: <span>{{ cupomSelecionado.venda.taxaEntrega || 0 }}</span></strong>
+        }
+        <strong>Serviço: <span>{{ cupomSelecionado.venda.valorServico || 0 }}</span></strong>
+        <strong>Desconto: <span>{{ cupomSelecionado.venda.desconto || 0 }}</span>, Motivo: <span>{{ cupomSelecionado.venda.motivoDesconto || '' }}</span></strong>
+        <strong>Valor Total: <span>{{ cupomSelecionado.venda.valorTotal || 0 }}</span></strong>
+      </div>
       <div class="d-flex justify-content-between align-items-center w-100 mt-2">
-        <div
-          class="d-flex justify-content-between align-items-center areaPagar p-3 w-75"
-        >
-          <h3 class="m-0">VALOR TOTAL</h3>
-          <h3 class="m-0 barra">|</h3>
-          <h3 class="m-0 valorVenda">
-            R$ {{ cupomSelecionado.venda.valorTotal || 0 }}
-          </h3>
-        </div>
         <div class="col-acoes">
           @if ((usuario && usuario.permissao && (usuario.permissao.imprimir &&
-          urlString === 'caixa')) && matriz.configuracaoImpressao.usarImpressora && cupomSelecionado.venda.deletado == false) {
+          urlString === 'caixa')) && matriz.configuracaoImpressao.usarImpressora
+          && cupomSelecionado.venda.deletado == false) {
           <button
             type="button"
             class="hover-btn btn-imprimir"
@@ -207,9 +238,9 @@
             />
             <span class="hover-text">Imprimir</span>
           </button>
-          } @if ((usuario && usuario.permissao &&
-          usuario.permissao.deletarVenda) && urlString === 'caixa' &&
-          cupomSelecionado.venda.deletado == false) {
+          } @if (modoModal) { @if ((usuario && usuario.permissao &&
+          usuario.permissao.deletarVenda) && cupomSelecionado.venda.deletado ==
+          false && urlString === 'caixa') {
           <button
             type="button"
             class="btn-comum btn-comum-vermelho"
@@ -217,7 +248,17 @@
           >
             Deletar
           </button>
-          }
+          } } @else { @if ((usuario && usuario.permissao &&
+          usuario.permissao.deletarVenda) && cupomSelecionado.venda.deletado ==
+          false) {
+          <button
+            type="button"
+            class="btn-comum btn-comum-vermelho"
+            (click)="deletarVenda(cupomSelecionado.venda, modalDeletarVenda)"
+          >
+            Deletar
+          </button>
+          } }
         </div>
       </div>
     </div>

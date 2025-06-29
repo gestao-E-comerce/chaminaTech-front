@@ -5,7 +5,7 @@ p {
 
 label,
 h3,
-h4 {
+h4, strong {
     color: var(--cor-white);
 }
 
@@ -40,20 +40,6 @@ h4 {
     border: none;
     font-size: 1.8rem;
     cursor: pointer;
-}
-
-.fechar-menu {
-    background: none;
-    color: var(--cor-white);
-    border: none;
-    font-size: 1.4rem;
-    margin: 5px 10px;
-    align-self: flex-end;
-    cursor: pointer;
-
-    &:hover {
-        background-color: var(--cor-laranja);
-    }
 }
 
 .content-container {

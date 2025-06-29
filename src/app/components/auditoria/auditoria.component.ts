@@ -6,7 +6,7 @@ import { AuditoriaService } from '../../services/auditoria.service';
 import { ToastrService } from 'ngx-toastr';
 import { Auditoria } from '../../models/auditoria';
 import { Funcionario } from '../../models/funcionario';
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgClass } from '@angular/common';
 import { NgxMaskDirective } from 'ngx-mask';
 import { Usuario } from '../../models/usuario';
 import { take } from 'rxjs';
@@ -15,7 +15,7 @@ import { FuncionarioService } from '../../services/funcionario.service';
 @Component({
   selector: 'app-auditoria',
   standalone: true,
-  imports: [FormsModule, RouterLink, DatePipe, NgxMaskDirective],
+  imports: [FormsModule, RouterLink, DatePipe, NgxMaskDirective, NgClass],
   templateUrl: './auditoria.component.html',
   styleUrl: './auditoria.component.scss',
 })
@@ -47,9 +47,7 @@ export class AuditoriaComponent {
       next: (matriz) => {
         this.funcionarioService.listarFuncionarios().subscribe({
           next: (lista) => {
-            this.funcionarios = (lista || []).filter(
-              (f) => f.deletado === false
-            );
+            this.funcionarios = lista || [];
           },
           error: () => {
             this.toastr.error('Erro ao filtrar funcionarios.');

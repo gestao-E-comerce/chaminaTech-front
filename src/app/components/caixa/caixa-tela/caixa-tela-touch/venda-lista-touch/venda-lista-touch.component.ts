@@ -9,11 +9,12 @@ import { SocketService } from '../../../../../services/socket.service';
 import { GlobalService } from '../../../../../services/global.service';
 import { Matriz } from '../../../../../models/matriz';
 import { take } from 'rxjs';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-venda-lista-touch',
   standalone: true,
-  imports: [NgClass, CurrencyPipe],
+  imports: [NgClass, CurrencyPipe, FormsModule],
   templateUrl: './venda-lista-touch.component.html',
   styleUrl: './venda-lista-touch.component.scss',
 })
@@ -55,6 +56,7 @@ export class VendaListaTouchComponent implements OnInit {
   totalVenda: number = 0;
   tempo!: string;
   exibirTotal: boolean = false;
+  nome?: string = '';
 
   toggleTotalVisibility(): void {
     this.exibirTotal = !this.exibirTotal;
@@ -137,9 +139,17 @@ export class VendaListaTouchComponent implements OnInit {
       },
     });
   }
-  listarCuponsEntrega() {
+  filtrarClientes() {
+    this.nome = this.nome?.toLocaleUpperCase();
+    if (this.tipoCaixa === 'entrega') {
+      this.listarCuponsEntrega(this.nome);
+    } else if (this.tipoCaixa === 'retirada') {
+      this.listarCuponsRetirada(this.nome);
+    }
+  }
+  listarCuponsEntrega(nome?: string) {
     if (this.tipoCaixa !== 'entrega') return;
-    this.gestaoCaixaService.buscarCuponsEntregaByMatrizId().subscribe({
+    this.gestaoCaixaService.buscarCuponsEntregaByMatrizId(nome).subscribe({
       next: (numeros) => {
         const agora = new Date().getTime();
         this.listaVendasCliente = numeros.map((venda) => {
@@ -158,9 +168,9 @@ export class VendaListaTouchComponent implements OnInit {
       },
     });
   }
-  listarCuponsRetirada() {
+  listarCuponsRetirada(nome?: string) {
     if (this.tipoCaixa !== 'retirada') return;
-    this.gestaoCaixaService.buscarCuponsRetiradaByMatrizId().subscribe({
+    this.gestaoCaixaService.buscarCuponsRetiradaByMatrizId(nome).subscribe({
       next: (numeros) => {
         const agora = new Date().getTime();
         this.listaVendasCliente = numeros.map((venda) => {

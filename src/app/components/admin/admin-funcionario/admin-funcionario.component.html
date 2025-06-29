@@ -62,7 +62,7 @@
           [(ngModel)]="ativo"
           (change)="filtrarAdminFuncionarios()"
         >
-          <option value="">Todos</option>
+          <option [ngValue]="undefined">Todos</option>
           <option value="true">Sim</option>
           <option value="false">Não</option>
         </select>

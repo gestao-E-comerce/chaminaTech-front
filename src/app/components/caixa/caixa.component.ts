@@ -5,6 +5,7 @@ import {
   EventEmitter,
   HostListener,
   inject,
+  Input,
   OnInit,
   Output,
   ViewChild,
@@ -23,9 +24,10 @@ import { SangriaComponent } from './sangria/sangria.component';
 import { SuprimentoComponent } from './suprimento/suprimento.component';
 import { VendaService } from '../../services/venda.service';
 import { Usuario } from '../../models/usuario';
-import { HistoricoVendasComponent } from './historico-vendas/historico-vendas.component';
 import { take } from 'rxjs';
 import { GorjetaComponent } from './gorjeta/gorjeta.component';
+import { HistoricoVendaComponent } from "../historicos/historico-venda/historico-venda.component";
+import { HistoricoConsumoComponent } from "../historicos/historico-consumo/historico-consumo.component";
 
 @Component({
   selector: 'app-caixa',
@@ -38,9 +40,10 @@ import { GorjetaComponent } from './gorjeta/gorjeta.component';
     NgClass,
     SangriaComponent,
     SuprimentoComponent,
-    HistoricoVendasComponent,
     GorjetaComponent,
-  ],
+    HistoricoVendaComponent,
+    HistoricoConsumoComponent
+],
   templateUrl: './caixa.component.html',
   styleUrl: './caixa.component.scss',
 })
@@ -48,6 +51,7 @@ export class CaixaComponent implements OnInit {
   @Output() retorno = new EventEmitter<any>();
   @ViewChild('numeroVendaInput', { static: false })
   numeroVendaInput!: ElementRef<HTMLInputElement>;
+  @Input() modoModal!: boolean;
 
   identificador: Identificador = new Identificador();
   urlString!: string;
@@ -110,7 +114,15 @@ export class CaixaComponent implements OnInit {
   }
   abrirModalHistoricoVendas(modalHistoricoVendas: any) {
     this.menuPrincipalAberto = false;
+    this.modoModal = true;
     this.modalRef = this.modalService.open(modalHistoricoVendas, {
+      size: 'fullscreen',
+    });
+  }
+  abrirModalHistoricoConsumos(modalHistoricoConsumos: any) {
+    this.menuPrincipalAberto = false;
+    this.modoModal = true;
+    this.modalRef = this.modalService.open(modalHistoricoConsumos, {
       size: 'fullscreen',
     });
   }

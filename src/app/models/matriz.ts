@@ -19,5 +19,5 @@ export class Matriz extends Usuario {
   configuracaoEntrega!: ConfiguracaoEntrega;
   configuracaoRetirada!: ConfiguracaoRetirada;
   configuracaoImpressao!: ConfiguracaoImpressao;
-  configuracaoTaxaServicio!: ConfiguracaoTaxaServico;
+  configuracaoTaxaServico!: ConfiguracaoTaxaServico;
 }

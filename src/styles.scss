@@ -21,19 +21,19 @@
 }
 
 :root {
-    --cor-white-filter-icon: brightness(0) invert(0) !important; //
-    --cor-white-filter: invert(0%) sepia(0%) saturate(1%) hue-rotate(329deg) brightness(104%) contrast(101%) !important; //
-    --cor-cinza-escuro-filter: invert(0%) sepia(0%) saturate(67%) hue-rotate(206deg) brightness(90%) contrast(86%) !important; //
-    --cor-white: #1a1a1a !important; //
+    --cor-white-filter-icon: brightness(0) invert(0) !important;
+    --cor-white-filter: invert(0%) sepia(0%) saturate(1%) hue-rotate(329deg) brightness(104%) contrast(101%) !important;
+    --cor-cinza-escuro-filter: invert(0%) sepia(0%) saturate(67%) hue-rotate(206deg) brightness(90%) contrast(86%) !important;
+    --cor-white: #1a1a1a !important;
     --cor-ddd: #ff9e30 !important;
     --cor-b4b4b4: #9f9c9c !important;
     --cor-cinza-calro: #d87a15 !important;
     --cor-cinza-medio: #676363 !important;
     --cor-cinza: #6c757d !important;
     --cor-cinza-hover: #5c636a !important;
-    --cor-cinza-escuro: #e9e9e9 !important; //
-    --cor-cinza-fundo: #f9f9f9 !important; //
-    --cor-cinza-escuro-fundo: #D6D6D6 !important; //D6D6D6
+    --cor-cinza-escuro: #e9e9e9 !important;
+    --cor-cinza-fundo: #f9f9f9 !important;
+    --cor-cinza-escuro-fundo: #D6D6D6 !important;
 
 
     --cor-laranja-filter: invert(39%) sepia(98%) saturate(5346%) hue-rotate(5deg) brightness(96%) contrast(100%) !important;
@@ -66,6 +66,32 @@
 
     --card-min: 120px;
     --card-max: 200px;
+}
+
+.tooltip-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.custom-tooltip {
+    position: absolute;
+    top: 50%;
+    right: 105%;
+    transform: translateY(-50%);
+    background-color: var(--cor-cinza-escuro);
+    color: #fff;
+    padding: 5px 10px;
+    border: 1px solid var(--cor-laranja);
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+}
+
+.tooltip-wrapper:hover .custom-tooltip {
+    opacity: 1;
 }
 
 .detalhes {
@@ -105,11 +131,12 @@
     box-sizing: border-box;
 }
 
-html, body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
 }
 
 p {
@@ -477,7 +504,19 @@ select,
 option {
     font-size: var(--fs-select);
 }
+.fechar-menu {
+    background-color: transparent;
+    color: var(--cor-white);
+    border: 1px solid var(--cor-laranja);
+    border-radius: 10px;
+    font-size: 1.4rem;
+    align-self: flex-end;
+    cursor: pointer;
 
+    &:hover {
+        background-color: var(--cor-laranja);
+    }
+}
 .tela {
     height: 100vh;
     width: 100%;

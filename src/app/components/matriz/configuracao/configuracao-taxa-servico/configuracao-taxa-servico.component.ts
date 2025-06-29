@@ -31,7 +31,7 @@ export class ConfiguracaoTaxaServicoComponent {
   }
 
   buscarConfiguracaoTaxaServico() {
-    this.confTaxaServicoService.buscarConfiguracaoTaxaServicio().subscribe({
+    this.confTaxaServicoService.buscarconfiguracaoTaxaServico().subscribe({
       next: (conf) => {
         this.confTaxaServicoOriginal = JSON.parse(JSON.stringify(conf));
         this.confTaxaServico = JSON.parse(JSON.stringify(conf));

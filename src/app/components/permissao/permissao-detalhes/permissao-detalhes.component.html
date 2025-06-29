@@ -35,7 +35,6 @@
         <th class="text-center col-1">Ativar</th>
       </thead>
       <tbody>
-
         @if (usuario && usuario.permissao && usuario.permissao.venda) {
         <tr>
           <td class="text-start">VENDA</td>
@@ -990,6 +989,74 @@
             </label>
           </td>
         </tr>
+        }@if (usuario && usuario.permissao && usuario.permissao.relatorio) {
+        <tr>
+          <td class="text-start">RELATÓRIO</td>
+          <td class="text-start">Permite acessar área relatório</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="relatorio"
+                [(ngModel)]="permissao.relatorio"
+                (click)="toggleRelatorio()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">CADASTRAR RELATÓRIO</td>
+          <td class="text-start">Permite cadastrar relatório</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="relatorio-cadastrar"
+                [(ngModel)]="permissao.cadastrarRelatorio"
+                (ngModelChange)="verificarRelatorio()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">EDITAR RELATÓRIO</td>
+          <td class="text-start">Permite editar relatório</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="relatorio-editar"
+                [(ngModel)]="permissao.editarRelatorio"
+                (ngModelChange)="verificarRelatorio()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="text-start">DELETAR RELATÓRIO</td>
+          <td class="text-start">Permite deletar relatório</td>
+          <td class="text-center">
+            <label class="switch">
+              <input
+                type="checkbox"
+                class="switch-input"
+                name="relatorio-deletar"
+                [(ngModel)]="permissao.deletarRelatorio"
+                (ngModelChange)="verificarRelatorio()"
+              />
+              <span class="slider"></span>
+            </label>
+          </td>
+        </tr>
         } @if (usuario && usuario.permissao && usuario.permissao.filho) {
         <tr>
           <td class="text-start">FILHO</td>
@@ -1068,7 +1135,7 @@
               <input
                 type="checkbox"
                 class="switch-input"
-                name="matriz" 
+                name="matriz"
                 [(ngModel)]="permissao.matrizPermissao"
                 (click)="toggleMatriz()"
               />

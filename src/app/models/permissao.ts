@@ -89,4 +89,9 @@ export class Permissao {
 
   editarConfiguracoes: boolean = false;
   auditoria: boolean = false;
+
+  relatorio: boolean = false;
+  cadastrarRelatorio: boolean = false;
+  editarRelatorio: boolean = false;
+  deletarRelatorio: boolean = false;
 }

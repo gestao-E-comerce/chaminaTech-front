@@ -1,13 +1,14 @@
-.h-dados {
-    height: 20vh !important;
+.menu-top {
+    background-color: var(--cor-cinza-escuro);
 }
 
-.h-listas {
-    height: 69vh !important;
-}
-
-.h-btn {
-    height: 9vh !important;
+.header-fixo {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: var(--cor-cinza-escuro);
+    padding: 1rem;
+    border-bottom: 1px solid var(--cor-laranja);
 }
 
 p {
@@ -54,33 +55,11 @@ h4 {
     cursor: pointer;
 }
 
-.fechar-menu {
-    background: none;
-    color: var(--cor-white);
-    border: none;
-    font-size: 1.4rem;
-    margin: 5px 10px;
-    align-self: flex-end;
-    cursor: pointer;
-
-    &:hover {
-        background-color: var(--cor-laranja);
-    }
-}
-
 .content-container {
     margin-left: 4vw;
     width: 96vw !important;
     height: 100vh;
     overflow-y: auto;
-}
-
-.lista-col {
-    width: calc(50% - 0.75rem);
-
-    @media (max-width: 1024px) {
-        width: 100%;
-    }
 }
 
 @media (max-width: 1024px) {
@@ -91,34 +70,6 @@ h4 {
     .content-container {
         margin-left: 6vw;
         width: calc(100% - 6vw);
-    }
-
-    .h-listas {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-        height: auto !important;
-    }
-
-    .h-listas>.d-flex.justify-content-center {
-        flex-direction: column !important;
-        gap: 1rem !important;
-    }
-
-    .h-listas>.d-flex.justify-content-center>div {
-        width: 100% !important;
-    }
-
-    .lista {
-        max-height: 35vh;
-        overflow-y: auto;
-        border-radius: 10px;
-    }
-
-    .table {
-        table-layout: auto;
-        width: 100%;
-        min-width: unset;
     }
 
     .table th,
@@ -135,25 +86,6 @@ h4 {
     .content-container {
         margin-left: 8vw;
         width: calc(100% - 8vw);
-    }
-
-    .h-listas {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-        height: auto !important;
-    }
-
-    .lista {
-        max-height: 35vh;
-        overflow-y: auto;
-        border-radius: 10px;
-    }
-
-    .table {
-        table-layout: auto;
-        width: 100%;
-        min-width: unset;
     }
 
     .table th,
@@ -181,6 +113,7 @@ h4 {
         margin-left: 15vw;
         width: 85vw !important;
     }
+
     .select-ativo {
         width: 100% !important;
     }

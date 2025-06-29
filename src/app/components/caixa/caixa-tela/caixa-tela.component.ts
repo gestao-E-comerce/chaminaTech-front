@@ -599,6 +599,61 @@ export class CaixaTelaComponent implements OnInit {
       }, 0);
     }
   }
+  consumo(modalConfirmarConsumo: any) {
+    if (!this.venda.produtoVendas || this.venda.produtoVendas.length === 0) {
+      this.toastr.error('Não há produtos na venda!');
+    } else {
+      setTimeout(() => {
+        this.modalRef = this.modalService.open(modalConfirmarConsumo, {
+          size: 'md',
+        });
+      }, 0);
+    }
+  }
+  confirmarConsumo() {
+    if (!this.venda.motivoConsumo?.trim()) {
+      this.toastr.error('Motivo indefinido!!');
+      return;
+    } else {
+      this.venda.nomeImpressora = this.getNomeImpressora();
+      if (this.tipoCaixa === 'mesa') {
+        this.venda.mesa = this.venda.mesa;
+      } else if (this.tipoCaixa === 'entrega') {
+        this.venda.entrega = true;
+      } else if (this.tipoCaixa === 'retirada') {
+        this.venda.retirada = true;
+      } else if (this.tipoCaixa === 'balcao') {
+        this.venda.balcao = true;
+      }
+      this.venda.consumoInterno = true;
+      this.venda.imprimirCadastrar = false;
+      this.venda.imprimirDeletar = false;
+      this.venda.imprimirNotaFiscal = false;
+      this.venda.notaFiscal = false;
+      this.venda.desconto = 0;
+      this.venda.valorServico = 0;
+      this.venda.valorTotal =
+        this.venda.valorBruto + (this.venda.taxaEntrega || 0);
+      this.venda.statusEmAberto = false;
+      this.venda.statusEmPagamento = false;
+      const vendaPagamento = new VendaPagamento();
+      vendaPagamento.consumoInterno = this.venda.valorTotal;
+      this.venda.vendaPagamento = vendaPagamento;
+      this.venda.funcionario = this.funcionario;
+
+      this.vendaService.save(this.venda, this.chaveUnico).subscribe({
+        next: (mensagem) => {
+          this.toastr.success(mensagem.mensagem);
+          this.retorno.emit(mensagem);
+          this.modalService.dismissAll();
+          this.atualizarEstadoCaixa();
+        },
+        error: (erro) => {
+          this.toastr.error(erro.error.mensagem);
+        },
+      });
+    }
+  }
   abrirModalImpressao(venda: Venda, modalImpressao: any) {
     this.venda = Object.assign({}, venda);
     this.modalRef = this.modalService.open(modalImpressao, {
@@ -2555,19 +2610,19 @@ export class CaixaTelaComponent implements OnInit {
     valorTotal += this.venda.taxaEntrega ?? 0;
     if (
       this.tipoCaixa === 'mesa' &&
-      this.matriz.configuracaoTaxaServicio.aplicar
+      this.matriz.configuracaoTaxaServico.aplicar
     ) {
       if (
-        this.matriz.configuracaoTaxaServicio.tipo === 'PERCENTUAL' &&
-        this.matriz.configuracaoTaxaServicio.percentual > 0
+        this.matriz.configuracaoTaxaServico.tipo === 'PERCENTUAL' &&
+        this.matriz.configuracaoTaxaServico.percentual > 0
       ) {
         taxa =
-          (valorTotal * this.matriz.configuracaoTaxaServicio.percentual) / 100;
+          (valorTotal * this.matriz.configuracaoTaxaServico.percentual) / 100;
       } else if (
-        this.matriz.configuracaoTaxaServicio.tipo === 'FIXO' &&
-        this.matriz.configuracaoTaxaServicio.valorFixo > 0
+        this.matriz.configuracaoTaxaServico.tipo === 'FIXO' &&
+        this.matriz.configuracaoTaxaServico.valorFixo > 0
       ) {
-        taxa = this.matriz.configuracaoTaxaServicio.valorFixo;
+        taxa = this.matriz.configuracaoTaxaServico.valorFixo;
       }
       valorTotal += taxa;
     }
@@ -2592,9 +2647,6 @@ export class CaixaTelaComponent implements OnInit {
       this.venda.entrega = false;
       this.venda.balcao = true;
       this.venda.nomeImpressora = null;
-      this.venda.imprimirCadastrar = false;
-      this.venda.imprimirDeletar = false;
-      this.venda.imprimirNotaFiscal = false;
     } else {
       this.venda.retirada = false;
       this.venda.entrega = false;
@@ -2611,9 +2663,6 @@ export class CaixaTelaComponent implements OnInit {
       this.venda.statusEmAberto = false;
       this.venda.ativo = true;
       this.venda.nomeImpressora = null;
-      this.venda.imprimirCadastrar = false;
-      this.venda.imprimirDeletar = false;
-      this.venda.imprimirNotaFiscal = false;
     } else {
       this.venda.mesa == this.venda.mesa;
       this.venda.retirada = false;
@@ -2632,9 +2681,6 @@ export class CaixaTelaComponent implements OnInit {
       this.venda.statusEmAberto = false;
       this.venda.statusEmPagamento = false;
       this.venda.nomeImpressora = null;
-      this.venda.imprimirCadastrar = false;
-      this.venda.imprimirDeletar = false;
-      this.venda.imprimirNotaFiscal = false;
     } else {
       this.venda.retirada = false;
       this.venda.entrega = true;
@@ -2652,9 +2698,6 @@ export class CaixaTelaComponent implements OnInit {
       this.venda.statusEmAberto = false;
       this.venda.statusEmPagamento = false;
       this.venda.nomeImpressora = null;
-      this.venda.imprimirCadastrar = false;
-      this.venda.imprimirDeletar = false;
-      this.venda.imprimirNotaFiscal = false;
     } else {
       this.venda.retirada = true;
       this.venda.entrega = false;

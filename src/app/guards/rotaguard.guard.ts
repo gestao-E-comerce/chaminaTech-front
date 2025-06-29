@@ -32,8 +32,11 @@ export const rotaguardGuard: CanActivateFn = (route, state) => {
     deposito: 'deposito',
     materia: 'materia',
     config: 'editarConfiguracoes',
-    caixaConf: 'historicoCaixa',
+    hisCaixas: 'historicoCaixa',
+    hisVendas: 'historicoVenda',
+    hisConsumos: 'historicoVenda',
     venda: 'venda',
+    relatorios: 'relatorio',
 
     conf: 'editarConfiguracoes',
     funcionarios: 'funcionario',
@@ -49,9 +52,26 @@ export const rotaguardGuard: CanActivateFn = (route, state) => {
   return globalService.getUsuarioAsync().pipe(
     map((usuario) => {
       const partesUrl = state.url.split('/').filter(Boolean);
-      const rotaBase = state.url.split('/')[1]; // ex: 'produtos'
-      const permissaoNecessaria = rotaParaPermissao[rotaBase];
-      const tipoCaixaOuVenda = partesUrl[1];
+      let rotaBase = partesUrl[0];
+      let subRota = partesUrl[1];
+      let permissaoNecessaria = rotaParaPermissao[rotaBase];
+      let tipoCaixaOuVenda = partesUrl[1];
+
+      if (rotaBase === 'historicos' && !subRota) {
+        const temPermissao =
+          usuario.permissao?.historicoCaixa ||
+          usuario.permissao?.historicoVenda;
+        if (!temPermissao) {
+          toastr.error('Você não tem permissão para acessar os históricos.');
+          router.navigate(['/home']);
+          return false;
+        }
+        return true;
+      }
+
+      if (rotaBase === 'historicos' && subRota) {
+        permissaoNecessaria = rotaParaPermissao[subRota];
+      }
 
       if (rotaBase === 'venda') {
         const tiposValidos = ['mesa', 'retirada', 'entrega'];

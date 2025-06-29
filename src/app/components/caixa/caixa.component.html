@@ -177,7 +177,16 @@
               class="mb-1 w-100 text-start d-flex align-items-center botao_opc"
               (click)="abrirModalHistoricoVendas(modalHistoricoVendas)"
             >
-              <span class="texto-balcao">Histórico Venda</span>
+              <span class="texto-balcao">Histórico Vendas</span>
+            </button>
+            }@if (usuario && usuario.permissao &&
+            usuario.permissao.historicoVenda) {
+            <button
+              type="button"
+              class="mb-1 w-100 text-start d-flex align-items-center botao_opc"
+              (click)="abrirModalHistoricoConsumos(modalHistoricoConsumos)"
+            >
+              <span class="texto-balcao">Histórico Consumos</span>
             </button>
             } @if (podeMudarModo) {
 
@@ -197,11 +206,11 @@
         <div class="w-100">
           <button
             type="button"
-            class="mb-3 w-100 text-start d-flex align-items-center botao"
+            class="mb-3 w-100 text-start d-flex align-items-center botao gap-2"
             routerLink="/home"
           >
-            <i class="bi bi-arrow-lefticon-img"></i>
-            <span class="texto-balcao">Sair</span>
+            <i class="bi bi-arrow-left"></i>
+            <span class="texto-balcao">Voltar</span>
           </button>
         </div>
       </div>
@@ -377,6 +386,18 @@
     ></i>
   </div>
   <div class="modal-body">
-    <app-historico-vendas></app-historico-vendas>
+    <app-historico-venda [modoModal]="modoModal"></app-historico-venda>
+  </div>
+</ng-template>
+<ng-template #modalHistoricoConsumos let-modal>
+  <div class="modal-header modal-style justify-content-end p-3 border-0">
+    <i
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+      class="bi bi-x-lg close"
+    ></i>
+  </div>
+  <div class="modal-body">
+    <app-historico-consumo [modoModal]="modoModal"></app-historico-consumo>
   </div>
 </ng-template>

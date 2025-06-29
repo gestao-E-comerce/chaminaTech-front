@@ -1,0 +1,41 @@
+<div class="tela d-flex flex-column col-lg-12 w-100">
+  <div
+    class="d-flex align-items-center justify-content-between menu-top py-3 px-2"
+  >
+    <div class="d-flex align-items-center">
+      <button type="button" class="botao_voltar me-2" routerLink="/home">
+        <i class="bi bi-arrow-left"></i>
+      </button>
+
+      <h2 class="titulo m-0">Históricos</h2>
+    </div>
+  </div>
+  <div class="d-flex col-12 justify-content-center mt-5">
+    <div
+      class="d-flex justify-content-evenly col-10 flex-wrap gap-4 justify-content-start lista-servicos"
+    >
+      @if (usuario && usuario.permissao && usuario.permissao.historicoVenda) {
+      <div
+        class="col-3 p-5 bloco d-flex flex-column justify-content-center"
+        routerLink="/historicos/hisVendas"
+      >
+        <span>Histórico Vendas</span>
+      </div>
+      } @if (usuario && usuario.permissao && usuario.permissao.historicoCaixa) {
+      <div
+        class="col-3 p-5 bloco d-flex flex-column justify-content-center"
+        routerLink="/historicos/hisCaixas"
+      >
+        <span>Histórico Caixas</span>
+      </div>
+      } @if (usuario && usuario.permissao && usuario.permissao.historicoVenda) {
+      <div
+        class="col-3 p-5 bloco d-flex flex-column justify-content-center"
+        routerLink="/historicos/hisConsumos"
+      >
+        <span>Histórico Consumos</span>
+      </div>
+      }
+    </div>
+  </div>
+</div>

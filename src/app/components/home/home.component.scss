@@ -53,7 +53,7 @@
 }
 
 /* Container geral de blocos */
-.grid-container,
+
 .d-flex.flex-wrap {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(clamp(120px, 20vw, 200px), 1fr));
@@ -105,9 +105,10 @@
         border-color: var(--cor-cinza-escuro);
         transform: translateY(-4px);
 
-        i{
+        i {
             color: var(--cor-cinza-escuro);
         }
+
         span {
             color: var(--cor-cinza-escuro);
         }
@@ -117,7 +118,10 @@
         }
     }
 }
-
+.icon-conf {
+    font-size: 20px;
+    color: var(--cor-white);
+}
 .caixa {
     height: 100%;
 }

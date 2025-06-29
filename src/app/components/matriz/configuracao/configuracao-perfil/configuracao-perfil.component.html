@@ -4,13 +4,18 @@
       <h2 class="titulo m-0">Perfil</h2>
     </div>
     <div class="d-flex align-items-center">
-      <button
-        type="submit"
-        class="btn-comum btn-comum-laranja"
-        [disabled]="!isModified()"
-      >
-        Salvar
-      </button>
+      <div class="tooltip-wrapper">
+        <button
+          type="submit"
+          class="btn-comum btn-comum-laranja"
+          [disabled]="!isModified()"
+        >
+          Salvar
+        </button>
+        @if (!isModified()) {
+        <div class="custom-tooltip">Nenhuma alteração</div>
+        }
+      </div>
     </div>
   </div>
   <div class="d-flex flex-column gap-3 p-2">

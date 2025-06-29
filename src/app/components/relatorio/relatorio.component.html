@@ -1,0 +1,393 @@
+<div class="h-100 d-flex w-100">
+  <div
+    class="d-flex flex-column menuVendas menu-container"
+    [class.expanded]="menuAberto"
+  >
+    @if (!menuAberto) {
+    <div
+      class="d-flex flex-column align-items-center justify-content-between text-center h-100 w-100"
+    >
+      <div>
+        <button class="abrir-menu w-100" (click)="menuAberto = true">☰</button>
+        <h2 class="titulo-vertical">Relatórios</h2>
+      </div>
+      <button
+        type="button"
+        name="sair"
+        class="botao_voltar mb-2"
+        routerLink="/historicos"
+      >
+        <i class="bi bi-arrow-left"></i>
+      </button>
+    </div>
+    } @if (menuAberto) {
+    <div class="d-flex flex-column p-2 pm-0 col-12">
+      <div class="d-flex align-items-center justify-content-between mb-3 gap-2">
+        <div class="d-flex align-items-center">
+          <button
+            type="button"
+            name="sair"
+            class="botao_voltar me-2"
+            routerLink="/historicos"
+          >
+            <i class="bi bi-arrow-left"></i>
+          </button>
+
+          <h2 class="titulo m-0">Relatórios</h2>
+        </div>
+        <button class="fechar-menu" (click)="menuAberto = false">✕</button>
+      </div>
+    </div>
+    <div class="d-flex flex-column lista-btns">
+      @for (relatorio of listaRelatoriosOrginal; track $index) {
+      <button
+        type="button"
+        name="{{ relatorio.id }}"
+        (click)="selecionarRelatorio(relatorio)"
+        class="btn-lista d-flex align-items-center text-start px-3 py-2 m-1"
+        [ngClass]="{ 'btn-lista-active': active == relatorio }"
+      >
+        <span class="text-start" style="width: 150px">
+          <strong>Relatório </strong> {{ relatorio.nome }}
+        </span>
+        @if (usuario && usuario.permissao && usuario.permissao.deletarRelatorio)
+        {
+        <button
+          type="button"
+          (click)="deletarRelatorio(modalDeletarRelatorio, relatorio, $index)"
+          class="hover-btn"
+          name="Deletar{{ $index }}"
+        >
+          <img
+            src="../../../../assets/images/botao_deletar.svg"
+            alt="Deletar"
+          />
+          <span class="hover-text">Deletar</span>
+        </button>
+        }
+      </button>
+      }
+    </div>
+    }
+  </div>
+  <div class="d-flex flex-column p-3 w-100 content-container">
+    <div class="d-flex flex-wrap gap-3">
+      <div class="d-flex flex-column w-20">
+        <label>Tipo de objeto</label>
+        <select class="select-filtro p-1" [(ngModel)]="relatorio.tipoConsulta">
+          <option [ngValue]="undefined">Selecione</option>
+          <option value="VENDA">Venda</option>
+
+          <!-- <option value="CATEGORIA">Categoria</option>
+         <option value="PRODUTO">Produto</option>
+         <option value="CLIENTE">Cliente</option>
+         <option value="CAIXA">Caixa</option>
+         <option value="FUNCIONARIO">Funcionário</option>
+         <option value="PERMISSAO">Permissão</option>
+         <option value="ESTOQUE">Estoque</option>
+         <option value="DEPOSITO">Depósito</option>
+         <option value="MATERIA">Matéria</option>
+         <option value="CONFIGURACAO">Configuração</option>
+         <option value="SANGRIA">Sangria</option>
+         <option value="SUPRIMENTO">Suprimento</option>
+         <option value="IMPRESSAO">Impressão</option> -->
+        </select>
+      </div>
+      <div class="d-flex flex-column w-20">
+        <label>Data Início</label>
+        <input
+          type="datetime-local"
+          class="select-filtro p-1"
+          [(ngModel)]="relatorio.dataInicio"
+        />
+      </div>
+      <div class="d-flex flex-column w-20">
+        <label>Data Fim</label>
+        <input
+          type="datetime-local"
+          class="select-filtro p-1"
+          [(ngModel)]="relatorio.dataFim"
+        />
+      </div>
+      <div class="d-flex flex-column w-25">
+        <label>Tipos de Venda</label>
+        <div class="d-flex flex-wrap gap-2">
+          <button
+            class="btn-comum btn-selecionar"
+            [ngClass]="{
+              'btn-selecionar-foco': relatorio.tiposVenda.includes('MESA'),
+              'btn-selecionar': !relatorio.tiposVenda.includes('MESA')
+            }"
+            (click)="alternarTipoVenda('MESA')"
+          >
+            Mesa
+          </button>
+
+          <button
+            class="btn-comum btn-selecionar"
+            [ngClass]="{
+              'btn-selecionar-foco': relatorio.tiposVenda.includes('BALCAO'),
+              'btn-selecionar': !relatorio.tiposVenda.includes('BALCAO')
+            }"
+            (click)="alternarTipoVenda('BALCAO')"
+          >
+            Balcão
+          </button>
+
+          <button
+            class="btn-comum btn-selecionar"
+            [ngClass]="{
+              'btn-selecionar-foco': relatorio.tiposVenda.includes('ENTREGA'),
+              'btn-selecionar': !relatorio.tiposVenda.includes('ENTREGA')
+            }"
+            (click)="alternarTipoVenda('ENTREGA')"
+          >
+            Entrega
+          </button>
+
+          <button
+            class="btn-comum btn-selecionar"
+            [ngClass]="{
+              'btn-selecionar-foco': relatorio.tiposVenda.includes('RETIRADA'),
+              'btn-selecionar': !relatorio.tiposVenda.includes('RETIRADA')
+            }"
+            (click)="alternarTipoVenda('RETIRADA')"
+          >
+            Retirada
+          </button>
+        </div>
+      </div>
+      <div class="d-flex flex-column w-20">
+        <label>Formas de Pagamento</label>
+        <div class="d-flex flex-wrap gap-2">
+          <button
+            class="btn-comum btn-selecionar"
+            [ngClass]="{
+              'btn-selecionar-foco':
+                relatorio.formasPagamento.includes('DINHEIRO'),
+              'btn-selecionar': !relatorio.formasPagamento.includes('DINHEIRO')
+            }"
+            (click)="alternarTipoPagamento('DINHEIRO')"
+          >
+            Dinheiro
+          </button>
+
+          <button
+            class="btn-comum btn-selecionar"
+            [ngClass]="{
+              'btn-selecionar-foco':
+                relatorio.formasPagamento.includes('CREDITO'),
+              'btn-selecionar': !relatorio.formasPagamento.includes('CREDITO')
+            }"
+            (click)="alternarTipoPagamento('CREDITO')"
+          >
+            Crédito
+          </button>
+
+          <button
+            class="btn-comum btn-selecionar"
+            [ngClass]="{
+              'btn-selecionar-foco':
+                relatorio.formasPagamento.includes('DEBITO'),
+              'btn-selecionar': !relatorio.formasPagamento.includes('DEBITO')
+            }"
+            (click)="alternarTipoPagamento('DEBITO')"
+          >
+            Débito
+          </button>
+
+          <button
+            class="btn-comum btn-selecionar"
+            [ngClass]="{
+              'btn-selecionar-foco': relatorio.formasPagamento.includes('PIX'),
+              'btn-selecionar': !relatorio.formasPagamento.includes('PIX')
+            }"
+            (click)="alternarTipoPagamento('PIX')"
+          >
+            Pix
+          </button>
+        </div>
+      </div>
+      <div class="d-flex flex-column w-20">
+        <label>Vendas Deletadas</label>
+        <div class="btn-group w-100">
+          <button
+            type="button"
+            class="btn btn-borda-laranja p-2"
+            [ngClass]="{
+              'btn-comum-laranja': relatorio.deletado === true,
+              'btn-borda-laranja': relatorio.deletado !== true
+            }"
+            (click)="relatorio.deletado = true"
+          >
+            SIM
+          </button>
+          <button
+            type="button"
+            class="btn btn-borda-laranja p-2"
+            [ngClass]="{
+              'btn-comum-laranja': relatorio.deletado === false,
+              'btn-borda-laranja': relatorio.deletado !== false
+            }"
+            (click)="relatorio.deletado = false"
+          >
+            NÃO
+          </button>
+          <button
+            type="button"
+            class="btn btn-borda-laranja p-2"
+            [ngClass]="{
+              'btn-comum-laranja': relatorio.deletado === null,
+              'btn-borda-laranja': relatorio.deletado !== null
+            }"
+            (click)="relatorio.deletado = null"
+          >
+            TODOS
+          </button>
+        </div>
+      </div>
+      <div class="d-flex flex-column w-20">
+        <label>Vendas Com Desconto</label>
+        <div class="btn-group w-100">
+          <button
+            type="button"
+            class="btn btn-borda-laranja p-2"
+            [ngClass]="{
+              'btn-comum-laranja': relatorio.desconto === true,
+              'btn-borda-laranja': relatorio.desconto !== true
+            }"
+            (click)="relatorio.desconto = true"
+          >
+            SIM
+          </button>
+          <button
+            type="button"
+            class="btn btn-borda-laranja p-2"
+            [ngClass]="{
+              'btn-comum-laranja': relatorio.desconto === false,
+              'btn-borda-laranja': relatorio.desconto !== false
+            }"
+            (click)="relatorio.desconto = false"
+          >
+            NÃO
+          </button>
+          <button
+            type="button"
+            class="btn btn-borda-laranja p-2"
+            [ngClass]="{
+              'btn-comum-laranja': relatorio.desconto === null,
+              'btn-borda-laranja': relatorio.desconto !== null
+            }"
+            (click)="relatorio.desconto = null"
+          >
+            TODOS
+          </button>
+        </div>
+      </div>
+      <div class="d-flex flex-column w-20">
+        <label>Vendas Com Serviço</label>
+        <div class="btn-group w-100">
+          <button
+            type="button"
+            class="btn btn-borda-laranja p-2"
+            [ngClass]="{
+              'btn-comum-laranja': relatorio.taxaServico === true,
+              'btn-borda-laranja': relatorio.taxaServico !== true
+            }"
+            (click)="relatorio.taxaServico = true"
+          >
+            SIM
+          </button>
+          <button
+            type="button"
+            class="btn btn-borda-laranja p-2"
+            [ngClass]="{
+              'btn-comum-laranja': relatorio.taxaServico === false,
+              'btn-borda-laranja': relatorio.taxaServico !== false
+            }"
+            (click)="relatorio.taxaServico = false"
+          >
+            NÃO
+          </button>
+          <button
+            type="button"
+            class="btn btn-borda-laranja p-2"
+            [ngClass]="{
+              'btn-comum-laranja': relatorio.taxaServico === null,
+              'btn-borda-laranja': relatorio.taxaServico !== null
+            }"
+            (click)="relatorio.taxaServico = null"
+          >
+            TODOS
+          </button>
+        </div>
+      </div>
+      <div class="d-flex flex-column w-20">
+        <label>Funcionário</label>
+        <select class="select-filtro p-1" [(ngModel)]="relatorio.funcionarioId">
+          <option [ngValue]="undefined">Todos</option>
+          @for (funcionario of funcionarios; track funcionario.id) {
+          <option [value]="funcionario.id">{{ funcionario.nome }}</option>
+          }
+        </select>
+      </div>
+      <div class="d-flex flex-column w-20">
+        <label>Ordenar Por</label>
+        <select class="select-filtro p-1" [(ngModel)]="relatorio.ordenacao">
+          <option [ngValue]="undefined">Selecione</option>
+
+          <option value="valorTotalDesc">Valor Total (maior → menor)</option>
+          <option value="valorTotalAsc">Valor Total (menor → maior)</option>
+
+          <option value="valorBrutoDesc">Valor Bruto (maior → menor)</option>
+          <option value="valorBrutoAsc">Valor Bruto (menor → maior)</option>
+
+          <option value="descontoDesc">Desconto (maior → menor)</option>
+          <option value="descontoAsc">Desconto (menor → maior)</option>
+
+          <option value="valorServicoDesc">Taxa Serviço (maior → menor)</option>
+          <option value="valorServicoAsc">Taxa Serviço (menor → maior)</option>
+
+          <option value="taxaEntregaDesc">Taxa Entrega (maior → menor)</option>
+          <option value="taxaEntregaAsc">Taxa Entrega (menor → maior)</option>
+
+          <option value="funcionarioAsc">Funcionário (A-Z)</option>
+          <option value="funcionarioDesc">Funcionário (Z-A)</option>
+
+          <option value="dataDesc">Data (mais recente)</option>
+          <option value="dataAsc">Data (mais antiga)</option>
+        </select>
+      </div>
+    </div>
+    <div class="d-flex justify-content-center">
+      <button class="btn-comum btn-comum-laranja" (click)="aplicarRelatorio()">
+        Aplicar
+      </button>
+    </div>
+  </div>
+</div>
+
+<ng-template #modalDeletarRelatorio let-modal>
+  <div class="modal-header modal-style">
+    <h4 class="modal-title">{{ tituloModal }}</h4>
+  </div>
+  <div class="modal-body modal-style">
+    <h5>Tem certeza que deseja deletar?</h5>
+  </div>
+  <div class="modal-footer modal-style justify-content-center">
+    <button
+      type="button"
+      class="btn-comum btn-comum-vermelho"
+      (click)="confirmarDeletarRelatorio(relatorio)"
+    >
+      Deletar
+    </button>
+    <button
+      type="button"
+      class="btn-comum btn-comum-cinza"
+      (click)="modal.close('Close click')"
+    >
+      Fechar
+    </button>
+  </div>
+</ng-template>

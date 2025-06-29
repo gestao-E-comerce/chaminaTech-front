@@ -68,7 +68,7 @@
           [(ngModel)]="ativo"
           (change)="filtrarProdutos()"
         >
-          <option value="">Todos</option>
+          <option [ngValue]="undefined">Todos</option>
           <option value="true">Sim</option>
           <option value="false">Não</option>
         </select>
@@ -81,7 +81,7 @@
           [(ngModel)]="cardapio"
           (change)="filtrarProdutos()"
         >
-          <option value="">Todos</option>
+          <option [ngValue]="undefined">Todos</option>
           <option value="true">Sim</option>
           <option value="false">Não</option>
         </select>
@@ -94,7 +94,7 @@
           [(ngModel)]="validarExestencia"
           (change)="filtrarProdutos()"
         >
-          <option value="">Todos</option>
+          <option [ngValue]="undefined">Todos</option>
           <option value="true">Sim</option>
           <option value="false">Não</option>
         </select>
@@ -107,7 +107,7 @@
           [(ngModel)]="estocavel"
           (change)="filtrarProdutos()"
         >
-          <option value="">Todos</option>
+          <option [ngValue]="undefined">Todos</option>
           <option value="true">Sim</option>
           <option value="false">Não</option>
         </select>
@@ -121,7 +121,7 @@
           [(ngModel)]="categoriaNome"
           (change)="filtrarProdutos()"
         >
-          <option value="">Todos</option>
+          <option [ngValue]="undefined">Todos</option>
           @for (categoria of listaCategorias; track $index) {
           <option value="{{ categoria.nome }}">{{ categoria.nome }}</option>
           }

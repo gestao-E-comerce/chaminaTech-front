@@ -123,19 +123,37 @@
         <tbody>
           <tr>
             <td class="text-start w-25">Subtotal</td>
-            <td class="text-start w-75">R$ {{ venda.valorBruto }}</td>
+            <td class="text-start w-75">
+              R$ {{ venda.valorBruto | number : "1.2-2" }}
+            </td>
           </tr>
+          @if (tipoCaixa === 'mesa') {
           <tr>
             <td class="text-start w-25">Serviço</td>
-            <td class="text-start w-75">R$ {{ venda.valorServico }}</td>
+            <td class="text-start w-75">
+              R$ {{ venda.valorServico | number : "1.2-2" }}
+            </td>
           </tr>
+          }
+          @if (tipoCaixa === 'entrega') {
+          <tr>
+            <td class="text-start w-25">Taxa Entrega</td>
+            <td class="text-start w-75">
+              R$ {{ venda.taxaEntrega | number : "1.2-2" }}
+            </td>
+          </tr>
+          }
           <tr>
             <td class="text-start w-25">Desconto</td>
-            <td class="text-start w-75">R$ {{ venda.desconto || 0 }}</td>
+            <td class="text-start w-75">
+              R$ {{ venda.desconto || 0 | number : "1.2-2" }}
+            </td>
           </tr>
           <tr>
             <td class="text-start w-25">Total</td>
-            <td class="text-start w-75">R$ {{ venda.valorTotal }}</td>
+            <td class="text-start w-75">
+              R$ {{ venda.valorTotal | number : "1.2-2" }}
+            </td>
           </tr>
           <tr>
             <td class="text-start w-25">{{ tipoTrocoOuDiferenca }}</td>
@@ -153,16 +171,26 @@
       <table class="table w-100">
         <tbody>
           <tr>
+            @if (tipoCaixa === 'mesa') {
             <td class="text-start w-25">Serviço</td>
-            <td class="text-start w-25">R$ {{ venda.valorServico }}</td>
+            <td class="text-start w-25">
+              R$ {{ venda.valorServico | number : "1.2-2" }}
+            </td>
+            }
             <td class="text-start w-25">Desconto</td>
-            <td class="text-start w-25">R$ {{ venda.desconto || 0 }}</td>
+            <td class="text-start w-25">
+              R$ {{ venda.desconto || 0 | number : "1.2-2" }}
+            </td>
           </tr>
           <tr>
             <td class="text-start w-25">Subtotal</td>
-            <td class="text-start w-25">R$ {{ venda.valorBruto }}</td>
+            <td class="text-start w-25">
+              R$ {{ venda.valorBruto | number : "1.2-2" }}
+            </td>
             <td class="text-start w-25">Total</td>
-            <td class="text-start w-25">R$ {{ venda.valorTotal }}</td>
+            <td class="text-start w-25">
+              R$ {{ venda.valorTotal | number : "1.2-2" }}
+            </td>
           </tr>
           <tr>
             <td class="text-start w-25">{{ tipoTrocoOuDiferenca }}</td>

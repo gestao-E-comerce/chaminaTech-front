@@ -23,6 +23,7 @@ export class ConfiguracaoImpressao {
   imprimirGorjeta: boolean = true;
   mostarMotivoDeletarVenda: boolean = true;
   mostarMotivoDeletarProduto: boolean = true;
+  imprimirComprovanteConsumo: boolean = true;
   identificador: Identificador[] = [];
   impressoras: Impressora[] = [];
   matriz!: Matriz;

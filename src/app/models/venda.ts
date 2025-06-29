@@ -12,6 +12,8 @@ export class Venda {
     retirada!: boolean;
     entrega!: boolean;
     balcao!: boolean;
+    consumoInterno: boolean = false;
+    motivoConsumo!: string;
     deletado: boolean = false;
     chaveUnico!: string;
     imprimirDeletar: boolean = true;

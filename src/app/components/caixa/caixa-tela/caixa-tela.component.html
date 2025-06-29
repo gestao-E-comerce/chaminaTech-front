@@ -25,14 +25,19 @@
         </div>
       </div>
       <div class="h-100 d-flex justify-content-center align-items-center">
-        <button
-          class="btn-comum btn-comum-laranja"
-          type="button"
-          (click)="cancelar()"
-          [disabled]="venda.produtoVendas == null"
-        >
-          Fechar
-        </button>
+        <div class="tooltip-wrapper">
+          <button
+            class="btn-comum btn-comum-laranja"
+            type="button"
+            (click)="cancelar()"
+            [disabled]="venda.produtoVendas == null"
+          >
+            Fechar
+          </button>
+          @if (venda.produtoVendas == null) {
+          <div class="custom-tooltip">Nenhuma alteração</div>
+          }
+        </div>
       </div>
     </div>
     <div class="d-flex flex-column mt-3">
@@ -71,14 +76,19 @@
               +
             </button>
             @if (produto.categoria.obsObrigatotio == false) {
-            <button
-              type="button"
-              class="btnObs"
-              (click)="abrirModalObservacao(modalObservacaoTouch, produto)"
-              [disabled]="(quantidadesProdutosVenda[produto.id] || 0) === 0"
-            >
-              Obs
-            </button>
+            <div class="tooltip-wrapper">
+              <button
+                type="button"
+                class="btnObs"
+                (click)="abrirModalObservacao(modalObservacaoTouch, produto)"
+                [disabled]="(quantidadesProdutosVenda[produto.id] || 0) === 0"
+              >
+                Obs
+              </button>
+              @if ((quantidadesProdutosVenda[produto.id] || 0) === 0) {
+              <div class="custom-tooltip">Quantidade mimina 1</div>
+              }
+            </div>
             }
           </div>
         </div>
@@ -417,8 +427,8 @@
           </div>
         </div>
         <div class="w-50 d-flex gap-3 justify-content-end">
-          @if ((tipoCaixa =='mesa' && !produtoSelecionado && venda.mesa && !transferir) ||
-          ((tipoCaixa =='retirada' || tipoCaixa =='entrega') &&
+          @if ((tipoCaixa =='mesa' && !produtoSelecionado && venda.mesa &&
+          !transferir) || ((tipoCaixa =='retirada' || tipoCaixa =='entrega') &&
           !produtoSelecionado && venda.cliente) || (tipoCaixa == 'balcao' &&
           !produtoSelecionado)) {
           <div>
@@ -432,7 +442,8 @@
           </div>
           } @if ( (tipoCaixa =='mesa' && !vendaAlterada() && venda.mesa &&
           venda.dataVenda != null && venda.deletado == false) && (usuario &&
-          usuario.permissao && usuario.permissao.transferirVenda) && !produtoSelecionado) {
+          usuario.permissao && usuario.permissao.transferirVenda) &&
+          !produtoSelecionado) {
           <div>
             <button
               class="btn-comum btn-comum-laranja"
@@ -617,8 +628,8 @@
             <td>
               <div class="col-acoes">
                 @if (usuario && usuario.permissao &&
-                usuario.permissao.editarProdutoVenda || produtoVenda.id == null && !produtoSelecionado)
-                {
+                usuario.permissao.editarProdutoVenda || produtoVenda.id == null
+                && !produtoSelecionado) {
                 <button
                   type="button"
                   (click)="editarProduto(produtoVenda, $index)"
@@ -631,8 +642,8 @@
                   <span class="hover-text">Editar</span>
                 </button>
                 } @if (usuario && usuario.permissao &&
-                usuario.permissao.deletarProdutoVenda || produtoVenda.id ==
-                null && !produtoSelecionado) {
+                usuario.permissao.deletarProdutoVenda || produtoVenda.id == null
+                && !produtoSelecionado) {
                 <button
                   type="button"
                   (click)="
@@ -691,7 +702,8 @@
           "entrega") && !vendaAlterada() && venda.dataVenda != null &&
           venda.deletado == false ) && (usuario && usuario.permissao &&
           (usuario.permissao.imprimir && urlString === 'caixa'))) &&
-          matriz.configuracaoImpressao.usarImpressora && !produtoSelecionado && !transferir) {
+          matriz.configuracaoImpressao.usarImpressora && !produtoSelecionado &&
+          !transferir) {
           <button
             type="button"
             class="hover-btn btn-imprimir"
@@ -726,7 +738,8 @@
           == "entrega") && !vendaAlterada() && venda.dataVenda != null &&
           venda.deletado == false ) || (tipoCaixa == "balcao" &&
           venda.produtoVendas != null) ) && (usuario && usuario.permissao &&
-          (usuario.permissao.caixa && urlString === 'caixa')) && !produtoSelecionado && !transferir) {
+          (usuario.permissao.caixa && urlString === 'caixa')) &&
+          !produtoSelecionado && !transferir) {
           <button
             type="button"
             class="btn-comum btn-comum-verde"
@@ -737,9 +750,26 @@
           }
         </div>
         <div>
+          @if ( ( ( (tipoCaixa == "mesa" || tipoCaixa == "retirada" || tipoCaixa
+          == "entrega") && !vendaAlterada() && venda.dataVenda != null &&
+          venda.deletado == false ) || (tipoCaixa == "balcao" &&
+          venda.produtoVendas != null) ) && (usuario && usuario.permissao &&
+          (usuario.permissao.caixa && urlString === 'caixa')) &&
+          !produtoSelecionado && !transferir) {
+          <button
+            type="button"
+            class="btn-comum btn-comum-verde"
+            (click)="consumo(modalConfirmarConsumo)"
+          >
+            Consumo
+          </button>
+          }
+        </div>
+        <div>
           @if ((tipoCaixa != "balcao" && !vendaAlterada() && venda.dataVenda !=
           null && venda.deletado == false) && ((usuario && usuario.permissao &&
-          usuario.permissao.deletarVenda) && urlString === 'caixa' ) && !produtoSelecionado && !transferir) {
+          usuario.permissao.deletarVenda) && urlString === 'caixa' ) &&
+          !produtoSelecionado && !transferir) {
           <button
             type="button"
             class="btn-comum btn-comum-vermelho"
@@ -940,6 +970,49 @@
     </button>
   </div>
 </ng-template>
+<ng-template #modalConfirmarConsumo let-modal>
+  <div class="modal-header modal-style">
+    <h4 class="modal-title">Consumo Interno</h4>
+  </div>
+
+  <div class="w-100 modal-body modal-style">
+    <div>
+      <strong
+        >Valor do consumo <label>{{ venda.valorTotal }}</label></strong
+      >
+    </div>
+    <label for="motivo" class="form-label mt-2">Motivo</label>
+    <textarea
+      autocomplete="off"
+      #motivo="ngModel"
+      required
+      type="text"
+      class="form-control"
+      name="motivo"
+      [(ngModel)]="venda.motivoConsumo"
+      [ngClass]="{
+        'borda-vermelha':
+          venda.motivoConsumo == null && !motivo.valid && motivo.touched
+      }"
+    ></textarea>
+  </div>
+  <div class="modal-footer modal-style justify-content-center">
+    <button
+      type="button"
+      class="btn-comum btn-comum-laranja"
+      (click)="confirmarConsumo()"
+    >
+      Salvar
+    </button>
+    <button
+      type="button"
+      class="btn-comum btn-comum-cinza"
+      (click)="modal.close('Close click')"
+    >
+      Fechar
+    </button>
+  </div>
+</ng-template>
 <ng-template #modalDeletarProduto let-modal>
   <div class="modal-header modal-style">
     <h4 class="modal-title">Deleter Produto</h4>
@@ -1030,7 +1103,7 @@
   <div class="modal-header modal-style justify-content-between">
     <h4 class="modal-title">{{ tituloModal }} {{ tipoPagamento }}</h4>
     <div class="d-flex align-items-center gap-2">
-      @if (tipoCaixa === 'mesa' && matriz.configuracaoTaxaServicio.aplicar &&
+      @if (tipoCaixa === 'mesa' && matriz.configuracaoTaxaServico.aplicar &&
       vendaPagamento.taxaAplicada) {
       <button
         class="btn-comum btn-comum-vermelho"
@@ -1038,7 +1111,7 @@
       >
         Remover Serviço
       </button>
-      } @if (tipoCaixa === 'mesa' && matriz.configuracaoTaxaServicio.aplicar &&
+      } @if (tipoCaixa === 'mesa' && matriz.configuracaoTaxaServico.aplicar &&
       !vendaPagamento.taxaAplicada) {
       <button
         class="btn-comum btn-comum-verde"
@@ -1093,14 +1166,22 @@
           Pagar
         </button>
         @if (tipoCaixa === 'mesa' && !vendaPagamento.pagamentoParcial) {
-        <button
-          class="btn-comum btn-comum-laranja"
-          type="button"
-          (click)="vendaPagamento.abrirModalPagarParcial()"
-          [disabled]="!vendaPagamento.podePagarParcial"
-        >
-          Pagar Parcial
-        </button>
+        <div class="tooltip-wrapper">
+          <button
+            class="btn-comum btn-comum-laranja"
+            type="button"
+            (click)="vendaPagamento.abrirModalPagarParcial()"
+            [disabled]="!vendaPagamento.podePagarParcial"
+          >
+            Pagar Parcial
+          </button>
+          @if (!vendaPagamento.podePagarParcial) {
+          <div class="custom-tooltip">
+            Selecione mais de um produto ou quantidade maior que 1 para
+            habilitar
+          </div>
+          }
+        </div>
         }
       </div>
       <div class="d-flex justify-content-start gap-2">
@@ -1681,18 +1762,23 @@
                   </button>
 
                   @if (produto.categoria.obsObrigatotio == false) {
-                  <button
-                    type="button"
-                    class="btnObs"
-                    (click)="
-                      abrirModalObservacao(modalObservacaoTouch, produto)
-                    "
-                    [disabled]="
-                      (quantidadesProdutosVenda[produto.id] || 0) === 0
-                    "
-                  >
-                    Obs
-                  </button>
+                  <div class="tooltip-wrapper">
+                    <button
+                      type="button"
+                      class="btnObs"
+                      (click)="
+                        abrirModalObservacao(modalObservacaoTouch, produto)
+                      "
+                      [disabled]="
+                        (quantidadesProdutosVenda[produto.id] || 0) === 0
+                      "
+                    >
+                      Obs
+                    </button>
+                    @if ((quantidadesProdutosVenda[produto.id] || 0) === 0) {
+                    <div class="custom-tooltip">Quantidade mimina 1</div>
+                    }
+                  </div>
                   }
                 </div>
               </div>
@@ -1710,7 +1796,8 @@
                   Obs:{{ getObservacoesFormatadas(produtoVenda) }}
                 </p>
                 <div class="d-flex gap-2">
-                  @if (produto.categoria.obsObrigatotio == false && !produtoSelecionado) {
+                  @if (produto.categoria.obsObrigatotio == false &&
+                  !produtoSelecionado) {
                   <button
                     type="button"
                     (click)="
@@ -1727,7 +1814,8 @@
                     />
                     <span class="hover-text">Editar</span>
                   </button>
-                  } @else if (produto.categoria.obsObrigatotio == true && !produtoSelecionado) {
+                  } @else if (produto.categoria.obsObrigatotio == true &&
+                  !produtoSelecionado) {
                   <button
                     type="button"
                     (click)="
@@ -1958,18 +2046,23 @@
                     +
                   </button>
                   @if (produto.categoria.obsObrigatotio == false) {
-                  <button
-                    type="button"
-                    class="btnObs"
-                    (click)="
-                      abrirModalObservacao(modalObservacaoTouch, produto)
-                    "
-                    [disabled]="
-                      (quantidadesProdutosVenda[produto.id] || 0) === 0
-                    "
-                  >
-                    Obs
-                  </button>
+                  <div class="tooltip-wrapper">
+                    <button
+                      type="button"
+                      class="btnObs"
+                      (click)="
+                        abrirModalObservacao(modalObservacaoTouch, produto)
+                      "
+                      [disabled]="
+                        (quantidadesProdutosVenda[produto.id] || 0) === 0
+                      "
+                    >
+                      Obs
+                    </button>
+                    @if ((quantidadesProdutosVenda[produto.id] || 0) === 0) {
+                    <div class="custom-tooltip">Quantidade mimina 1</div>
+                    }
+                  </div>
                   }
                 </div>
               </div>

@@ -415,6 +415,20 @@ export class PermissaoDetalhesComponent {
       });
     }
   }
+  toggleRelatorio() {
+    const novoValor = !this.permissao.relatorio;
+    const permissoesRelacionadas = [
+      'cadastrarRelatorio',
+      'editarRelatorio',
+      'deletarRelatorio',
+    ];
+
+    if (novoValor == false) {
+      permissoesRelacionadas.forEach((permissao) => {
+        this.permissao[permissao as keyof Permissao] = novoValor;
+      });
+    }
+  }
   transferirVenda() {
     const novoValor = !this.permissao.transferirVenda;
     const permissoesRelacionadas = ['cadastrarVenda'];
@@ -648,13 +662,32 @@ export class PermissaoDetalhesComponent {
       this.permissao.produto = false;
     }
   }
+  verificarRelatorio() {
+    const permissoesRelatorio = [
+      'cadastrarRelatorio',
+      'editarRelatorio',
+      'deletarRelatorio',
+    ];
 
+    const relatorioAtivo = permissoesRelatorio.some(
+      (permissao) => this.permissao[permissao as keyof Permissao]
+    );
+
+    if (relatorioAtivo) {
+      this.permissao.relatorio = true;
+    } else {
+      this.permissao.relatorio = false;
+    }
+  }
   salvar() {
     if (!this.permissao.nome?.trim()) {
       this.toastr.error('Nome obrigatório!');
       return;
     }
-    if (this.matriz && this.matriz.configuracaoImpressao.usarImpressora == false) {
+    if (
+      this.matriz &&
+      this.matriz.configuracaoImpressao.usarImpressora == false
+    ) {
       this.permissao.imprimir = false;
     }
     if (

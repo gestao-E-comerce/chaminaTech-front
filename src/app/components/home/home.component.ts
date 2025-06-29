@@ -125,17 +125,20 @@ export class HomeComponent {
       } else {
         this.toastr.error('Acesso negado pra este usuario!');
       }
-    } else if (this.acao === 'caixaConf') {
-      if (this.usuario.permissao.historicoCaixa == true) {
-        this.modalService.dismissAll();
-        this.router.navigate(['/caixaConf']);
-      } else {
-        this.toastr.error('Acesso negado pra este usuario!');
-      }
+    } else if (this.acao === 'historicos') {
+      this.modalService.dismissAll();
+      this.router.navigate(['/historicos']);
     } else if (this.acao === 'audit') {
       if (this.usuario.permissao.auditoria == true) {
         this.modalService.dismissAll();
         this.router.navigate(['/audit']);
+      } else {
+        this.toastr.error('Acesso negado pra este usuario!');
+      }
+    } else if (this.acao === 'relatorios') {
+      if (this.usuario.permissao.relatorio == true) {
+        this.modalService.dismissAll();
+        this.router.navigate(['/relatorios']);
       } else {
         this.toastr.error('Acesso negado pra este usuario!');
       }
@@ -177,7 +180,6 @@ export class HomeComponent {
       .pipe(take(1))
       .subscribe({
         next: (caixaAtivo) => {
-          
           if (caixaAtivo) {
             this.router.navigate(['/caixa/balcao']);
           } else {

@@ -13,6 +13,29 @@
         }
       </div>
       <div class="d-flex align-items-center p-0 m-0 gap-3">
+        @if ( ((loginService.getUser().role == "MATRIZ" ||
+        loginService.getUser().role == "FUNCIONARIO")) && usuario &&
+        usuario.permissao && usuario.permissao.editarConfiguracoes) {
+        <button
+          type="button"
+          class="hover-btn icon-conf"
+          (click)="acao = 'config'; verificarUsuario(modalAbrirCaixa)"
+        >
+          <i class="bi bi-gear"></i>
+          <span class="hover-text">Configuração</span>
+        </button>
+        } @if ( (loginService.getUser().role == "ADMIN" ||
+        loginService.getUser().role == "ADMINFUNCIONARIO") && usuario &&
+        usuario.permissao && usuario.permissao.editarConfiguracoes){
+        <button
+          type="button"
+          class="hover-btn icon-conf"
+          (click)="acao = 'configadmin'; verificarUsuarioAdmin()"
+        >
+          <i class="bi bi-gear"></i>
+          <span class="hover-text">Configuração</span>
+        </button>
+        }
         <button type="button" class="hover-btn" (click)="alternarTema()">
           <i class="tema bi bi-circle-half"></i>
           <span class="hover-text">Tema</span>
@@ -21,7 +44,7 @@
           <a
             (click)="loginService.deslogar()"
             class="sair d-flex align-items-center gap-2 p-2"
-            ><i class="bi bi-box-arrow-left"></i><span>Sair</span></a
+            ><i class="bi bi-box-arrow-left"></i><span>Deslogar</span></a
           >
         </div>
       </div>
@@ -124,28 +147,26 @@
               <i class="bi bi-people-fill"></i>
               <span>Clientes</span>
             </div>
-            } @if (usuario && usuario.permissao &&
-            usuario.permissao.historicoCaixa) {
+            } @if ((usuario && usuario.permissao &&
+            usuario.permissao.historicoCaixa) || (usuario && usuario.permissao
+            && usuario.permissao.historicoVenda)) {
             <div
               class="col-3 p-5 bloco d-flex flex-column justify-content-center"
-              (click)="acao = 'caixaConf'; verificarUsuario(modalAbrirCaixa)"
+              (click)="acao = 'historicos'; verificarUsuario(modalAbrirCaixa)"
             >
-              <i class="img-caixa"
-                ><img src="../../../assets/images/caixa-gaveta.svg"
-              /></i>
-              <span class="Texto">Caixa Conf.</span>
+              <i class="bi bi-file-earmark-text"></i>
+              <span class="Texto">Históricos</span>
             </div>
             } @if (usuario && usuario.permissao &&
-            usuario.permissao.editarConfiguracoes) {
+            usuario.permissao.relatorio) {
             <div
               class="col-3 p-5 bloco d-flex flex-column justify-content-center"
-              (click)="acao = 'config'; verificarUsuario(modalAbrirCaixa)"
+              (click)="acao = 'relatorios'; verificarUsuario(modalAbrirCaixa)"
             >
-              <i class="bi bi-tools"></i>
-              <span class="Texto">Configuração</span>
+              <i class="bi bi-file-earmark-text"></i>
+              <span class="Texto">Relatórios</span>
             </div>
-            } @if (usuario && usuario.permissao && usuario.permissao.auditoria)
-            {
+            }@if (usuario && usuario.permissao && usuario.permissao.auditoria) {
             <div
               class="col-3 p-5 bloco d-flex flex-column justify-content-center"
               (click)="acao = 'audit'; verificarUsuario(modalAbrirCaixa)"
@@ -177,15 +198,6 @@
         >
           <i class="bi bi-person-lines-fill"></i>
           <span>Funcionários</span>
-        </div>
-        } @if (usuario && usuario.permissao &&
-        usuario.permissao.editarConfiguracoes){
-        <div
-          class="col-3 p-5 bloco d-flex flex-column justify-content-center"
-          (click)="acao = 'configadmin'; verificarUsuarioAdmin()"
-        >
-          <i class="bi bi-tools"></i>
-          <span class="Texto">Configuração</span>
         </div>
         }
         <!-- @if (usuario && usuario.permissao && usuario.permissao.auditoria) {

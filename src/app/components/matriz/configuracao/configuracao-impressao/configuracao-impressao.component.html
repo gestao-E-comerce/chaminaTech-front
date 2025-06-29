@@ -4,13 +4,18 @@
       <h2 class="titulo m-0">Impressão</h2>
     </div>
     <div class="d-flex align-items-center">
-      <button
-        type="submit"
-        class="btn-comum btn-comum-laranja"
-        [disabled]="!isModified()"
-      >
-        Salvar
-      </button>
+      <div class="tooltip-wrapper">
+        <button
+          type="submit"
+          class="btn-comum btn-comum-laranja"
+          [disabled]="!isModified()"
+        >
+          Salvar
+        </button>
+        @if (!isModified()) {
+        <div class="custom-tooltip">Nenhuma alteração</div>
+        }
+      </div>
     </div>
   </div>
   <div class="d-flex flex-column gap-3 p-2">
@@ -605,7 +610,6 @@
               Não
             </button>
           </div>
-          
         </div>
         <div class="d-flex flex-column">
           <label class="form-label">Imprimir comprovante gorjeta?</label>
@@ -633,7 +637,37 @@
               Não
             </button>
           </div>
-          
+        </div>
+        <div class="d-flex flex-column">
+          <label class="form-label">Imprimir comprovante consumo?</label>
+          <div class="btn-group largura">
+            <button
+              type="button"
+              class="btn btn-borda-laranja p-2"
+              [ngClass]="{
+                'btn-comum-laranja':
+                  confImpressao.imprimirComprovanteConsumo === true,
+                'btn-borda-laranja':
+                  confImpressao.imprimirComprovanteConsumo !== true
+              }"
+              (click)="confImpressao.imprimirComprovanteConsumo = true"
+            >
+              Sim
+            </button>
+            <button
+              type="button"
+              class="btn btn-borda-laranja p-2"
+              [ngClass]="{
+                'btn-comum-laranja':
+                  confImpressao.imprimirComprovanteConsumo === false,
+                'btn-borda-laranja':
+                  confImpressao.imprimirComprovanteConsumo !== false
+              }"
+              (click)="confImpressao.imprimirComprovanteConsumo = false"
+            >
+              Não
+            </button>
+          </div>
         </div>
       </div>
     </div>

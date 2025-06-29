@@ -29,6 +29,21 @@
       'h-75': urlString === 'caixa'
     }"
   >
+    <div class="d-flex flex-column w-100 mb-2">
+      <label>Nome Cliente</label>
+      <div class="filtro-pesquisa">
+        <input
+          class="form-control"
+          type="text"
+          placeholder="nome"
+          [(ngModel)]="nome"
+          (keydown.enter)="filtrarClientes()"
+        />
+        <button type="button" class="botao_cep" (click)="filtrarClientes()">
+          <img src="../../../../../../assets/images/search.svg" class="busca" />
+        </button>
+      </div>
+    </div>
     @for (venda of listaVendasCliente; track $index) {
     <button
       type="button"

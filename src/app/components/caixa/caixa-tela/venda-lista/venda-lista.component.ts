@@ -9,11 +9,12 @@ import { SocketService } from '../../../../services/socket.service';
 import { take } from 'rxjs';
 import { Matriz } from '../../../../models/matriz';
 import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-venda-lista',
   standalone: true,
-  imports: [NgClass, CurrencyPipe],
+  imports: [NgClass, CurrencyPipe, FormsModule],
   templateUrl: './venda-lista.component.html',
   styleUrl: './venda-lista.component.scss',
 })
@@ -55,6 +56,7 @@ export class VendaListaComponent implements OnInit {
   totalVenda: number = 0;
   tempo!: string;
   exibirTotal: boolean = false;
+  nome?: string = '';
 
   toggleTotalVisibility(): void {
     this.exibirTotal = !this.exibirTotal;
@@ -138,9 +140,17 @@ export class VendaListaComponent implements OnInit {
       },
     });
   }
-  listarCuponsEntrega() {
+  filtrarClientes() {
+    this.nome = this.nome?.toLocaleUpperCase();
+    if (this.tipoCaixa === 'entrega') {
+      this.listarCuponsEntrega(this.nome);
+    } else if (this.tipoCaixa === 'retirada') {
+      this.listarCuponsRetirada(this.nome);
+    }
+  }
+  listarCuponsEntrega(nome?: string) {
     if (this.tipoCaixa !== 'entrega') return;
-    this.gestaoCaixaService.buscarCuponsEntregaByMatrizId().subscribe({
+    this.gestaoCaixaService.buscarCuponsEntregaByMatrizId(nome).subscribe({
       next: (numeros) => {
         const agora = new Date().getTime();
         this.listaVendasCliente = numeros.map((venda) => {
@@ -159,9 +169,9 @@ export class VendaListaComponent implements OnInit {
       },
     });
   }
-  listarCuponsRetirada() {
+  listarCuponsRetirada(nome?: string) {
     if (this.tipoCaixa !== 'retirada') return;
-    this.gestaoCaixaService.buscarCuponsRetiradaByMatrizId().subscribe({
+    this.gestaoCaixaService.buscarCuponsRetiradaByMatrizId(nome).subscribe({
       next: (numeros) => {
         const agora = new Date().getTime();
         this.listaVendasCliente = numeros.map((venda) => {

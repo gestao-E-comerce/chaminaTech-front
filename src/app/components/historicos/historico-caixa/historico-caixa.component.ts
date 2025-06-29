@@ -1,28 +1,28 @@
+import { DatePipe, NgClass } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { DatePipe, NgClass } from '@angular/common';
-import { Usuario } from '../../models/usuario';
+import { SangriaComponent } from '../../caixa/sangria/sangria.component';
+import { SuprimentoComponent } from '../../caixa/suprimento/suprimento.component';
 import { Router, RouterLink } from '@angular/router';
+import { GorjetaComponent } from '../../caixa/gorjeta/gorjeta.component';
+import { Caixa } from '../../../models/caixa';
+import { CaixaService } from '../../../services/caixa.service';
+import { SangriaService } from '../../../services/sangria.service';
+import { SuprimentoService } from '../../../services/suprimento.service';
+import { GorjetaService } from '../../../services/gorjeta.service';
+import { ImpressaoService } from '../../../services/impressao.service';
+import { GlobalService } from '../../../services/global.service';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
-import { ImpressaoService } from '../../services/impressao.service';
-import { Caixa } from '../../models/caixa';
-import { CaixaService } from '../../services/caixa.service';
-import { Sangria } from '../../models/sangria';
-import { Suprimento } from '../../models/suprimento';
+import { Usuario } from '../../../models/usuario';
+import { Sangria } from '../../../models/sangria';
+import { Suprimento } from '../../../models/suprimento';
+import { Gorjeta } from '../../../models/gorjeta';
+import { Matriz } from '../../../models/matriz';
 import { forkJoin, take } from 'rxjs';
-import { SangriaComponent } from '../caixa/sangria/sangria.component';
-import { SuprimentoComponent } from '../caixa/suprimento/suprimento.component';
-import { SangriaService } from '../../services/sangria.service';
-import { SuprimentoService } from '../../services/suprimento.service';
-import { GlobalService } from '../../services/global.service';
-import { Matriz } from '../../models/matriz';
-import { Gorjeta } from '../../models/gorjeta';
-import { GorjetaService } from '../../services/gorjeta.service';
-import { GorjetaComponent } from "../caixa/gorjeta/gorjeta.component";
 
 @Component({
-  selector: 'app-caixa-configuracao',
+  selector: 'app-historico-caixa',
   standalone: true,
   imports: [
     FormsModule,
@@ -31,12 +31,12 @@ import { GorjetaComponent } from "../caixa/gorjeta/gorjeta.component";
     SangriaComponent,
     SuprimentoComponent,
     RouterLink,
-    GorjetaComponent
-],
-  templateUrl: './caixa-configuracao.component.html',
-  styleUrl: './caixa-configuracao.component.scss',
+    GorjetaComponent,
+  ],
+  templateUrl: './historico-caixa.component.html',
+  styleUrl: './historico-caixa.component.scss',
 })
-export class CaixaConfiguracaoComponent implements OnInit {
+export class HistoricoCaixaComponent implements OnInit {
   listaCaixasOrginal: Caixa[] = [];
   listaCaixasFiltrada: Caixa[] = [];
 
@@ -99,7 +99,6 @@ export class CaixaConfiguracaoComponent implements OnInit {
         },
       });
   }
-
   atualizar() {
     this.idCaixaSelecionado = this.caixaSelecionado
       ? this.caixaSelecionado.id
@@ -134,6 +133,19 @@ export class CaixaConfiguracaoComponent implements OnInit {
     this.caixaSelecionado = caixa;
     this.active = caixa;
     this.menuAberto = false;
+
+    if (caixa.vendas) {
+      caixa.vendas = caixa.vendas.filter((v: any) => v.ativo);
+    }
+    if (caixa.sangrias) {
+      caixa.sangrias = caixa.sangrias.filter((v: any) => v.ativo);
+    }
+    if (caixa.suprimentos) {
+      caixa.suprimentos = caixa.suprimentos.filter((v: any) => v.ativo);
+    }
+    if (caixa.gorjetas) {
+      caixa.gorjetas = caixa.gorjetas.filter((v: any) => v.ativo);
+    }
 
     this.defenirSaldos(caixa);
   }
@@ -202,6 +214,9 @@ export class CaixaConfiguracaoComponent implements OnInit {
   }
 
   editarSangria(modalSangria: any, sangria: Sangria, indice: number) {
+    if (this.caixaSelecionado != null) {
+      this.caixa = this.caixaSelecionado;
+    }
     this.sangria = Object.assign({}, sangria);
     this.indice = indice;
 
@@ -210,6 +225,9 @@ export class CaixaConfiguracaoComponent implements OnInit {
   }
 
   deletarSangria(modalDelatarSangria: any, sangria: Sangria) {
+    if (this.caixaSelecionado != null) {
+      this.caixa = this.caixaSelecionado;
+    }
     this.sangria = Object.assign({}, sangria);
     this.deletar = 0;
     this.modalRef = this.modalService.open(modalDelatarSangria, { size: 'md' });
@@ -233,6 +251,7 @@ export class CaixaConfiguracaoComponent implements OnInit {
       next: (mensagem) => {
         this.toastr.success(mensagem.mensagem);
         this.modalRef.close();
+        this.atualizar();
       },
     });
   }
@@ -242,6 +261,9 @@ export class CaixaConfiguracaoComponent implements OnInit {
     suprimento: Suprimento,
     indice: number
   ) {
+    if (this.caixaSelecionado != null) {
+      this.caixa = this.caixaSelecionado;
+    }
     this.suprimento = Object.assign({}, suprimento);
     this.indice = indice;
 
@@ -250,6 +272,9 @@ export class CaixaConfiguracaoComponent implements OnInit {
   }
 
   deletarSuprimento(modalDelatarSuprimento: any, suprimento: Suprimento) {
+    if (this.caixaSelecionado != null) {
+      this.caixa = this.caixaSelecionado;
+    }
     this.suprimento = Object.assign({}, suprimento);
     this.deletar = 1;
     this.modalRef = this.modalService.open(modalDelatarSuprimento, {
@@ -263,10 +288,14 @@ export class CaixaConfiguracaoComponent implements OnInit {
       next: (mensagem) => {
         this.toastr.success(mensagem.mensagem);
         this.modalRef.close();
+        this.atualizar();
       },
     });
   }
   editarGorjeta(modalGorjeta: any, gorjeta: Gorjeta, indice: number) {
+    if (this.caixaSelecionado != null) {
+      this.caixa = this.caixaSelecionado;
+    }
     this.gorjeta = Object.assign({}, gorjeta);
     this.indice = indice;
 
@@ -275,6 +304,9 @@ export class CaixaConfiguracaoComponent implements OnInit {
   }
 
   deletarGorjeta(modalDelatarGorjeta: any, gorjeta: Gorjeta) {
+    if (this.caixaSelecionado != null) {
+      this.caixa = this.caixaSelecionado;
+    }
     this.gorjeta = Object.assign({}, gorjeta);
     this.deletar = 3;
     this.modalRef = this.modalService.open(modalDelatarGorjeta, {

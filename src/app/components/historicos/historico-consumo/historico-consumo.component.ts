@@ -1,28 +1,29 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { Venda } from '../../../models/venda';
-import { VendaService } from '../../../services/venda.service';
+import { DatePipe, NgClass } from '@angular/common';
+import { Component, inject, Input, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
 import { GestaoCaixa } from '../../../models/gestao-caixa';
 import { GestaoCaixaService } from '../../../services/gestao-caixa.service';
-import { FormsModule } from '@angular/forms';
-import { DatePipe, NgClass } from '@angular/common';
-import { Observacoes } from '../../../models/observacoes';
-import { Usuario } from '../../../models/usuario';
-import { Router } from '@angular/router';
+import { ImpressaoService } from '../../../services/impressao.service';
+import { GlobalService } from '../../../services/global.service';
+import { VendaService } from '../../../services/venda.service';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
-import { ImpressaoService } from '../../../services/impressao.service';
-import { take } from 'rxjs';
-import { GlobalService } from '../../../services/global.service';
+import { Usuario } from '../../../models/usuario';
+import { Venda } from '../../../models/venda';
 import { Matriz } from '../../../models/matriz';
+import { take } from 'rxjs';
+import { Observacoes } from '../../../models/observacoes';
 
 @Component({
-  selector: 'app-historico-vendas',
+  selector: 'app-historico-consumo',
   standalone: true,
-  imports: [FormsModule, DatePipe, NgClass],
-  templateUrl: './historico-vendas.component.html',
-  styleUrl: './historico-vendas.component.scss',
+  imports: [FormsModule, DatePipe, NgClass, RouterLink],
+  templateUrl: './historico-consumo.component.html',
+  styleUrl: './historico-consumo.component.scss',
 })
-export class HistoricoVendasComponent implements OnInit {
+export class HistoricoConsumoComponent implements OnInit {
+  @Input() modoModal: boolean = false;
   listaCuponsOrginal: GestaoCaixa[] = [];
   listaCuponsFiltrada: GestaoCaixa[] = [];
 
@@ -72,7 +73,7 @@ export class HistoricoVendasComponent implements OnInit {
   }
 
   listaCupons(tipo?: string, cupom?: number) {
-    this.gestaoCaixaService.buscarCuponsHistorico(tipo, cupom).subscribe({
+    this.gestaoCaixaService.buscarCuponsConsumosHistorico(tipo, cupom).subscribe({
       next: (listaCupons) => {
         this.listaCuponsOrginal = listaCupons;
         this.listaCuponsFiltrada = listaCupons;
@@ -154,14 +155,5 @@ export class HistoricoVendasComponent implements OnInit {
         this.modalRef.close();
       },
     });
-  }
-  imprimirNotaFiscal() {
-    console.log('Nota Fiscal');
-    // this.impressaoService.imprimirNotaFiscal(this.venda).subscribe({
-    //   next: (mensagem) => {
-    //     this.toastr.success(mensagem.mensagem);
-    //     this.modalRef.close();
-    //   },
-    // });
   }
 }

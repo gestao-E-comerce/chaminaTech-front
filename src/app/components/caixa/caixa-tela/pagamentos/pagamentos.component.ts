@@ -25,10 +25,11 @@ import { take } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { Observacoes } from '../../../../models/observacoes';
 import { ProdutoVenda } from '../../../../models/produto-venda';
+import { DecimalPipe } from '@angular/common';
 @Component({
   selector: 'app-pagamentos',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, DecimalPipe],
   templateUrl: './pagamentos.component.html',
   styleUrl: './pagamentos.component.scss',
 })
@@ -410,19 +411,19 @@ export class PagamentosComponent implements OnInit {
     valorTotal += vendaCalcular.taxaEntrega ?? 0;
     if (
       this.tipoCaixa === 'mesa' &&
-      this.matriz.configuracaoTaxaServicio.aplicar
+      this.matriz.configuracaoTaxaServico.aplicar
     ) {
       if (
-        this.matriz.configuracaoTaxaServicio.tipo === 'PERCENTUAL' &&
-        this.matriz.configuracaoTaxaServicio.percentual > 0
+        this.matriz.configuracaoTaxaServico.tipo === 'PERCENTUAL' &&
+        this.matriz.configuracaoTaxaServico.percentual > 0
       ) {
         taxa =
-          (valorTotal * this.matriz.configuracaoTaxaServicio.percentual) / 100;
+          (valorTotal * this.matriz.configuracaoTaxaServico.percentual) / 100;
       } else if (
-        this.matriz.configuracaoTaxaServicio.tipo === 'FIXO' &&
-        this.matriz.configuracaoTaxaServicio.valorFixo > 0
+        this.matriz.configuracaoTaxaServico.tipo === 'FIXO' &&
+        this.matriz.configuracaoTaxaServico.valorFixo > 0
       ) {
-        taxa = this.matriz.configuracaoTaxaServicio.valorFixo;
+        taxa = this.matriz.configuracaoTaxaServico.valorFixo;
       }
       valorTotal += taxa;
     }
@@ -637,7 +638,6 @@ export class PagamentosComponent implements OnInit {
 
     dinheiroTotal -= excedente;
 
-    this.toastr.success(`Troco: R$ ${excedente.toFixed(2)}`);
     this.definirPagamentoEEmitir(
       dinheiroTotal,
       debitoTotal,
@@ -753,6 +753,23 @@ export class PagamentosComponent implements OnInit {
       this.toastr.error(
         'Selecione ao menos um produto para pagamento parcial!'
       );
+      return;
+    }
+    const totalParcial = this.vendaParcial.produtoVendas.reduce(
+      (acc, p) => acc + p.quantidade,
+      0
+    );
+    const totalOriginal =
+      this.vendaOriginal.produtoVendas.reduce(
+        (acc, p) => acc + p.quantidade,
+        0
+      ) + totalParcial;
+
+    if (totalParcial === totalOriginal) {
+      this.toastr.error(
+        'Não é possível fazer pagamento parcial com todos os produtos selecionados!'
+      );
+      this.vendaParcial = new Venda();
       return;
     }
 

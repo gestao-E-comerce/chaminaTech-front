@@ -109,6 +109,6 @@ export class CaixaService {
     return this.http.get<number>(`${this.API}/${caixaId}/totalDescontos`);
   }
   getTotalServicosByCaixaId(caixaId: number): Observable<number> {
-    return this.http.get<number>(`${this.API}/${caixaId}/totalServicios`);
+    return this.http.get<number>(`${this.API}/${caixaId}/totalServicos`);
   }
 }

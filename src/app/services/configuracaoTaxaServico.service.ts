@@ -10,11 +10,11 @@ import { ConfiguracaoTaxaServico } from '../models/configuracao-taxa-servico';
   providedIn: 'root',
 })
 export class ConfiguracaoTaxaServicoService {
-  private readonly API = `${Config.BACKEND_URL}/confTaxaServicio`;
+  private readonly API = `${Config.BACKEND_URL}/confTaxaServico`;
   http = inject(HttpClient);
   globalService = inject(GlobalService);
 
-  buscarConfiguracaoTaxaServicio(): Observable<ConfiguracaoTaxaServico> {
+  buscarconfiguracaoTaxaServico(): Observable<ConfiguracaoTaxaServico> {
     return this.globalService.getMatrizAsync().pipe(
       switchMap((matriz) => {
         return this.http.get<ConfiguracaoTaxaServico>(
@@ -25,12 +25,12 @@ export class ConfiguracaoTaxaServicoService {
   }
 
   salvar(
-    configuracaoTaxaServicio: ConfiguracaoTaxaServico
+    configuracaoTaxaServico: ConfiguracaoTaxaServico
   ): Observable<Mensagem> {
     return this.globalService.getMatrizAsync().pipe(
       switchMap((matriz) => {
-        configuracaoTaxaServicio.matriz = matriz;
-        return this.http.post<Mensagem>(this.API, configuracaoTaxaServicio);
+        configuracaoTaxaServico.matriz = matriz;
+        return this.http.post<Mensagem>(this.API, configuracaoTaxaServico);
       })
     );
   }

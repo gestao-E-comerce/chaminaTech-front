@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CaixaConfiguracaoComponent } from './caixa-configuracao.component';
+import { CaixaConfiguracaoComponent } from './historicos.component';
 
 describe('CaixaConfiguracaoComponent', () => {
   let component: CaixaConfiguracaoComponent;
