@@ -45,4 +45,5 @@ export class RelatorioService {
   deletar(id: number): Observable<Mensagem> {
     return this.http.delete<Mensagem>(`${this.API}/${id}`);
   }
+
 }
