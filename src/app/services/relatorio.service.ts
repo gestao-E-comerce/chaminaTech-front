@@ -5,6 +5,8 @@ import { Mensagem } from '../models/mensagem';
 import { GlobalService } from './global.service';
 import { Config } from '../../config';
 import { Relatorio } from '../models/relatorio';
+import { Pagina } from '../models/pagina';
+import { Venda } from '../models/venda';
 
 @Injectable({
   providedIn: 'root',
@@ -45,5 +47,13 @@ export class RelatorioService {
   deletar(id: number): Observable<Mensagem> {
     return this.http.delete<Mensagem>(`${this.API}/${id}`);
   }
-
+  gerarRelatorio(relatorio: Relatorio): Observable<Pagina<Venda>> {
+    return this.http.post<Pagina<Venda>>(
+      `${this.API}/gerarRelatorio`,
+      relatorio
+    );
+  }
+  gerarGrafico(relatorio: Relatorio): Observable<any[]> {
+    return this.http.post<any[]>(`${this.API}/grafico`, relatorio);
+  }
 }

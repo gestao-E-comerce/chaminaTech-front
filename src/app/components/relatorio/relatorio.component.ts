@@ -1,4 +1,4 @@
-import { NgClass } from '@angular/common';
+import { CurrencyPipe, DatePipe, NgClass } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -13,11 +13,22 @@ import { take } from 'rxjs';
 import { Mensagem } from '../../models/mensagem';
 import { Funcionario } from '../../models/funcionario';
 import { FuncionarioService } from '../../services/funcionario.service';
+import { Venda } from '../../models/venda';
+import { NgxMaskDirective } from 'ngx-mask';
+import { Cliente } from '../../models/cliente';
+import { ClienteService } from '../../services/cliente.service';
 
 @Component({
   selector: 'app-relatorio',
   standalone: true,
-  imports: [FormsModule, NgClass, RouterLink],
+  imports: [
+    FormsModule,
+    NgClass,
+    RouterLink,
+    DatePipe,
+    NgxMaskDirective,
+    CurrencyPipe,
+  ],
   templateUrl: './relatorio.component.html',
   styleUrl: './relatorio.component.scss',
 })
@@ -27,6 +38,7 @@ export class RelatorioComponent {
   funcionarioService = inject(FuncionarioService);
   relatorioService = inject(RelatorioService);
   globalService = inject(GlobalService);
+  clienteService = inject(ClienteService);
   modalService = inject(NgbModal);
   toastr = inject(ToastrService);
   router = inject(Router);
@@ -36,13 +48,19 @@ export class RelatorioComponent {
   matriz: Matriz = new Matriz();
   relatorio: Relatorio = new Relatorio();
   funcionarios: Funcionario[] = [];
+  clientes: Cliente[] = [];
+  listaVendas: Venda[] = [];
 
   tituloModal!: string;
   active!: any;
   relatorioSelecionado!: Relatorio | null;
   urlString!: string;
-  menuAberto = false;
+  menuAberto = true;
   indice!: number;
+  page!: number;
+  size!: number;
+  totalPages: number = 0;
+  dadosGrafico: any[] = [];
 
   ngOnInit() {
     this.urlString = this.router.url.split('/')[1] ?? '';
@@ -71,33 +89,51 @@ export class RelatorioComponent {
               this.toastr.error('Erro ao filtrar funcionarios.');
             },
           });
+          this.clienteService.listarClientesPorMatrizId().subscribe({
+            next: (lista) => {
+              this.clientes = lista || [];
+            },
+            error: () => {
+              this.toastr.error('Erro ao filtrar funcionarios.');
+            },
+          });
         },
       });
   }
 
   alternarTipoVenda(tipo: string) {
-    if (!this.relatorio.tiposVenda) {
-      this.relatorio.tiposVenda = [];
-    }
-
-    const index = this.relatorio.tiposVenda.indexOf(tipo);
-    if (index > -1) {
-      this.relatorio.tiposVenda.splice(index, 1);
-    } else {
-      this.relatorio.tiposVenda.push(tipo);
+    switch (tipo) {
+      case 'MESA':
+        this.relatorio.mesa = this.relatorio.mesa === true ? null : true;
+        break;
+      case 'BALCAO':
+        this.relatorio.balcao = this.relatorio.balcao === true ? null : true;
+        break;
+      case 'ENTREGA':
+        this.relatorio.entrega = this.relatorio.entrega === true ? null : true;
+        break;
+      case 'RETIRADA':
+        this.relatorio.retirada =
+          this.relatorio.retirada === true ? null : true;
+        break;
     }
   }
 
-  alternarTipoPagamento(forma: string) {
-    if (!this.relatorio.formasPagamento) {
-      this.relatorio.formasPagamento = [];
-    }
-
-    const index = this.relatorio.formasPagamento.indexOf(forma);
-    if (index > -1) {
-      this.relatorio.formasPagamento.splice(index, 1);
-    } else {
-      this.relatorio.formasPagamento.push(forma);
+  alternarTipoPagamento(tipo: string) {
+    switch (tipo) {
+      case 'PIX':
+        this.relatorio.pix = this.relatorio.pix === true ? null : true;
+        break;
+      case 'CREDITO':
+        this.relatorio.credito = this.relatorio.credito === true ? null : true;
+        break;
+      case 'DEBITO':
+        this.relatorio.debito = this.relatorio.debito === true ? null : true;
+        break;
+      case 'DINHEIRO':
+        this.relatorio.dinheiro =
+          this.relatorio.dinheiro === true ? null : true;
+        break;
     }
   }
 
@@ -136,12 +172,141 @@ export class RelatorioComponent {
     });
   }
 
-  selecionarRelatorio(cupom: any) {
-    this.relatorioSelecionado = cupom;
-    this.active = cupom;
+  selecionarRelatorio(relatorio: any) {
+    this.relatorio = relatorio;
+    this.active = relatorio;
     this.menuAberto = false;
   }
+
+  convertStringToDate(value: string): Date | null {
+    const numeros = value.replace(/\D/g, '');
+
+    if (numeros.length !== 8 && numeros.length !== 12) {
+      throw new Error('Formato inválido: use ddMMyyyy ou ddMMyyyyHHmm');
+    }
+
+    const dia = parseInt(numeros.substring(0, 2), 10);
+    const mes = parseInt(numeros.substring(2, 4), 10);
+    const ano = parseInt(numeros.substring(4, 8), 10);
+    const hora =
+      numeros.length === 12 ? parseInt(numeros.substring(8, 10), 10) : 0;
+    const minuto =
+      numeros.length === 12 ? parseInt(numeros.substring(10, 12), 10) : 0;
+
+    const data = new Date(ano, mes - 1, dia, hora, minuto);
+
+    if (
+      isNaN(data.getTime()) ||
+      data.getDate() !== dia ||
+      data.getMonth() + 1 !== mes ||
+      data.getFullYear() !== ano ||
+      data.getHours() !== hora ||
+      data.getMinutes() !== minuto
+    ) {
+      throw new Error('Data inválida');
+    }
+
+    return data;
+  }
+
   aplicarRelatorio() {
+    if (!this.relatorio.tipoConsulta?.trim()) {
+      this.toastr.error('Tipo de objeto obrigatório!');
+      return;
+    }
+
+    let di: Date | undefined;
+    let df: Date | undefined;
+
+    if (this.relatorio.dataInicio) {
+      const dataConvertida = this.convertStringToDate(
+        this.relatorio.dataInicio
+      );
+      if (!dataConvertida) throw new Error('Data Início inválida');
+      di = dataConvertida;
+    }
+
+    if (this.relatorio.dataFim) {
+      const dataConvertida = this.convertStringToDate(this.relatorio.dataFim);
+      if (!dataConvertida) throw new Error('Data Fim inválida');
+      df = dataConvertida;
+    }
+
+    if (di && df && df < di) {
+      this.toastr.error('Data Fim não pode ser anterior à Data Início');
+      return;
+    }
     console.log('Relatorio:', this.relatorio);
+    this.relatorio.nome = 'Relatório ' + this.relatorio.tipoConsulta;
+    this.relatorioService.save(this.relatorio).subscribe({
+      next: (mensagem) => {
+        this.listaRelatorios();
+        this.gerarRelatorio(this.relatorio);
+        this.gerarGrafico(this.relatorio);
+      },
+      error: (erro) => {
+        this.toastr.error(erro.error.mensagem);
+      },
+    });
+  }
+  gerarGrafico(relatorio: Relatorio) {
+    this.relatorioService.gerarGrafico(relatorio).subscribe({
+      next: (dados) => {
+        this.dadosGrafico = dados;
+        console.log('Dados do gráfico:', dados);
+        // aqui você pode montar o gráfico com Chart.js, Recharts etc
+      },
+      error: () => {
+        this.toastr.error('Erro ao gerar gráfico.');
+      },
+    });
+  }
+  gerarRelatorio(relatorio: Relatorio) {
+    this.relatorioService.gerarRelatorio(relatorio).subscribe({
+      next: (resultado) => {
+        this.listaVendas = resultado.content;
+        this.page = resultado.number;
+        this.size = resultado.size;
+        this.totalPages = resultado.totalPages;
+      },
+      error: (err) => {
+        this.toastr.error('Erro ao gerar relatório.');
+      },
+    });
+  }
+  setPage(i: number) {
+    if (i >= 0 && i < this.totalPages) {
+      this.page = i;
+      this.relatorio.tamanho = this.size;
+      this.relatorio.pagina = this.page;
+      this.gerarRelatorio(this.relatorio);
+    }
+  }
+  alterarTamanho(event: Event) {
+    const valor = +(event.target as HTMLSelectElement).value;
+    this.size = valor;
+    this.page = 0;
+    this.relatorio.tamanho = this.size;
+    this.relatorio.pagina = this.page;
+    this.gerarRelatorio(this.relatorio);
+  }
+  pagesVisiveis(): number[] {
+    const total = this.totalPages;
+    const atual = this.page;
+
+    const maxVisiveis = 5;
+    let inicio = Math.max(0, atual - Math.floor(maxVisiveis / 2));
+    let fim = inicio + maxVisiveis;
+
+    if (fim > total) {
+      fim = total;
+      inicio = Math.max(0, fim - maxVisiveis);
+    }
+
+    const intervalo = [];
+    for (let i = inicio; i < fim; i++) {
+      intervalo.push(i);
+    }
+    return intervalo;
   }
 }

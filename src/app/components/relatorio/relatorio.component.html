@@ -15,7 +15,7 @@
         type="button"
         name="sair"
         class="botao_voltar mb-2"
-        routerLink="/historicos"
+        routerLink="/home"
       >
         <i class="bi bi-arrow-left"></i>
       </button>
@@ -28,7 +28,7 @@
             type="button"
             name="sair"
             class="botao_voltar me-2"
-            routerLink="/historicos"
+            routerLink="/home"
           >
             <i class="bi bi-arrow-left"></i>
           </button>
@@ -44,11 +44,11 @@
         type="button"
         name="{{ relatorio.id }}"
         (click)="selecionarRelatorio(relatorio)"
-        class="btn-lista d-flex align-items-center text-start px-3 py-2 m-1"
+        class="btn-lista d-flex align-items-center justify-content-between px-3 py-2 m-1"
         [ngClass]="{ 'btn-lista-active': active == relatorio }"
       >
         <span class="text-start" style="width: 150px">
-          <strong>Relatório </strong> {{ relatorio.nome }}
+          <strong>{{ relatorio.nome }}</strong>
         </span>
         @if (usuario && usuario.permissao && usuario.permissao.deletarRelatorio)
         {
@@ -70,12 +70,12 @@
     </div>
     }
   </div>
-  <div class="d-flex flex-column p-3 w-100 content-container">
+  <div class="d-flex flex-column p-3 w-100 content-container gap-2">
     <div class="d-flex flex-wrap gap-3">
       <div class="d-flex flex-column w-20">
         <label>Tipo de objeto</label>
         <select class="select-filtro p-1" [(ngModel)]="relatorio.tipoConsulta">
-          <option [ngValue]="undefined">Selecione</option>
+          <option [ngValue]="null">Selecione</option>
           <option value="VENDA">Venda</option>
 
           <!-- <option value="CATEGORIA">Categoria</option>
@@ -96,18 +96,40 @@
       <div class="d-flex flex-column w-20">
         <label>Data Início</label>
         <input
-          type="datetime-local"
-          class="select-filtro p-1"
+          type="text"
+          inputmode="numeric"
+          class="form-control"
           [(ngModel)]="relatorio.dataInicio"
+          mask="00/00/0000 00:00"
+          placeholder="dd/MM/aaaa hh:mm"
+          [disabled]="!relatorio.tipoConsulta"
         />
       </div>
       <div class="d-flex flex-column w-20">
         <label>Data Fim</label>
         <input
-          type="datetime-local"
-          class="select-filtro p-1"
+          type="text"
+          inputmode="numeric"
+          class="form-control"
           [(ngModel)]="relatorio.dataFim"
+          [disabled]="!relatorio.tipoConsulta"
+          mask="00/00/0000 00:00"
+          placeholder="dd/MM/aaaa hh:mm"
         />
+      </div>
+      <div class="d-flex flex-column w-20">
+        <label>Período</label>
+        <select
+          class="select-filtro p-1"
+          [(ngModel)]="relatorio.periodoDia"
+          [disabled]="!relatorio.tipoConsulta"
+        >
+          <option [ngValue]="null">Selecione</option>
+          <option value="MANHA">Manhã</option>
+          <option value="TARDE">Tarde</option>
+          <option value="NOITE">Noite</option>
+          <option value="MADRUGADA">Madrugada</option>
+        </select>
       </div>
       <div class="d-flex flex-column w-25">
         <label>Tipos de Venda</label>
@@ -115,10 +137,11 @@
           <button
             class="btn-comum btn-selecionar"
             [ngClass]="{
-              'btn-selecionar-foco': relatorio.tiposVenda.includes('MESA'),
-              'btn-selecionar': !relatorio.tiposVenda.includes('MESA')
+              'btn-selecionar-foco': relatorio.mesa,
+              'btn-selecionar': !relatorio.mesa
             }"
             (click)="alternarTipoVenda('MESA')"
+            [disabled]="!relatorio.tipoConsulta"
           >
             Mesa
           </button>
@@ -126,10 +149,11 @@
           <button
             class="btn-comum btn-selecionar"
             [ngClass]="{
-              'btn-selecionar-foco': relatorio.tiposVenda.includes('BALCAO'),
-              'btn-selecionar': !relatorio.tiposVenda.includes('BALCAO')
+              'btn-selecionar-foco': relatorio.balcao,
+              'btn-selecionar': !relatorio.balcao
             }"
             (click)="alternarTipoVenda('BALCAO')"
+            [disabled]="!relatorio.tipoConsulta"
           >
             Balcão
           </button>
@@ -137,10 +161,11 @@
           <button
             class="btn-comum btn-selecionar"
             [ngClass]="{
-              'btn-selecionar-foco': relatorio.tiposVenda.includes('ENTREGA'),
-              'btn-selecionar': !relatorio.tiposVenda.includes('ENTREGA')
+              'btn-selecionar-foco': relatorio.entrega,
+              'btn-selecionar': !relatorio.entrega
             }"
             (click)="alternarTipoVenda('ENTREGA')"
+            [disabled]="!relatorio.tipoConsulta"
           >
             Entrega
           </button>
@@ -148,26 +173,28 @@
           <button
             class="btn-comum btn-selecionar"
             [ngClass]="{
-              'btn-selecionar-foco': relatorio.tiposVenda.includes('RETIRADA'),
-              'btn-selecionar': !relatorio.tiposVenda.includes('RETIRADA')
+              'btn-selecionar-foco': relatorio.retirada,
+              'btn-selecionar': !relatorio.retirada
             }"
             (click)="alternarTipoVenda('RETIRADA')"
+            [disabled]="!relatorio.tipoConsulta"
           >
             Retirada
           </button>
         </div>
       </div>
+
       <div class="d-flex flex-column w-20">
         <label>Formas de Pagamento</label>
         <div class="d-flex flex-wrap gap-2">
           <button
             class="btn-comum btn-selecionar"
             [ngClass]="{
-              'btn-selecionar-foco':
-                relatorio.formasPagamento.includes('DINHEIRO'),
-              'btn-selecionar': !relatorio.formasPagamento.includes('DINHEIRO')
+              'btn-selecionar-foco': relatorio.dinheiro,
+              'btn-selecionar': !relatorio.dinheiro
             }"
             (click)="alternarTipoPagamento('DINHEIRO')"
+            [disabled]="!relatorio.tipoConsulta"
           >
             Dinheiro
           </button>
@@ -175,11 +202,11 @@
           <button
             class="btn-comum btn-selecionar"
             [ngClass]="{
-              'btn-selecionar-foco':
-                relatorio.formasPagamento.includes('CREDITO'),
-              'btn-selecionar': !relatorio.formasPagamento.includes('CREDITO')
+              'btn-selecionar-foco': relatorio.credito,
+              'btn-selecionar': !relatorio.credito
             }"
             (click)="alternarTipoPagamento('CREDITO')"
+            [disabled]="!relatorio.tipoConsulta"
           >
             Crédito
           </button>
@@ -187,11 +214,11 @@
           <button
             class="btn-comum btn-selecionar"
             [ngClass]="{
-              'btn-selecionar-foco':
-                relatorio.formasPagamento.includes('DEBITO'),
-              'btn-selecionar': !relatorio.formasPagamento.includes('DEBITO')
+              'btn-selecionar-foco': relatorio.debito,
+              'btn-selecionar': !relatorio.debito
             }"
             (click)="alternarTipoPagamento('DEBITO')"
+            [disabled]="!relatorio.tipoConsulta"
           >
             Débito
           </button>
@@ -199,10 +226,11 @@
           <button
             class="btn-comum btn-selecionar"
             [ngClass]="{
-              'btn-selecionar-foco': relatorio.formasPagamento.includes('PIX'),
-              'btn-selecionar': !relatorio.formasPagamento.includes('PIX')
+              'btn-selecionar-foco': relatorio.pix,
+              'btn-selecionar': !relatorio.pix
             }"
             (click)="alternarTipoPagamento('PIX')"
+            [disabled]="!relatorio.tipoConsulta"
           >
             Pix
           </button>
@@ -219,6 +247,7 @@
               'btn-borda-laranja': relatorio.deletado !== true
             }"
             (click)="relatorio.deletado = true"
+            [disabled]="!relatorio.tipoConsulta"
           >
             SIM
           </button>
@@ -230,6 +259,7 @@
               'btn-borda-laranja': relatorio.deletado !== false
             }"
             (click)="relatorio.deletado = false"
+            [disabled]="!relatorio.tipoConsulta"
           >
             NÃO
           </button>
@@ -241,6 +271,7 @@
               'btn-borda-laranja': relatorio.deletado !== null
             }"
             (click)="relatorio.deletado = null"
+            [disabled]="!relatorio.tipoConsulta"
           >
             TODOS
           </button>
@@ -257,6 +288,7 @@
               'btn-borda-laranja': relatorio.desconto !== true
             }"
             (click)="relatorio.desconto = true"
+            [disabled]="!relatorio.tipoConsulta"
           >
             SIM
           </button>
@@ -268,6 +300,7 @@
               'btn-borda-laranja': relatorio.desconto !== false
             }"
             (click)="relatorio.desconto = false"
+            [disabled]="!relatorio.tipoConsulta"
           >
             NÃO
           </button>
@@ -279,6 +312,7 @@
               'btn-borda-laranja': relatorio.desconto !== null
             }"
             (click)="relatorio.desconto = null"
+            [disabled]="!relatorio.tipoConsulta"
           >
             TODOS
           </button>
@@ -295,6 +329,7 @@
               'btn-borda-laranja': relatorio.taxaServico !== true
             }"
             (click)="relatorio.taxaServico = true"
+            [disabled]="!relatorio.tipoConsulta"
           >
             SIM
           </button>
@@ -306,6 +341,7 @@
               'btn-borda-laranja': relatorio.taxaServico !== false
             }"
             (click)="relatorio.taxaServico = false"
+            [disabled]="!relatorio.tipoConsulta"
           >
             NÃO
           </button>
@@ -317,6 +353,7 @@
               'btn-borda-laranja': relatorio.taxaServico !== null
             }"
             (click)="relatorio.taxaServico = null"
+            [disabled]="!relatorio.tipoConsulta"
           >
             TODOS
           </button>
@@ -324,17 +361,38 @@
       </div>
       <div class="d-flex flex-column w-20">
         <label>Funcionário</label>
-        <select class="select-filtro p-1" [(ngModel)]="relatorio.funcionarioId">
-          <option [ngValue]="undefined">Todos</option>
+        <select
+          class="select-filtro p-1"
+          [(ngModel)]="relatorio.funcionarioId"
+          [disabled]="!relatorio.tipoConsulta"
+        >
+          <option [ngValue]="null">Todos</option>
           @for (funcionario of funcionarios; track funcionario.id) {
           <option [value]="funcionario.id">{{ funcionario.nome }}</option>
           }
         </select>
       </div>
       <div class="d-flex flex-column w-20">
+        <label>Cliente</label>
+        <select
+          class="select-filtro p-1"
+          [(ngModel)]="relatorio.clienteId"
+          [disabled]="!relatorio.tipoConsulta"
+        >
+          <option [ngValue]="null">Todos</option>
+          @for (cliente of clientes; track cliente.id) {
+          <option [value]="cliente.id">{{ cliente.nome }}</option>
+          }
+        </select>
+      </div>
+      <div class="d-flex flex-column w-20">
         <label>Ordenar Por</label>
-        <select class="select-filtro p-1" [(ngModel)]="relatorio.ordenacao">
-          <option [ngValue]="undefined">Selecione</option>
+        <select
+          class="select-filtro p-1"
+          [(ngModel)]="relatorio.ordenacao"
+          [disabled]="!relatorio.tipoConsulta"
+        >
+          <option [ngValue]="null">Selecione</option>
 
           <option value="valorTotalDesc">Valor Total (maior → menor)</option>
           <option value="valorTotalAsc">Valor Total (menor → maior)</option>
@@ -363,6 +421,137 @@
       <button class="btn-comum btn-comum-laranja" (click)="aplicarRelatorio()">
         Aplicar
       </button>
+    </div>
+    <div class="lista">
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="text-center col-1">#</th>
+            <th class="text-center col-1">ID</th>
+            <th class="text-center col-2">Funcionário</th>
+            <th class="text-center col-1">Venda</th>
+            <th class="text-center col-1">Bruto</th>
+            <th class="text-center col-1">Desconto</th>
+            <th class="text-center col-1">Serviço</th>
+            <th class="text-center col-1">Entrega</th>
+            <th class="text-center col-1">Total</th>
+            <th class="text-center col-2">Pagamento</th>
+            <th class="text-center col-2">Data/Hora</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (venda of listaVendas; track $index) {
+          <tr>
+            <td class="text-center">{{ $index + 1 + page * size }}</td>
+            <td class="text-center">{{ venda.id }}</td>
+            <td class="text-center">{{ venda.funcionario.nome || "-" }}</td>
+            <td class="text-center">
+              {{
+                venda.mesa != null
+                  ? " Mesa"
+                  : venda.retirada
+                  ? " Retirada"
+                  : venda.entrega
+                  ? " Entrega"
+                  : venda.balcao
+                  ? " Balcão"
+                  : ""
+              }}
+            </td>
+            <td class="text-center">
+              {{ venda.valorBruto | currency : "BRL" }}
+            </td>
+            <td class="text-center">{{ venda.desconto | currency : "BRL" }}</td>
+            <td class="text-center">
+              {{ venda.valorServico | currency : "BRL" }}
+            </td>
+            <td class="text-center">
+              {{ venda.taxaEntrega | currency : "BRL" }}
+            </td>
+            <td class="text-center">
+              {{ venda.valorTotal | currency : "BRL" }}
+            </td>
+            @if (venda.vendaPagamento) {
+            <td class="text-center">
+              @if (venda.vendaPagamento.dinheiro > 0) {
+              <span>
+                Dinheiro
+                {{ venda.vendaPagamento.dinheiro || 0 | currency : "BRL" }}
+              </span>
+              } @if (venda.vendaPagamento.credito > 0) {
+              <span>
+                Crédito
+                {{ venda.vendaPagamento.credito || 0 | currency : "BRL" }}</span
+              >
+              } @if (venda.vendaPagamento.debito > 0) {
+              <span>
+                Débito
+                {{ venda.vendaPagamento.debito || 0 | currency : "BRL" }}</span
+              >
+              } @if (venda.vendaPagamento.pix > 0) {
+              <span>
+                PIX {{ venda.vendaPagamento.pix || 0 | currency : "BRL" }}</span
+              >
+              }
+            </td>
+            } @else { &nbsp; }
+            <td class="text-center">
+              {{ venda.dataVenda | date : "dd/MM/yyyy HH:mm:ss" }}
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <div class="d-flex justify-content-between align-items-center">
+      <div></div>
+      <div class="d-flex align-items-center justify-content-center">
+        <div class="paginacao-container mt-2">
+          <button
+            class="paginacao-botao"
+            [ngClass]="{
+              none: page === 0
+            }"
+            (click)="setPage(page - 1)"
+          >
+            <i class="bi bi-chevron-left"></i>
+          </button>
+
+          @for (i of pagesVisiveis(); track i) {
+          <button
+            class="paginacao-botao"
+            [class.ativo]="i === page"
+            [disabled]="i === page"
+            (click)="setPage(i)"
+          >
+            {{ i + 1 }}
+          </button>
+          }
+
+          <button
+            class="paginacao-botao"
+            [ngClass]="{
+              none: page + 1 >= totalPages
+            }"
+            (click)="setPage(page + 1)"
+          >
+            <i class="bi bi-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+      <div>
+        <div class="d-flex align-items-center tamanho-select">
+          <div class="d-flex flex-column w-100">
+            <label>Itens por página</label>
+            <select class="select-filtro p-1" (change)="alterarTamanho($event)">
+              <option [value]="20">20</option>
+              <option [value]="50">50</option>
+              <option [value]="100">100</option>
+              <option [value]="100">200</option>
+            </select>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
