@@ -15,11 +15,10 @@ import { NgClass } from '@angular/common';
 import { catchError, from, Observable, of, switchMap, take } from 'rxjs';
 
 @Component({
-  selector: 'app-configuracao-retirada',
-  standalone: true,
-  imports: [FormsModule, NgClass],
-  templateUrl: './configuracao-retirada.component.html',
-  styleUrl: './configuracao-retirada.component.scss',
+    selector: 'app-configuracao-retirada',
+    imports: [FormsModule, NgClass],
+    templateUrl: './configuracao-retirada.component.html',
+    styleUrl: './configuracao-retirada.component.scss'
 })
 export class ConfiguracaoRetiradaComponent implements OnInit {
   @ViewChild('modalCancelar') modalCancelar!: TemplateRef<any>;

@@ -25,11 +25,10 @@ import { Estoque } from '../../../models/estoque';
 import { EstoqueService } from '../../../services/estoque.service';
 
 @Component({
-  selector: 'app-sangria',
-  standalone: true,
-  imports: [FormsModule, NgClass, ListaProdutosSelecionarComponent],
-  templateUrl: './sangria.component.html',
-  styleUrl: './sangria.component.scss',
+    selector: 'app-sangria',
+    imports: [FormsModule, NgClass, ListaProdutosSelecionarComponent],
+    templateUrl: './sangria.component.html',
+    styleUrl: './sangria.component.scss'
 })
 export class SangriaComponent implements OnInit {
   @Output() retorno = new EventEmitter<any>();

@@ -30,22 +30,21 @@ import { HistoricoVendaComponent } from "../historicos/historico-venda/historico
 import { HistoricoConsumoComponent } from "../historicos/historico-consumo/historico-consumo.component";
 
 @Component({
-  selector: 'app-caixa',
-  standalone: true,
-  imports: [
-    FormsModule,
-    RouterOutlet,
-    RouterLink,
-    FecharCaixaComponent,
-    NgClass,
-    SangriaComponent,
-    SuprimentoComponent,
-    GorjetaComponent,
-    HistoricoVendaComponent,
-    HistoricoConsumoComponent
-],
-  templateUrl: './caixa.component.html',
-  styleUrl: './caixa.component.scss',
+    selector: 'app-caixa',
+    imports: [
+        FormsModule,
+        RouterOutlet,
+        RouterLink,
+        FecharCaixaComponent,
+        NgClass,
+        SangriaComponent,
+        SuprimentoComponent,
+        GorjetaComponent,
+        HistoricoVendaComponent,
+        HistoricoConsumoComponent
+    ],
+    templateUrl: './caixa.component.html',
+    styleUrl: './caixa.component.scss'
 })
 export class CaixaComponent implements OnInit {
   @Output() retorno = new EventEmitter<any>();

@@ -10,11 +10,10 @@ import { Mensagem } from '../../../../models/mensagem';
 import { Permissao } from '../../../../models/permissao';
 
 @Component({
-  selector: 'app-admin-funcionario-detalhes',
-  standalone: true,
-  imports: [FormsModule, PermissaoListaComponent, NgClass],
-  templateUrl: './admin-funcionario-detalhes.component.html',
-  styleUrl: './admin-funcionario-detalhes.component.scss',
+    selector: 'app-admin-funcionario-detalhes',
+    imports: [FormsModule, PermissaoListaComponent, NgClass],
+    templateUrl: './admin-funcionario-detalhes.component.html',
+    styleUrl: './admin-funcionario-detalhes.component.scss'
 })
 export class AdminFuncionarioDetalhesComponent {
   @Input() adminFuncionario: AdminFuncionario = new AdminFuncionario();

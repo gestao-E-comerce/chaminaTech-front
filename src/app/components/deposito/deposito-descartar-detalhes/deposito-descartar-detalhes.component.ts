@@ -10,11 +10,10 @@ import { ToastrService } from 'ngx-toastr';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-  selector: 'app-deposito-descartar-detalhes',
-  standalone: true,
-  imports: [FormsModule, MateriaListComponent, NgClass],
-  templateUrl: './deposito-descartar-detalhes.component.html',
-  styleUrl: './deposito-descartar-detalhes.component.scss',
+    selector: 'app-deposito-descartar-detalhes',
+    imports: [FormsModule, MateriaListComponent, NgClass],
+    templateUrl: './deposito-descartar-detalhes.component.html',
+    styleUrl: './deposito-descartar-detalhes.component.scss'
 })
 export class DepositoDescartarDetalhesComponent {
   @Output() retorno = new EventEmitter<Mensagem>();

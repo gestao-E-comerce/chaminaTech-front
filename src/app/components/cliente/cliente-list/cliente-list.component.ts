@@ -22,18 +22,17 @@ import { GlobalService } from '../../../services/global.service';
 import { take } from 'rxjs';
 
 @Component({
-  selector: 'app-cliente-list',
-  standalone: true,
-  imports: [
-    FormsModule,
-    ClienteDetalhesComponent,
-    RouterLink,
-    NgClass,
-    NgxMaskPipe,
-    NgxMaskDirective,
-  ],
-  templateUrl: './cliente-list.component.html',
-  styleUrl: './cliente-list.component.scss',
+    selector: 'app-cliente-list',
+    imports: [
+        FormsModule,
+        ClienteDetalhesComponent,
+        RouterLink,
+        NgClass,
+        NgxMaskPipe,
+        NgxMaskDirective,
+    ],
+    templateUrl: './cliente-list.component.html',
+    styleUrl: './cliente-list.component.scss'
 })
 export class ClienteListComponent implements OnInit {
   @Output() retorno = new EventEmitter<any>();

@@ -13,11 +13,10 @@ import { ToastrService } from 'ngx-toastr';
 import { LoginService } from '../../services/login.service';
 
 @Component({
-  selector: 'app-home',
-  standalone: true,
-  imports: [FormsModule, AbrirCaixaComponent, NgClass],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.scss',
+    selector: 'app-home',
+    imports: [FormsModule, AbrirCaixaComponent, NgClass],
+    templateUrl: './home.component.html',
+    styleUrl: './home.component.scss'
 })
 export class HomeComponent {
   identificador: Identificador = new Identificador();

@@ -16,11 +16,10 @@ import { take } from 'rxjs';
 import { Observacoes } from '../../../models/observacoes';
 
 @Component({
-  selector: 'app-historico-venda',
-  standalone: true,
-  imports: [FormsModule, DatePipe, NgClass, RouterLink],
-  templateUrl: './historico-venda.component.html',
-  styleUrl: './historico-venda.component.scss',
+    selector: 'app-historico-venda',
+    imports: [FormsModule, DatePipe, NgClass, RouterLink],
+    templateUrl: './historico-venda.component.html',
+    styleUrl: './historico-venda.component.scss'
 })
 export class HistoricoVendaComponent implements OnInit {
   @Input() modoModal: boolean = false;

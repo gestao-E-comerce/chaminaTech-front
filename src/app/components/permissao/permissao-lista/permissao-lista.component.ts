@@ -11,11 +11,10 @@ import { GlobalService } from '../../../services/global.service';
 import { take } from 'rxjs';
 
 @Component({
-  selector: 'app-permissao-lista',
-  standalone: true,
-  imports: [FormsModule, PermissaoDetalhesComponent],
-  templateUrl: './permissao-lista.component.html',
-  styleUrl: './permissao-lista.component.scss',
+    selector: 'app-permissao-lista',
+    imports: [FormsModule, PermissaoDetalhesComponent],
+    templateUrl: './permissao-lista.component.html',
+    styleUrl: './permissao-lista.component.scss'
 })
 export class PermissaoListaComponent {
   @Output() retornoPermissao = new EventEmitter<any>();

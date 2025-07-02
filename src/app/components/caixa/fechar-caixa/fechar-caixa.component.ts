@@ -11,11 +11,10 @@ import { take } from 'rxjs';
 import { Matriz } from '../../../models/matriz';
 
 @Component({
-  selector: 'app-fechar-caixa',
-  standalone: true,
-  imports: [FormsModule],
-  templateUrl: './fechar-caixa.component.html',
-  styleUrl: './fechar-caixa.component.scss',
+    selector: 'app-fechar-caixa',
+    imports: [FormsModule],
+    templateUrl: './fechar-caixa.component.html',
+    styleUrl: './fechar-caixa.component.scss'
 })
 export class FecharCaixaComponent implements OnInit {
   @Output() retorno = new EventEmitter<Mensagem>();

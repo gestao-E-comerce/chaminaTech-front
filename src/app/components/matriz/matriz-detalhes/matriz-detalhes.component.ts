@@ -19,11 +19,10 @@ import { GlobalService } from '../../../services/global.service';
 import { NgxMaskDirective } from 'ngx-mask';
 
 @Component({
-  selector: 'app-matriz-detalhes',
-  standalone: true,
-  imports: [FormsModule, NgxMaskDirective, NgClass, PermissaoListaComponent],
-  templateUrl: './matriz-detalhes.component.html',
-  styleUrl: './matriz-detalhes.component.scss',
+    selector: 'app-matriz-detalhes',
+    imports: [FormsModule, NgxMaskDirective, NgClass, PermissaoListaComponent],
+    templateUrl: './matriz-detalhes.component.html',
+    styleUrl: './matriz-detalhes.component.scss'
 })
 export class MatrizDetalhesComponent {
   @Input() matriz: Matriz = new Matriz();

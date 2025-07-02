@@ -24,17 +24,16 @@ import { DepositoDescartarDetalhesComponent } from '../deposito-descartar-detalh
 import { DepositoDescartar } from '../../../models/deposito-descartar';
 
 @Component({
-  selector: 'app-deposito-list',
-  standalone: true,
-  imports: [
-    FormsModule,
-    DepositoDetalhesComponent,
-    DatePipe,
-    RouterLink,
-    DepositoDescartarDetalhesComponent,
-  ],
-  templateUrl: './deposito-list.component.html',
-  styleUrl: './deposito-list.component.scss',
+    selector: 'app-deposito-list',
+    imports: [
+        FormsModule,
+        DepositoDetalhesComponent,
+        DatePipe,
+        RouterLink,
+        DepositoDescartarDetalhesComponent,
+    ],
+    templateUrl: './deposito-list.component.html',
+    styleUrl: './deposito-list.component.scss'
 })
 export class DepositoListComponent implements OnInit {
   @Output() retorno = new EventEmitter<any>();

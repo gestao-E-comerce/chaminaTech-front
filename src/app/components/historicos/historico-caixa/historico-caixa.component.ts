@@ -22,19 +22,18 @@ import { Matriz } from '../../../models/matriz';
 import { forkJoin, take } from 'rxjs';
 
 @Component({
-  selector: 'app-historico-caixa',
-  standalone: true,
-  imports: [
-    FormsModule,
-    DatePipe,
-    NgClass,
-    SangriaComponent,
-    SuprimentoComponent,
-    RouterLink,
-    GorjetaComponent,
-  ],
-  templateUrl: './historico-caixa.component.html',
-  styleUrl: './historico-caixa.component.scss',
+    selector: 'app-historico-caixa',
+    imports: [
+        FormsModule,
+        DatePipe,
+        NgClass,
+        SangriaComponent,
+        SuprimentoComponent,
+        RouterLink,
+        GorjetaComponent,
+    ],
+    templateUrl: './historico-caixa.component.html',
+    styleUrl: './historico-caixa.component.scss'
 })
 export class HistoricoCaixaComponent implements OnInit {
   listaCaixasOrginal: Caixa[] = [];

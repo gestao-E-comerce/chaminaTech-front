@@ -12,11 +12,10 @@ import { take } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-venda-lista-touch',
-  standalone: true,
-  imports: [NgClass, CurrencyPipe, FormsModule],
-  templateUrl: './venda-lista-touch.component.html',
-  styleUrl: './venda-lista-touch.component.scss',
+    selector: 'app-venda-lista-touch',
+    imports: [NgClass, CurrencyPipe, FormsModule],
+    templateUrl: './venda-lista-touch.component.html',
+    styleUrl: './venda-lista-touch.component.scss'
 })
 export class VendaListaTouchComponent implements OnInit {
   @Output() vendaDuploClique = new EventEmitter<{

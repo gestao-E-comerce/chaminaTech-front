@@ -2,7 +2,6 @@ import { NgClass } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { NgxMaskDirective } from 'ngx-mask';
 import { Admin } from '../../../models/admin';
 import { ToastrService } from 'ngx-toastr';
 import { GlobalService } from '../../../services/global.service';
@@ -11,7 +10,6 @@ import { AdminService } from '../../../services/admin.service';
 
 @Component({
   selector: 'app-admin-config',
-  standalone: true,
   imports: [FormsModule, RouterLink, NgClass],
   templateUrl: './admin-config.component.html',
   styleUrl: './admin-config.component.scss',

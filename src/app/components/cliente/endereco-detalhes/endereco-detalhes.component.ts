@@ -14,11 +14,10 @@ import { NgClass } from '@angular/common';
 import { NgxMaskDirective } from 'ngx-mask';
 
 @Component({
-  selector: 'app-endereco-detalhes',
-  standalone: true,
-  imports: [FormsModule, NgClass, NgxMaskDirective],
-  templateUrl: './endereco-detalhes.component.html',
-  styleUrl: './endereco-detalhes.component.scss',
+    selector: 'app-endereco-detalhes',
+    imports: [FormsModule, NgClass, NgxMaskDirective],
+    templateUrl: './endereco-detalhes.component.html',
+    styleUrl: './endereco-detalhes.component.scss'
 })
 export class EnderecoDetalhesComponent implements OnInit {
   @Input() endereco: Endereco = new Endereco();

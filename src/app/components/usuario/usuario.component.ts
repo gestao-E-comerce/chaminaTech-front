@@ -7,11 +7,10 @@ import { NgClass } from '@angular/common';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-  selector: 'app-usuario',
-  standalone: true,
-  imports: [FormsModule, NgClass],
-  templateUrl: './usuario.component.html',
-  styleUrl: './usuario.component.scss',
+    selector: 'app-usuario',
+    imports: [FormsModule, NgClass],
+    templateUrl: './usuario.component.html',
+    styleUrl: './usuario.component.scss'
 })
 export class UsuarioComponent {
   login: Login = new Login();

@@ -6,11 +6,10 @@ import { take } from 'rxjs';
 import { GlobalService } from '../../services/global.service';
 
 @Component({
-  selector: 'app-historicos',
-  standalone: true,
-  imports: [FormsModule, RouterLink],
-  templateUrl: './historicos.component.html',
-  styleUrl: './historicos.component.scss',
+    selector: 'app-historicos',
+    imports: [FormsModule, RouterLink],
+    templateUrl: './historicos.component.html',
+    styleUrl: './historicos.component.scss'
 })
 export class HistoricosComponent implements OnInit {
   globalService = inject(GlobalService);

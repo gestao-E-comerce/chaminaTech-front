@@ -51,26 +51,25 @@ import { SocketService } from '../../../services/socket.service';
 import { ProdutoObservacaoTouchDeveComponent } from './caixa-tela-touch/produto-observacao-touch-deve/produto-observacao-touch-deve.component';
 
 @Component({
-  selector: 'app-caixa-tela',
-  standalone: true,
-  imports: [
-    FormsModule,
-    SelecionarProdutosComponent,
-    PagamentosComponent,
-    TransferirMesaComponent,
-    ProdutoObservacaoComponent,
-    VendaListaComponent,
-    NgClass,
-    DatePipe,
-    SelecionarClienteComponent,
-    NgxMaskPipe,
-    ProdutosComponent,
-    ProdutoObservacaoTouchComponent,
-    VendaListaTouchComponent,
-    ProdutoObservacaoTouchDeveComponent,
-  ],
-  templateUrl: './caixa-tela.component.html',
-  styleUrl: './caixa-tela.component.scss',
+    selector: 'app-caixa-tela',
+    imports: [
+        FormsModule,
+        SelecionarProdutosComponent,
+        PagamentosComponent,
+        TransferirMesaComponent,
+        ProdutoObservacaoComponent,
+        VendaListaComponent,
+        NgClass,
+        DatePipe,
+        SelecionarClienteComponent,
+        NgxMaskPipe,
+        ProdutosComponent,
+        ProdutoObservacaoTouchComponent,
+        VendaListaTouchComponent,
+        ProdutoObservacaoTouchDeveComponent,
+    ],
+    templateUrl: './caixa-tela.component.html',
+    styleUrl: './caixa-tela.component.scss'
 })
 export class CaixaTelaComponent implements OnInit {
   @ViewChild('quantidadeProdutoPeso', { static: false })

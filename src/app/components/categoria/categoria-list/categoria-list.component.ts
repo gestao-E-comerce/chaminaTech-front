@@ -13,11 +13,10 @@ import { GlobalService } from '../../../services/global.service';
 import { Observacoes } from '../../../models/observacoes';
 
 @Component({
-  selector: 'app-categoria-list',
-  standalone: true,
-  imports: [FormsModule, CategoriaDetalhesComponent, RouterLink],
-  templateUrl: './categoria-list.component.html',
-  styleUrl: './categoria-list.component.scss',
+    selector: 'app-categoria-list',
+    imports: [FormsModule, CategoriaDetalhesComponent, RouterLink],
+    templateUrl: './categoria-list.component.html',
+    styleUrl: './categoria-list.component.scss'
 })
 export class CategoriaListComponent implements OnInit {
   @Output() retorno = new EventEmitter<any>();

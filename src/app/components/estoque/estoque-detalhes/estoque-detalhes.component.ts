@@ -17,11 +17,10 @@ import { NgClass } from '@angular/common';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-  selector: 'app-estoque-detalhes',
-  standalone: true,
-  imports: [FormsModule, ProdutoListComponent, NgClass],
-  templateUrl: './estoque-detalhes.component.html',
-  styleUrl: './estoque-detalhes.component.scss',
+    selector: 'app-estoque-detalhes',
+    imports: [FormsModule, ProdutoListComponent, NgClass],
+    templateUrl: './estoque-detalhes.component.html',
+    styleUrl: './estoque-detalhes.component.scss'
 })
 export class EstoqueDetalhesComponent {
   @Output() retorno = new EventEmitter<Mensagem>();

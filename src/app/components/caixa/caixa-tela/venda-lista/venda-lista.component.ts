@@ -12,11 +12,10 @@ import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-venda-lista',
-  standalone: true,
-  imports: [NgClass, CurrencyPipe, FormsModule],
-  templateUrl: './venda-lista.component.html',
-  styleUrl: './venda-lista.component.scss',
+    selector: 'app-venda-lista',
+    imports: [NgClass, CurrencyPipe, FormsModule],
+    templateUrl: './venda-lista.component.html',
+    styleUrl: './venda-lista.component.scss'
 })
 export class VendaListaComponent implements OnInit {
   @Output() vendaDuploClique = new EventEmitter<{

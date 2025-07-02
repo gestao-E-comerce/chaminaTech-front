@@ -15,11 +15,10 @@ import { GlobalService } from '../../../../services/global.service';
 import { catchError, from, Observable, of, switchMap, take } from 'rxjs';
 
 @Component({
-  selector: 'app-configuracao-entrega',
-  standalone: true,
-  imports: [FormsModule],
-  templateUrl: './configuracao-entrega.component.html',
-  styleUrl: './configuracao-entrega.component.scss',
+    selector: 'app-configuracao-entrega',
+    imports: [FormsModule],
+    templateUrl: './configuracao-entrega.component.html',
+    styleUrl: './configuracao-entrega.component.scss'
 })
 export class ConfiguracaoEntregaComponent implements OnInit {
   @ViewChild('modalCancelar') modalCancelar!: TemplateRef<any>;

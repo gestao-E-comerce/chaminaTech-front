@@ -11,16 +11,15 @@ import { Categoria } from '../../../models/categoria';
 import { NgClass } from '@angular/common';
 
 @Component({
-  selector: 'app-observacao-detalhes',
-  standalone: true,
-  imports: [
-    FormsModule,
-    SelecionarMateriasComponent,
-    SelecionarProdutosComponent,
-    NgClass,
-  ],
-  templateUrl: './observacao-detalhes.component.html',
-  styleUrl: './observacao-detalhes.component.scss',
+    selector: 'app-observacao-detalhes',
+    imports: [
+        FormsModule,
+        SelecionarMateriasComponent,
+        SelecionarProdutosComponent,
+        NgClass,
+    ],
+    templateUrl: './observacao-detalhes.component.html',
+    styleUrl: './observacao-detalhes.component.scss'
 })
 export class ObservacaoDetalhesComponent {
   @Output() retorno = new EventEmitter<Observacoes>();

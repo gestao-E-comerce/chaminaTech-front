@@ -8,11 +8,10 @@ import { ToastrService } from 'ngx-toastr';
 import { Observacoes } from '../../../../../models/observacoes';
 
 @Component({
-  selector: 'app-produto-observacao-touch-deve',
-  standalone: true,
-  imports: [FormsModule, NgClass],
-  templateUrl: './produto-observacao-touch-deve.component.html',
-  styleUrl: './produto-observacao-touch-deve.component.scss',
+    selector: 'app-produto-observacao-touch-deve',
+    imports: [FormsModule, NgClass],
+    templateUrl: './produto-observacao-touch-deve.component.html',
+    styleUrl: './produto-observacao-touch-deve.component.scss'
 })
 export class ProdutoObservacaoTouchDeveComponent {
   @Output() retorno = new EventEmitter<any>();

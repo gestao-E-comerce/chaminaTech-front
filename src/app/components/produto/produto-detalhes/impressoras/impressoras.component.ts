@@ -15,11 +15,10 @@ import { take } from 'rxjs';
 import { Produto } from '../../../../models/produto';
 
 @Component({
-  selector: 'app-impressoras',
-  standalone: true,
-  imports: [FormsModule],
-  templateUrl: './impressoras.component.html',
-  styleUrl: './impressoras.component.scss',
+    selector: 'app-impressoras',
+    imports: [FormsModule],
+    templateUrl: './impressoras.component.html',
+    styleUrl: './impressoras.component.scss'
 })
 export class ImpressorasComponent implements OnInit {
   @Output() retorno = new EventEmitter<any>();

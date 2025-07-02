@@ -27,11 +27,10 @@ import { Observacoes } from '../../../../models/observacoes';
 import { ProdutoVenda } from '../../../../models/produto-venda';
 import { DecimalPipe } from '@angular/common';
 @Component({
-  selector: 'app-pagamentos',
-  standalone: true,
-  imports: [FormsModule, DecimalPipe],
-  templateUrl: './pagamentos.component.html',
-  styleUrl: './pagamentos.component.scss',
+    selector: 'app-pagamentos',
+    imports: [FormsModule, DecimalPipe],
+    templateUrl: './pagamentos.component.html',
+    styleUrl: './pagamentos.component.scss'
 })
 export class PagamentosComponent implements OnInit {
   @Output() retornoPagamentoParcial = new EventEmitter<any>();

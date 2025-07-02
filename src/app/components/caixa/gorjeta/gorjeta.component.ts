@@ -18,11 +18,10 @@ import { take } from 'rxjs';
 import { Matriz } from '../../../models/matriz';
 
 @Component({
-  selector: 'app-gorjeta',
-  standalone: true,
-  imports: [FormsModule],
-  templateUrl: './gorjeta.component.html',
-  styleUrl: './gorjeta.component.scss',
+    selector: 'app-gorjeta',
+    imports: [FormsModule],
+    templateUrl: './gorjeta.component.html',
+    styleUrl: './gorjeta.component.scss'
 })
 export class GorjetaComponent implements OnInit {
   @Output() retorno = new EventEmitter<any>();

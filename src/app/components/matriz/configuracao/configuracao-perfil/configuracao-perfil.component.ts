@@ -15,11 +15,10 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { NgClass } from '@angular/common';
 
 @Component({
-  selector: 'app-configuracao-perfil',
-  standalone: true,
-  imports: [FormsModule, NgClass],
-  templateUrl: './configuracao-perfil.component.html',
-  styleUrl: './configuracao-perfil.component.scss',
+    selector: 'app-configuracao-perfil',
+    imports: [FormsModule, NgClass],
+    templateUrl: './configuracao-perfil.component.html',
+    styleUrl: './configuracao-perfil.component.scss'
 })
 export class ConfiguracaoPerfilComponent implements OnInit {
   @ViewChild('modalCancelar') modalCancelar!: TemplateRef<any>;

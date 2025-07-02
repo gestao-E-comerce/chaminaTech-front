@@ -15,11 +15,10 @@ import { VendaService } from '../../../../services/venda.service';
 import { NgClass } from '@angular/common';
 
 @Component({
-  selector: 'app-selecionar-cliente',
-  standalone: true,
-  imports: [FormsModule, ClienteListComponent, NgClass],
-  templateUrl: './selecionar-cliente.component.html',
-  styleUrl: './selecionar-cliente.component.scss',
+    selector: 'app-selecionar-cliente',
+    imports: [FormsModule, ClienteListComponent, NgClass],
+    templateUrl: './selecionar-cliente.component.html',
+    styleUrl: './selecionar-cliente.component.scss'
 })
 export class SelecionarClienteComponent implements OnInit {
   @Input() venda: Venda = new Venda();

@@ -24,11 +24,10 @@ import { take } from 'rxjs';
 import { Matriz } from '../../../models/matriz';
 
 @Component({
-  selector: 'app-produto-list',
-  standalone: true,
-  imports: [FormsModule, ProdutoDetalhesComponent, RouterLink, NgClass],
-  templateUrl: './produto-list.component.html',
-  styleUrl: './produto-list.component.scss',
+    selector: 'app-produto-list',
+    imports: [FormsModule, ProdutoDetalhesComponent, RouterLink, NgClass],
+    templateUrl: './produto-list.component.html',
+    styleUrl: './produto-list.component.scss'
 })
 export class ProdutoListComponent implements OnInit {
   @Output() retorno = new EventEmitter<any>();

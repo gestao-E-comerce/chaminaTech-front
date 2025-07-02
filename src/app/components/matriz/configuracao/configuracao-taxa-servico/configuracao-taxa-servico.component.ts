@@ -9,11 +9,10 @@ import { FormsModule } from '@angular/forms';
 import { NgClass } from '@angular/common';
 
 @Component({
-  selector: 'app-configuracao-taxa-servico',
-  standalone: true,
-  imports: [FormsModule, NgClass],
-  templateUrl: './configuracao-taxa-servico.component.html',
-  styleUrl: './configuracao-taxa-servico.component.scss',
+    selector: 'app-configuracao-taxa-servico',
+    imports: [FormsModule, NgClass],
+    templateUrl: './configuracao-taxa-servico.component.html',
+    styleUrl: './configuracao-taxa-servico.component.scss'
 })
 export class ConfiguracaoTaxaServicoComponent {
   @ViewChild('modalCancelar') modalCancelar!: TemplateRef<any>;

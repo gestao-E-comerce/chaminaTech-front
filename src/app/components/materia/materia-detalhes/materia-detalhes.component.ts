@@ -7,11 +7,10 @@ import { ToastrService } from 'ngx-toastr';
 import { NgClass } from '@angular/common';
 
 @Component({
-  selector: 'app-materia-detalhes',
-  standalone: true,
-  imports: [FormsModule,NgClass],
-  templateUrl: './materia-detalhes.component.html',
-  styleUrl: './materia-detalhes.component.scss'
+    selector: 'app-materia-detalhes',
+    imports: [FormsModule, NgClass],
+    templateUrl: './materia-detalhes.component.html',
+    styleUrl: './materia-detalhes.component.scss'
 })
 export class MateriaDetalhesComponent {
   @Input() materia: Materia = new Materia();

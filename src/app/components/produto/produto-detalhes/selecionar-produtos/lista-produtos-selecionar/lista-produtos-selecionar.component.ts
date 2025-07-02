@@ -8,11 +8,10 @@ import { FormsModule } from '@angular/forms';
 import { Observacoes } from '../../../../../models/observacoes';
 
 @Component({
-  selector: 'app-lista-produtos-selecionar',
-  standalone: true,
-  imports: [FormsModule],
-  templateUrl: './lista-produtos-selecionar.component.html',
-  styleUrl: './lista-produtos-selecionar.component.scss',
+    selector: 'app-lista-produtos-selecionar',
+    imports: [FormsModule],
+    templateUrl: './lista-produtos-selecionar.component.html',
+    styleUrl: './lista-produtos-selecionar.component.scss'
 })
 export class ListaProdutosSelecionarComponent {
   @Output() retorno = new EventEmitter<any>();

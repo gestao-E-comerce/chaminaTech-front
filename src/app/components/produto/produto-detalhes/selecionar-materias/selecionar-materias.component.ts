@@ -20,11 +20,10 @@ import { MateriaListComponent } from '../../../materia/materia-list/materia-list
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-  selector: 'app-selecionar-materias',
-  standalone: true,
-  imports: [FormsModule, NgClass, MateriaListComponent],
-  templateUrl: './selecionar-materias.component.html',
-  styleUrl: './selecionar-materias.component.scss',
+    selector: 'app-selecionar-materias',
+    imports: [FormsModule, NgClass, MateriaListComponent],
+    templateUrl: './selecionar-materias.component.html',
+    styleUrl: './selecionar-materias.component.scss'
 })
 export class SelecionarMateriasComponent implements OnInit {
   @Output() retornoProdutoMateria = new EventEmitter<ProdutoMateria>();

@@ -22,11 +22,10 @@ import { GlobalService } from '../../../services/global.service';
 import { take } from 'rxjs';
 
 @Component({
-  selector: 'app-materia-list',
-  standalone: true,
-  imports: [MateriaDetalhesComponent, FormsModule, RouterLink, NgClass],
-  templateUrl: './materia-list.component.html',
-  styleUrl: './materia-list.component.scss',
+    selector: 'app-materia-list',
+    imports: [MateriaDetalhesComponent, FormsModule, RouterLink, NgClass],
+    templateUrl: './materia-list.component.html',
+    styleUrl: './materia-list.component.scss'
 })
 export class MateriaListComponent implements OnInit {
   @Output() retorno = new EventEmitter<any>();

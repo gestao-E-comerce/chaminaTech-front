@@ -10,11 +10,10 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { NgClass } from '@angular/common';
 
 @Component({
-  selector: 'app-categoria-detalhes',
-  standalone: true,
-  imports: [FormsModule, ObservacaoDetalhesComponent, NgClass],
-  templateUrl: './categoria-detalhes.component.html',
-  styleUrl: './categoria-detalhes.component.scss',
+    selector: 'app-categoria-detalhes',
+    imports: [FormsModule, ObservacaoDetalhesComponent, NgClass],
+    templateUrl: './categoria-detalhes.component.html',
+    styleUrl: './categoria-detalhes.component.scss'
 })
 export class CategoriaDetalhesComponent {
   @Output() retorno = new EventEmitter<Mensagem>();

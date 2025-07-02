@@ -13,11 +13,10 @@ import { take } from 'rxjs';
 import { FuncionarioService } from '../../services/funcionario.service';
 
 @Component({
-  selector: 'app-auditoria',
-  standalone: true,
-  imports: [FormsModule, RouterLink, DatePipe, NgxMaskDirective, NgClass],
-  templateUrl: './auditoria.component.html',
-  styleUrl: './auditoria.component.scss',
+    selector: 'app-auditoria',
+    imports: [FormsModule, RouterLink, DatePipe, NgxMaskDirective, NgClass],
+    templateUrl: './auditoria.component.html',
+    styleUrl: './auditoria.component.scss'
 })
 export class AuditoriaComponent {
   listaAuditorias: Auditoria[] = [];

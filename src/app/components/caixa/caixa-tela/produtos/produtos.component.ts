@@ -8,11 +8,10 @@ import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
-  selector: 'app-produtos',
-  standalone: true,
-  imports: [FormsModule],
-  templateUrl: './produtos.component.html',
-  styleUrl: './produtos.component.scss',
+    selector: 'app-produtos',
+    imports: [FormsModule],
+    templateUrl: './produtos.component.html',
+    styleUrl: './produtos.component.scss'
 })
 export class ProdutosComponent {
   @Input() modalRef!: NgbModalRef;

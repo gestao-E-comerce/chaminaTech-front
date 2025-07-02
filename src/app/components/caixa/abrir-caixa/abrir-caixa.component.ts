@@ -20,11 +20,10 @@ import { take } from 'rxjs';
 import { Matriz } from '../../../models/matriz';
 
 @Component({
-  selector: 'app-abrir-caixa',
-  standalone: true,
-  imports: [FormsModule],
-  templateUrl: './abrir-caixa.component.html',
-  styleUrl: './abrir-caixa.component.scss',
+    selector: 'app-abrir-caixa',
+    imports: [FormsModule],
+    templateUrl: './abrir-caixa.component.html',
+    styleUrl: './abrir-caixa.component.scss'
 })
 export class AbrirCaixaComponent implements OnInit {
   caixa: Caixa = new Caixa();

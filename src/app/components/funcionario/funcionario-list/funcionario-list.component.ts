@@ -14,16 +14,15 @@ import { take } from 'rxjs';
 import { Matriz } from '../../../models/matriz';
 
 @Component({
-  selector: 'app-funcionario-list',
-  standalone: true,
-  imports: [
-    FormsModule,
-    FuncionarioDetalhesComponent,
-    RouterLink,
-    PermissaoListaComponent,
-  ],
-  templateUrl: './funcionario-list.component.html',
-  styleUrl: './funcionario-list.component.scss',
+    selector: 'app-funcionario-list',
+    imports: [
+        FormsModule,
+        FuncionarioDetalhesComponent,
+        RouterLink,
+        PermissaoListaComponent,
+    ],
+    templateUrl: './funcionario-list.component.html',
+    styleUrl: './funcionario-list.component.scss'
 })
 export class FuncionarioListComponent implements OnInit {
   @Output() retorno = new EventEmitter<any>();

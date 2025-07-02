@@ -27,17 +27,16 @@ import { take } from 'rxjs';
 import { Matriz } from '../../../models/matriz';
 
 @Component({
-  selector: 'app-produto-detalhes',
-  standalone: true,
-  imports: [
-    FormsModule,
-    SelecionarMateriasComponent,
-    SelecionarProdutosComponent,
-    ImpressorasComponent,
-    NgClass,
-  ],
-  templateUrl: './produto-detalhes.component.html',
-  styleUrls: ['./produto-detalhes.component.scss'],
+    selector: 'app-produto-detalhes',
+    imports: [
+        FormsModule,
+        SelecionarMateriasComponent,
+        SelecionarProdutosComponent,
+        ImpressorasComponent,
+        NgClass,
+    ],
+    templateUrl: './produto-detalhes.component.html',
+    styleUrls: ['./produto-detalhes.component.scss']
 })
 export class ProdutoDetalhesComponent implements OnInit {
   @Input() produto: Produto = new Produto();

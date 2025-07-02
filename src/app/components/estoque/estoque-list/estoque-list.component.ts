@@ -24,17 +24,16 @@ import { EstoqueDescartar } from '../../../models/estoque-descartar';
 import { EstoqueDescartarDetalhesComponent } from '../estoque-descartar-detalhes/estoque-descartar-detalhes.component';
 
 @Component({
-  selector: 'app-estoque-list',
-  standalone: true,
-  imports: [
-    FormsModule,
-    EstoqueDetalhesComponent,
-    DatePipe,
-    RouterLink,
-    EstoqueDescartarDetalhesComponent,
-  ],
-  templateUrl: './estoque-list.component.html',
-  styleUrl: './estoque-list.component.scss',
+    selector: 'app-estoque-list',
+    imports: [
+        FormsModule,
+        EstoqueDetalhesComponent,
+        DatePipe,
+        RouterLink,
+        EstoqueDescartarDetalhesComponent,
+    ],
+    templateUrl: './estoque-list.component.html',
+    styleUrl: './estoque-list.component.scss'
 })
 export class EstoqueListComponent implements OnInit {
   @Output() retorno = new EventEmitter<any>();

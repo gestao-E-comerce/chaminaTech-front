@@ -10,11 +10,10 @@ import { MateriaListComponent } from '../../materia/materia-list/materia-list.co
 import { NgClass } from '@angular/common';
 
 @Component({
-  selector: 'app-deposito-detalhes',
-  standalone: true,
-  imports: [FormsModule, MateriaListComponent, NgClass],
-  templateUrl: './deposito-detalhes.component.html',
-  styleUrl: './deposito-detalhes.component.scss',
+    selector: 'app-deposito-detalhes',
+    imports: [FormsModule, MateriaListComponent, NgClass],
+    templateUrl: './deposito-detalhes.component.html',
+    styleUrl: './deposito-detalhes.component.scss'
 })
 export class DepositoDetalhesComponent {
   @Output() retorno = new EventEmitter<Mensagem>();

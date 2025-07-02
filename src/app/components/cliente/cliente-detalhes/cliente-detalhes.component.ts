@@ -20,11 +20,10 @@ import { NgClass } from '@angular/common';
 import { NgxMaskDirective } from 'ngx-mask';
 
 @Component({
-  selector: 'app-cliente-detalhes',
-  standalone: true,
-  imports: [FormsModule, EnderecoDetalhesComponent, NgClass, NgxMaskDirective],
-  templateUrl: './cliente-detalhes.component.html',
-  styleUrl: './cliente-detalhes.component.scss',
+    selector: 'app-cliente-detalhes',
+    imports: [FormsModule, EnderecoDetalhesComponent, NgClass, NgxMaskDirective],
+    templateUrl: './cliente-detalhes.component.html',
+    styleUrl: './cliente-detalhes.component.scss'
 })
 export class ClienteDetalhesComponent implements OnInit {
   @Input() cliente: Cliente = new Cliente();

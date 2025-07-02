@@ -19,11 +19,10 @@ import { take } from 'rxjs';
 import { Matriz } from '../../../models/matriz';
 
 @Component({
-  selector: 'app-suprimento',
-  standalone: true,
-  imports: [FormsModule, NgClass],
-  templateUrl: './suprimento.component.html',
-  styleUrl: './suprimento.component.scss',
+    selector: 'app-suprimento',
+    imports: [FormsModule, NgClass],
+    templateUrl: './suprimento.component.html',
+    styleUrl: './suprimento.component.scss'
 })
 export class SuprimentoComponent implements OnInit {
   @Output() retorno = new EventEmitter<any>();

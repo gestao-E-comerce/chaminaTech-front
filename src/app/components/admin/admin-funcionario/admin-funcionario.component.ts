@@ -13,16 +13,15 @@ import { AdminFuncionario } from '../../../models/admin-funcionario';
 import { AdminFuncionarioService } from '../../../services/admin-funcionario';
 
 @Component({
-  selector: 'app-admin-funcionario',
-  standalone: true,
-  imports: [
-    FormsModule,
-    RouterLink,
-    PermissaoListaComponent,
-    AdminFuncionarioDetalhesComponent
-],
-  templateUrl: './admin-funcionario.component.html',
-  styleUrl: './admin-funcionario.component.scss',
+    selector: 'app-admin-funcionario',
+    imports: [
+        FormsModule,
+        RouterLink,
+        PermissaoListaComponent,
+        AdminFuncionarioDetalhesComponent
+    ],
+    templateUrl: './admin-funcionario.component.html',
+    styleUrl: './admin-funcionario.component.scss'
 })
 export class AdminFuncionarioComponent implements OnInit {
   @Output() retorno = new EventEmitter<any>();

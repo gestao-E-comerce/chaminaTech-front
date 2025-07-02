@@ -22,11 +22,10 @@ import { saveAs } from 'file-saver';
 import { catchError, from, Observable, of, switchMap, take } from 'rxjs';
 
 @Component({
-  selector: 'app-configuracao-impressao',
-  standalone: true,
-  imports: [FormsModule, NgClass, ImpressorasMatrizComponent],
-  templateUrl: './configuracao-impressao.component.html',
-  styleUrl: './configuracao-impressao.component.scss',
+    selector: 'app-configuracao-impressao',
+    imports: [FormsModule, NgClass, ImpressorasMatrizComponent],
+    templateUrl: './configuracao-impressao.component.html',
+    styleUrl: './configuracao-impressao.component.scss'
 })
 export class ConfiguracaoImpressaoComponent implements OnInit {
   @ViewChild('modalCancelar') modalCancelar!: TemplateRef<any>;

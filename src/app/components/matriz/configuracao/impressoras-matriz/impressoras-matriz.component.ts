@@ -5,11 +5,10 @@ import { Impressora } from '../../../../models/impressora';
 import { Identificador } from '../../../../models/identificador';
 
 @Component({
-  selector: 'app-impressoras-matriz',
-  standalone: true,
-  imports: [FormsModule],
-  templateUrl: './impressoras-matriz.component.html',
-  styleUrl: './impressoras-matriz.component.scss',
+    selector: 'app-impressoras-matriz',
+    imports: [FormsModule],
+    templateUrl: './impressoras-matriz.component.html',
+    styleUrl: './impressoras-matriz.component.scss'
 })
 export class ImpressorasMatrizComponent {
   @Output() retornoImpressora = new EventEmitter<Impressora>();

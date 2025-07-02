@@ -17,11 +17,10 @@ import { take } from 'rxjs';
 import { Usuario } from '../../../models/usuario';
 
 @Component({
-  selector: 'app-permissao-detalhes',
-  standalone: true,
-  imports: [FormsModule],
-  templateUrl: './permissao-detalhes.component.html',
-  styleUrl: './permissao-detalhes.component.scss',
+    selector: 'app-permissao-detalhes',
+    imports: [FormsModule],
+    templateUrl: './permissao-detalhes.component.html',
+    styleUrl: './permissao-detalhes.component.scss'
 })
 export class PermissaoDetalhesComponent {
   @Output() retorno = new EventEmitter<Mensagem>();

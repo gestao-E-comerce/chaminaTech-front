@@ -12,11 +12,10 @@ import { ProdutoVenda } from '../../../../models/produto-venda';
 import { Observacoes } from '../../../../models/observacoes';
 import { ToastrService } from 'ngx-toastr';
 @Component({
-  selector: 'app-transferir-mesa',
-  standalone: true,
-  imports: [FormsModule],
-  templateUrl: './transferir-mesa.component.html',
-  styleUrl: './transferir-mesa.component.scss',
+    selector: 'app-transferir-mesa',
+    imports: [FormsModule],
+    templateUrl: './transferir-mesa.component.html',
+    styleUrl: './transferir-mesa.component.scss'
 })
 export class TransferirMesaComponent implements OnInit {
   @Output() retorno = new EventEmitter<{

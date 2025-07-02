@@ -19,11 +19,10 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ListaProdutosSelecionarComponent } from "./lista-produtos-selecionar/lista-produtos-selecionar.component";
 
 @Component({
-  selector: 'app-selecionar-produtos',
-  standalone: true,
-  imports: [FormsModule, NgClass, ListaProdutosSelecionarComponent],
-  templateUrl: './selecionar-produtos.component.html',
-  styleUrl: './selecionar-produtos.component.scss',
+    selector: 'app-selecionar-produtos',
+    imports: [FormsModule, NgClass, ListaProdutosSelecionarComponent],
+    templateUrl: './selecionar-produtos.component.html',
+    styleUrl: './selecionar-produtos.component.scss'
 })
 export class SelecionarProdutosComponent implements OnInit {
   @Output() retornoProdutoComposto = new EventEmitter<ProdutoComposto>();

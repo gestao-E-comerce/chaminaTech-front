@@ -10,11 +10,10 @@ import { ToastrService } from 'ngx-toastr';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-  selector: 'app-estoque-descartar-detalhes',
-  standalone: true,
-  imports: [FormsModule, ProdutoListComponent, NgClass],
-  templateUrl: './estoque-descartar-detalhes.component.html',
-  styleUrl: './estoque-descartar-detalhes.component.scss',
+    selector: 'app-estoque-descartar-detalhes',
+    imports: [FormsModule, ProdutoListComponent, NgClass],
+    templateUrl: './estoque-descartar-detalhes.component.html',
+    styleUrl: './estoque-descartar-detalhes.component.scss'
 })
 export class EstoqueDescartarDetalhesComponent {
   @Input() estoqueDescartar: EstoqueDescartar = new EstoqueDescartar();

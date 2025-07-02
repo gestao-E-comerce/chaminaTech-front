@@ -17,11 +17,10 @@ import { Permissao } from '../../../models/permissao';
 import { NgClass } from '@angular/common';
 
 @Component({
-  selector: 'app-funcionario-detalhes',
-  standalone: true,
-  imports: [FormsModule, PermissaoListaComponent, NgClass],
-  templateUrl: './funcionario-detalhes.component.html',
-  styleUrl: './funcionario-detalhes.component.scss',
+    selector: 'app-funcionario-detalhes',
+    imports: [FormsModule, PermissaoListaComponent, NgClass],
+    templateUrl: './funcionario-detalhes.component.html',
+    styleUrl: './funcionario-detalhes.component.scss'
 })
 export class FuncionarioDetalhesComponent {
   @Input() funcionario: Funcionario = new Funcionario();

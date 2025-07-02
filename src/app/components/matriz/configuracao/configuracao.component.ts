@@ -16,11 +16,10 @@ import { GestaoCaixaService } from '../../../services/gestao-caixa.service';
 import { Usuario } from '../../../models/usuario';
 
 @Component({
-  selector: 'app-configuracao',
-  standalone: true,
-  imports: [FormsModule, RouterLink, RouterOutlet],
-  templateUrl: './configuracao.component.html',
-  styleUrl: './configuracao.component.scss',
+    selector: 'app-configuracao',
+    imports: [FormsModule, RouterLink, RouterOutlet],
+    templateUrl: './configuracao.component.html',
+    styleUrl: './configuracao.component.scss'
 })
 export class ConfiguracaoComponent implements OnInit {
   @ViewChild('modalCancelar') modalCancelar!: TemplateRef<any>;

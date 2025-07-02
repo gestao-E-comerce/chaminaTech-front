@@ -19,18 +19,17 @@ import { Cliente } from '../../models/cliente';
 import { ClienteService } from '../../services/cliente.service';
 
 @Component({
-  selector: 'app-relatorio',
-  standalone: true,
-  imports: [
-    FormsModule,
-    NgClass,
-    RouterLink,
-    DatePipe,
-    NgxMaskDirective,
-    CurrencyPipe,
-  ],
-  templateUrl: './relatorio.component.html',
-  styleUrl: './relatorio.component.scss',
+    selector: 'app-relatorio',
+    imports: [
+        FormsModule,
+        NgClass,
+        RouterLink,
+        DatePipe,
+        NgxMaskDirective,
+        CurrencyPipe,
+    ],
+    templateUrl: './relatorio.component.html',
+    styleUrl: './relatorio.component.scss'
 })
 export class RelatorioComponent {
   listaRelatoriosOrginal: Relatorio[] = [];

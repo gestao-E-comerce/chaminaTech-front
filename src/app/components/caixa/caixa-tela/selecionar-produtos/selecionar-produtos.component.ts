@@ -17,11 +17,10 @@ import { ToastrService } from 'ngx-toastr';
 import { Categoria } from '../../../../models/categoria';
 
 @Component({
-  selector: 'app-selecionar-produtos',
-  standalone: true,
-  imports: [FormsModule, NgClass],
-  templateUrl: './selecionar-produtos.component.html',
-  styleUrl: './selecionar-produtos.component.scss',
+    selector: 'app-selecionar-produtos',
+    imports: [FormsModule, NgClass],
+    templateUrl: './selecionar-produtos.component.html',
+    styleUrl: './selecionar-produtos.component.scss'
 })
 export class SelecionarProdutosComponent implements OnInit {
   @ViewChild('campoPesquisa', { static: false })

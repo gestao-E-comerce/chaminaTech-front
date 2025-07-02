@@ -14,16 +14,15 @@ import { MatrizService } from '../../../services/matriz.service';
 import { PermissaoListaComponent } from '../../permissao/permissao-lista/permissao-lista.component';
 
 @Component({
-  selector: 'app-matriz-list',
-  standalone: true,
-  imports: [
-    MatrizDetalhesComponent,
-    FormsModule,
-    RouterLink,
-    PermissaoListaComponent,
-  ],
-  templateUrl: './matriz-list.component.html',
-  styleUrl: './matriz-list.component.scss',
+    selector: 'app-matriz-list',
+    imports: [
+        MatrizDetalhesComponent,
+        FormsModule,
+        RouterLink,
+        PermissaoListaComponent,
+    ],
+    templateUrl: './matriz-list.component.html',
+    styleUrl: './matriz-list.component.scss'
 })
 export class MatrizListComponent implements OnInit {
   @Output() retorno = new EventEmitter<any>();
