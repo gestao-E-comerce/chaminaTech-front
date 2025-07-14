@@ -16,7 +16,7 @@ export class FuncionarioService {
 
   listarFuncionarios(
     termoPesquisa?: string,
-    ativo?: string
+    ativo?: string | null
   ): Observable<Funcionario[]> {
     return this.globalService.getMatrizAsync().pipe(
       switchMap((matriz) => {
@@ -28,6 +28,17 @@ export class FuncionarioService {
           params = params.set('ativo', ativo);
         }
         return this.http.get<Funcionario[]>(`${this.API}/lista`, {
+          params,
+        });
+      })
+    );
+  }
+
+  listarTudosFuncionarios(): Observable<Funcionario[]> {
+    return this.globalService.getMatrizAsync().pipe(
+      switchMap((matriz) => {
+        let params = new HttpParams().set('matrizId', matriz.id.toString());
+        return this.http.get<Funcionario[]>(`${this.API}/listaTudo`, {
           params,
         });
       })

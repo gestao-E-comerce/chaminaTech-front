@@ -15,7 +15,7 @@ export class EstoqueService {
   http = inject(HttpClient);
   globalService = inject(GlobalService);
 
-  listarEstoques(produtoNome?: string, ativo?: string): Observable<Estoque[]> {
+  listarEstoques(produtoNome?: string, ativo?: string | null): Observable<Estoque[]> {
     return this.globalService.getMatrizAsync().pipe(
       switchMap((matriz) => {
         let params = new HttpParams().set('matrizId', matriz.id.toString());

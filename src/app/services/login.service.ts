@@ -33,32 +33,4 @@ export class LoginService {
   getToken() {
     return localStorage.getItem('token');
   }
-
-  getUser() {
-    return this.decodificarToken() as Usuario;
-  }
-
-  decodificarToken() {
-    let token = this.getToken();
-    if (token) {
-      return jwtDecode<JwtPayload>(token);
-    }
-    return '';
-  }
-
-  listarUsers(): Observable<Usuario[]> {
-    return this.http.get<Usuario[]>(`${this.API}` + '/lista');
-  }
-
-  saveUser(user: Usuario): Observable<Mensagem> {
-    if (user.id) {
-      return this.http.put<Mensagem>(this.API + '/' + `${user.id}`, user);
-    } else {
-      return this.http.post<Mensagem>(this.API + '/user', user);
-    }
-  }
-
-  deletarUser(id: number): Observable<Mensagem> {
-    return this.http.delete<Mensagem>(this.API + '/' + `${id}`);
-  }
 }

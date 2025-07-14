@@ -1,4 +1,4 @@
-import { DatePipe, NgClass } from '@angular/common';
+import { CurrencyPipe, DatePipe, NgClass } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SangriaComponent } from '../../caixa/sangria/sangria.component';
@@ -22,18 +22,19 @@ import { Matriz } from '../../../models/matriz';
 import { forkJoin, take } from 'rxjs';
 
 @Component({
-    selector: 'app-historico-caixa',
-    imports: [
-        FormsModule,
-        DatePipe,
-        NgClass,
-        SangriaComponent,
-        SuprimentoComponent,
-        RouterLink,
-        GorjetaComponent,
-    ],
-    templateUrl: './historico-caixa.component.html',
-    styleUrl: './historico-caixa.component.scss'
+  selector: 'app-historico-caixa',
+  imports: [
+    FormsModule,
+    DatePipe,
+    NgClass,
+    SangriaComponent,
+    SuprimentoComponent,
+    RouterLink,
+    GorjetaComponent,
+    CurrencyPipe
+  ],
+  templateUrl: './historico-caixa.component.html',
+  styleUrl: './historico-caixa.component.scss',
 })
 export class HistoricoCaixaComponent implements OnInit {
   listaCaixasOrginal: Caixa[] = [];
@@ -62,7 +63,7 @@ export class HistoricoCaixaComponent implements OnInit {
   nomeFuncionario: string = '';
   active!: any;
   caixaSelecionado!: Caixa | null;
-  filtroTipo: string = '';
+  filtroTipo: string | null = null;
   motivoDeletar: string = '';
   saldo: number = 0;
   saldoDinheiro: number = 0;
@@ -134,7 +135,7 @@ export class HistoricoCaixaComponent implements OnInit {
     this.menuAberto = false;
 
     if (caixa.vendas) {
-      caixa.vendas = caixa.vendas.filter((v: any) => v.ativo);
+      caixa.vendas = caixa.vendas.filter((v: any) => !v.deletado);
     }
     if (caixa.sangrias) {
       caixa.sangrias = caixa.sangrias.filter((v: any) => v.ativo);
@@ -152,7 +153,10 @@ export class HistoricoCaixaComponent implements OnInit {
   pesquisarCaixa(nomeFuncionario: string) {
     let trimmedNomeFuncionario = nomeFuncionario.trim();
     trimmedNomeFuncionario = trimmedNomeFuncionario.toLocaleUpperCase();
-    const tipo = this.filtroTipo.trim() !== '' ? this.filtroTipo : undefined;
+    const tipo =
+      this.filtroTipo && this.filtroTipo.trim() !== ''
+        ? this.filtroTipo
+        : undefined;
 
     if (trimmedNomeFuncionario) {
       this.listaCaixas(trimmedNomeFuncionario, tipo);
@@ -164,7 +168,9 @@ export class HistoricoCaixaComponent implements OnInit {
 
   filtrarPorTipo() {
     const tipoValido =
-      this.filtroTipo.trim() !== '' ? this.filtroTipo : undefined;
+      this.filtroTipo && this.filtroTipo.trim() !== ''
+        ? this.filtroTipo
+        : undefined;
     const trimmedNomeFuncionario =
       this.nomeFuncionario.trim() !== '' ? this.nomeFuncionario : undefined;
 
@@ -435,8 +441,5 @@ export class HistoricoCaixaComponent implements OnInit {
       this.saldoSuprimentos +
       this.saldoGorjetas +
       (this.caixaSelecionado ? this.caixaSelecionado.valorAbertura : 0);
-
-    this.saldo = this.saldo - this.saldoSangrias;
-    this.saldo = this.saldo - this.saldoDescontos;
   }
 }

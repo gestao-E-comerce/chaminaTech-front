@@ -16,10 +16,10 @@ import { take } from 'rxjs';
 import { Observacoes } from '../../../models/observacoes';
 
 @Component({
-    selector: 'app-historico-consumo',
-    imports: [FormsModule, DatePipe, NgClass, RouterLink],
-    templateUrl: './historico-consumo.component.html',
-    styleUrl: './historico-consumo.component.scss'
+  selector: 'app-historico-consumo',
+  imports: [FormsModule, DatePipe, NgClass, RouterLink],
+  templateUrl: './historico-consumo.component.html',
+  styleUrl: './historico-consumo.component.scss',
 })
 export class HistoricoConsumoComponent implements OnInit {
   @Input() modoModal: boolean = false;
@@ -43,7 +43,7 @@ export class HistoricoConsumoComponent implements OnInit {
   termoPesquisa!: 0;
   active!: any;
   cupomSelecionado!: GestaoCaixa | null;
-  filtroTipo: string = '';
+  filtroTipo: string | null = null;
   urlString!: string;
   motivoDeletar: string = '';
   menuAberto = true;
@@ -72,12 +72,14 @@ export class HistoricoConsumoComponent implements OnInit {
   }
 
   listaCupons(tipo?: string, cupom?: number) {
-    this.gestaoCaixaService.buscarCuponsConsumosHistorico(tipo, cupom).subscribe({
-      next: (listaCupons) => {
-        this.listaCuponsOrginal = listaCupons;
-        this.listaCuponsFiltrada = listaCupons;
-      },
-    });
+    this.gestaoCaixaService
+      .buscarCuponsConsumosHistorico(tipo, cupom)
+      .subscribe({
+        next: (listaCupons) => {
+          this.listaCuponsOrginal = listaCupons;
+          this.listaCuponsFiltrada = listaCupons;
+        },
+      });
   }
 
   selecionarCupom(cupom: any) {
@@ -88,14 +90,18 @@ export class HistoricoConsumoComponent implements OnInit {
 
   pesquisarCupom(termo: number) {
     const tipoValido =
-      this.filtroTipo.trim() !== '' ? this.filtroTipo : undefined;
+      this.filtroTipo && this.filtroTipo.trim() !== ''
+        ? this.filtroTipo
+        : undefined;
     const cupom = termo > 0 ? termo : undefined;
 
     this.listaCupons(tipoValido, cupom);
   }
   filtrarPorTipo() {
     const tipoValido =
-      this.filtroTipo.trim() !== '' ? this.filtroTipo : undefined;
+      this.filtroTipo && this.filtroTipo.trim() !== ''
+        ? this.filtroTipo
+        : undefined;
     const cupom = this.termoPesquisa > 0 ? this.termoPesquisa : undefined;
 
     this.listaCupons(tipoValido, cupom);

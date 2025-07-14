@@ -11,7 +11,6 @@ import { Gorjeta } from '../../../models/gorjeta';
 import { Funcionario } from '../../../models/funcionario';
 import { ToastrService } from 'ngx-toastr';
 import { GorjetaService } from '../../../services/gorjeta.service';
-import { LoginService } from '../../../services/login.service';
 import { GlobalService } from '../../../services/global.service';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { take } from 'rxjs';
@@ -31,7 +30,6 @@ export class GorjetaComponent implements OnInit {
 
   toastr = inject(ToastrService);
   gorjetaService = inject(GorjetaService);
-  loginService = inject(LoginService);
   globalService = inject(GlobalService);
   modalService = inject(NgbModal);
 

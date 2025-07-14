@@ -62,7 +62,7 @@
           [(ngModel)]="ativo"
           (change)="filtrarFuncionarios()"
         >
-          <option [ngValue]="undefined">Todos</option>
+          <option [ngValue]="null">Todos</option>
           <option value="true">Sim</option>
           <option value="false">Não</option>
         </select>
@@ -146,7 +146,7 @@
                 <span class="hover-text">Ativar</span>
                 }
               </button>
-              } @else { &nbsp; }
+              }
             </div>
           </td>
         </tr>

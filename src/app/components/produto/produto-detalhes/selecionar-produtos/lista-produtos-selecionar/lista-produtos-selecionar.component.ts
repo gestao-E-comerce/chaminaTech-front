@@ -28,10 +28,10 @@ export class ListaProdutosSelecionarComponent {
   tituloModal!: string;
   indice!: number;
   ativo?: string = '';
-  cardapio?: string = '';
-  estocavel?: string = '';
+  cardapio?: string | null = null;
+  estocavel?: string | null = null;
   validarExestencia?: string = '';
-  categoriaNome?: string = '';
+  categoriaNome?: string | null = null;
   nome?: string = '';
 
   ngOnInit() {

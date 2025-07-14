@@ -109,7 +109,7 @@ export class GlobalService {
   setModoTouch(valor: boolean) {
     localStorage.setItem('modoTouch', valor.toString());
     this.modoTouchSubject.next(valor);
-    window.location.reload(); 
+    window.location.reload();
   }
 
   getModoTouch(): boolean {
@@ -120,14 +120,15 @@ export class GlobalService {
     if (this.caixa) return of(this.caixa);
     if (this.caixaObs$) return this.caixaObs$;
 
-    const loginService = this.injector.get(LoginService);
-    const usuarioId = loginService.getUser().id;
-
-    this.caixaObs$ = this.buscarCaixaAtivaPorFuncionario(usuarioId).pipe(
-      map((caixa) => {
-        if (caixa) this.caixa = caixa;
-        return caixa;
-      }),
+    this.caixaObs$ = this.getUsuarioAsync().pipe(
+      switchMap((usuario) =>
+        this.buscarCaixaAtivaPorFuncionario(usuario.id).pipe(
+          map((caixa) => {
+            if (caixa) this.caixa = caixa;
+            return caixa;
+          })
+        )
+      ),
       shareReplay(1)
     );
 
@@ -151,11 +152,11 @@ export class GlobalService {
     if (this.usuarioObs$) return this.usuarioObs$;
 
     const loginService = this.injector.get(LoginService);
-    const usuarioId = loginService.getUser().id;
+    const token = loginService.getToken();
 
-    this.usuarioObs$ = this.usuarioService.buscarUsuarioPorId(usuarioId).pipe(
+    this.usuarioObs$ = this.usuarioService.buscarUsuarioPorToken(token!).pipe(
       switchMap((usuario) => {
-        this.usuario = usuario;
+        this.setUsuario(usuario);
         return of(usuario);
       }),
       shareReplay(1)
@@ -163,19 +164,24 @@ export class GlobalService {
 
     return this.usuarioObs$;
   }
+  setUsuario(usuario: Usuario): void {
+    this.usuario = usuario;
+    this.usuarioObs$ = of(usuario); // Atualiza o observable com o novo valor
+  }
 
   getFuncionarioAsync(): Observable<Funcionario> {
     if (this.funcionario) return of(this.funcionario);
     if (this.funcionarioObs$) return this.funcionarioObs$;
 
-    const loginService = this.injector.get(LoginService);
-    const usuarioId = loginService.getUser().id;
-
-    this.funcionarioObs$ = this.buscarFuncionarioPorId(usuarioId).pipe(
-      switchMap((funcionario) => {
-        this.funcionario = funcionario;
-        return of(funcionario);
-      }),
+    this.funcionarioObs$ = this.getUsuarioAsync().pipe(
+      switchMap((usuario) =>
+        this.buscarFuncionarioPorId(usuario.id).pipe(
+          map((funcionario) => {
+            if (funcionario) this.funcionario = funcionario;
+            return funcionario;
+          })
+        )
+      ),
       shareReplay(1)
     );
 
@@ -186,32 +192,24 @@ export class GlobalService {
     if (this.matriz) return of(this.matriz);
     if (this.matrizObs$) return this.matrizObs$;
 
-    const loginService = this.injector.get(LoginService);
-    const usuario = loginService.getUser();
-
-    if (usuario.role === 'MATRIZ') {
-      this.matrizObs$ = this.buscarMatrizPorId(usuario.id).pipe(
-        switchMap((matriz) => {
-          this.matriz = matriz;
-          return of(matriz);
-        }),
-        shareReplay(1)
-      );
-    } else if (usuario.role === 'FUNCIONARIO') {
-      this.matrizObs$ = this.getFuncionarioAsync().pipe(
-        switchMap((func) =>
-          this.buscarMatrizPorId(func.matriz.id).pipe(
-            switchMap((matriz) => {
-              this.matriz = matriz;
-              return of(matriz);
-            })
-          )
-        ),
-        shareReplay(1)
-      );
-    } else {
-      return throwError(() => new Error('Usuário sem papel definido.'));
-    }
+    this.matrizObs$ = this.getUsuarioAsync().pipe(
+      switchMap((usuario) => {
+        if (usuario.role === 'MATRIZ') {
+          return this.buscarMatrizPorId(usuario.id);
+        } else if (usuario.role === 'FUNCIONARIO') {
+          return this.getFuncionarioAsync().pipe(
+            switchMap((func) => this.buscarMatrizPorId(func.matriz.id))
+          );
+        } else {
+          return throwError(() => new Error('Usuário sem papel definido.'));
+        }
+      }),
+      switchMap((matriz) => {
+        this.matriz = matriz;
+        return of(matriz);
+      }),
+      shareReplay(1)
+    );
 
     return this.matrizObs$;
   }
@@ -227,32 +225,24 @@ export class GlobalService {
     if (this.admin) return of(this.admin);
     if (this.adminObs$) return this.adminObs$;
 
-    const loginService = this.injector.get(LoginService);
-    const usuario = loginService.getUser();
-
-    if (usuario.role === 'ADMIN') {
-      this.adminObs$ = this.buscarAdminPorId(usuario.id).pipe(
-        switchMap((admin) => {
-          this.admin = admin;
-          return of(admin);
-        }),
-        shareReplay(1)
-      );
-    } else if (usuario.role === 'ADMINFUNCIONARIO') {
-      this.adminObs$ = this.getAdminFuncionarioAsync().pipe(
-        switchMap((func) =>
-          this.buscarAdminPorId(func.admin.id).pipe(
-            switchMap((admin) => {
-              this.admin = admin;
-              return of(admin);
-            })
-          )
-        ),
-        shareReplay(1)
-      );
-    } else {
-      return throwError(() => new Error('Usuário sem papel definido.'));
-    }
+    this.adminObs$ = this.getUsuarioAsync().pipe(
+      switchMap((usuario) => {
+        if (usuario.role === 'ADMIN') {
+          return this.buscarAdminPorId(usuario.id);
+        } else if (usuario.role === 'ADMINFUNCIONARIO') {
+          return this.getAdminFuncionarioAsync().pipe(
+            switchMap((func) => this.buscarAdminPorId(func.admin.id))
+          );
+        } else {
+          return throwError(() => new Error('Usuário sem papel definido.'));
+        }
+      }),
+      switchMap((admin) => {
+        this.admin = admin;
+        return of(admin);
+      }),
+      shareReplay(1)
+    );
 
     return this.adminObs$;
   }
@@ -260,16 +250,15 @@ export class GlobalService {
     if (this.adminFuncionario) return of(this.adminFuncionario);
     if (this.adminFuncionarioObs$) return this.adminFuncionarioObs$;
 
-    const loginService = this.injector.get(LoginService);
-    const usuarioId = loginService.getUser().id;
-
-    this.adminFuncionarioObs$ = this.buscarAdminFuncionarioPorId(
-      usuarioId
-    ).pipe(
-      switchMap((adminFuncionario) => {
-        this.adminFuncionario = adminFuncionario;
-        return of(adminFuncionario);
-      }),
+    this.adminFuncionarioObs$ = this.getUsuarioAsync().pipe(
+      switchMap((usuario) =>
+        this.buscarAdminFuncionarioPorId(usuario.id).pipe(
+          switchMap((adminFuncionario) => {
+            this.adminFuncionario = adminFuncionario;
+            return of(adminFuncionario);
+          })
+        )
+      ),
       shareReplay(1)
     );
 

@@ -19,7 +19,7 @@ export class CategoriaService {
   }
 
   listarCategorias(
-      ativo?: string,
+      ativo?: string | null,
       nome?: string
     ): Observable<Categoria[]> {
       return this.globalService.getMatrizAsync().pipe(

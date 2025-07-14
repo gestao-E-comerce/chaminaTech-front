@@ -39,7 +39,7 @@ export class MatrizListComponent implements OnInit {
   toastr = inject(ToastrService);
 
   tituloModal!: string;
-  ativo?: string = '';
+  ativo?: string | null = null;
   nome?: string = '';
 
   ngOnInit() {

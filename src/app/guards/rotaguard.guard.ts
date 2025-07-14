@@ -8,19 +8,10 @@ import { Permissao } from '../models/permissao';
 import { GlobalService } from '../services/global.service';
 
 export const rotaguardGuard: CanActivateFn = (route, state) => {
-  const loginService = inject(LoginService);
   const globalService = inject(GlobalService);
   const router = inject(Router);
   const location = inject(Location);
   const toastr = inject(ToastrService);
-
-  const token = loginService.getToken();
-  const user = loginService.getUser();
-
-  if (!token || !user?.id) {
-    router.navigate(['/login']);
-    return of(false);
-  }
 
   const rotaParaPermissao: { [rota: string]: keyof Permissao } = {
     produto: 'produto',
@@ -51,6 +42,10 @@ export const rotaguardGuard: CanActivateFn = (route, state) => {
 
   return globalService.getUsuarioAsync().pipe(
     map((usuario) => {
+      if (!usuario || !usuario.id) {
+        router.navigate(['/login']);
+        return false;
+      }
       const partesUrl = state.url.split('/').filter(Boolean);
       let rotaBase = partesUrl[0];
       let subRota = partesUrl[1];

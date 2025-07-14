@@ -68,7 +68,7 @@
             [(ngModel)]="filtroTipo"
             (change)="filtrarPorTipo()"
           >
-            <option [ngValue]="undefined">Todos</option>
+            <option [ngValue]="null">Todos</option>
             <option value="aberta">Aberta</option>
             <option value="fechada">Fechada</option>
           </select>
@@ -106,13 +106,15 @@
   </div>
   <div class="h-100 w-100 content-container">
     @if (caixaSelecionado) {
-    <div class="d-flex align-items-center justify-content-between header-fixo w-100">
+    <div
+      class="d-flex align-items-center justify-content-between header-fixo w-100"
+    >
       <div class="d-flex align-items-center">
-        <h2 class="titulo m-0">Detalhes do Caixa ID: {{ caixaSelecionado.id }}</h2>
+        <h2 class="titulo m-0">
+          Detalhes do Caixa ID: {{ caixaSelecionado.id }}
+        </h2>
       </div>
-      <div
-        class="d-flex justify-content-end align-items-center gap-3"
-      >
+      <div class="d-flex justify-content-end align-items-center gap-3">
         @if ((usuario && usuario.permissao && usuario.permissao.imprimir) &&
         matriz.configuracaoImpressao.usarImpressora) {
         <button
@@ -233,6 +235,7 @@
               <th class="text-center col-1">#</th>
               <th class="text-center col-1">Data</th>
               <th class="text-start col-2">Motivo</th>
+              <th class="text-start col-1">Tipo</th>
               <th class="text-center col-1">Valor</th>
               <th class="text-center col-2">Ações</th>
             </thead>
@@ -244,6 +247,7 @@
                   {{ sangria.dataSangria | date : "dd/MM/yyyy HH:mm" }}
                 </td>
                 <td class="text-start">{{ sangria.motivo }}</td>
+                <td class="text-start">{{ sangria.tipo }}</td>
                 <td class="text-center">{{ sangria.valor }}</td>
                 <td>
                   <div class="col-acoes">
@@ -291,7 +295,7 @@
                       />
                       <span class="hover-text">Deletar</span>
                     </button>
-                    } @else { &nbsp; }
+                    }
                   </div>
                 </td>
               </tr>
@@ -370,7 +374,7 @@
                       />
                       <span class="hover-text">Deletar</span>
                     </button>
-                    }@else { &nbsp; }
+                    }
                   </div>
                 </td>
               </tr>
@@ -389,6 +393,7 @@
               <th class="text-center col-1">#</th>
               <th class="text-center col-3">Data</th>
               <th class="text-center col-4">Pagamentos</th>
+              <th class="text-center col-2">Total</th>
               <th class="text-center col-2">Ações</th>
             </thead>
             <tbody>
@@ -400,14 +405,34 @@
                 </td>
                 <td class="text-center">
                   @if (gorjeta.dinheiro > 0) {
-                  <span>Dinheiro: {{ gorjeta.dinheiro }}</span>
-                  } @if (gorjeta.debito > 0) {
-                  <span> Débito: {{ gorjeta.debito }}</span>
+                  <span>
+                    Dinheiro
+                    {{ gorjeta.dinheiro || 0 | currency : "BRL" }}
+                  </span>
                   } @if (gorjeta.credito > 0) {
-                  <span> Crédito: {{ gorjeta.credito }}</span>
+                  <span>
+                    Crédito
+                    {{ gorjeta.credito || 0 | currency : "BRL" }}</span
+                  >
+                  } @if (gorjeta.debito > 0) {
+                  <span>
+                    Débito
+                    {{ gorjeta.debito || 0 | currency : "BRL" }}</span
+                  >
                   } @if (gorjeta.pix > 0) {
-                  <span> Pix: {{ gorjeta.pix }}</span>
+                  <span>
+                    PIX
+                    {{ gorjeta.pix || 0 | currency : "BRL" }}</span
+                  >
                   }
+                </td>
+                <td class="text-center">
+                  {{
+                    (gorjeta.dinheiro || 0) +
+                      (gorjeta.credito || 0) +
+                      (gorjeta.debito || 0) +
+                      (gorjeta.pix || 0) | currency : "BRL"
+                  }}
                 </td>
                 <td>
                   <div class="col-acoes">
@@ -455,7 +480,7 @@
                       />
                       <span class="hover-text">Deletar</span>
                     </button>
-                    } @else { &nbsp; }
+                    }
                   </div>
                 </td>
               </tr>

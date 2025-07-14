@@ -1,9 +1,9 @@
 export class Auditoria {
   id!: number;
   matrizId!: number;
-  operacao!: string;
-  tipo!: string;
+  operacao: string | null = null;;
+  tipo: string | null = null;;
   descricao!: string;
-  usuario!: string;
+  usuario: string | null = null;
   dataHora!: string;
 }

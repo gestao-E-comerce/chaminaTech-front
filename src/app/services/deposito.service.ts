@@ -17,7 +17,7 @@ export class DepositoService {
 
   listarDepositos(
     materiaNome?: string,
-    ativo?: string
+    ativo?: string | null
   ): Observable<Deposito[]> {
     return this.globalService.getMatrizAsync().pipe(
       switchMap((matriz) => {

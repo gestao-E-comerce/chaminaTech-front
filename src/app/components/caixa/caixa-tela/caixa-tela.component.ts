@@ -51,25 +51,25 @@ import { SocketService } from '../../../services/socket.service';
 import { ProdutoObservacaoTouchDeveComponent } from './caixa-tela-touch/produto-observacao-touch-deve/produto-observacao-touch-deve.component';
 
 @Component({
-    selector: 'app-caixa-tela',
-    imports: [
-        FormsModule,
-        SelecionarProdutosComponent,
-        PagamentosComponent,
-        TransferirMesaComponent,
-        ProdutoObservacaoComponent,
-        VendaListaComponent,
-        NgClass,
-        DatePipe,
-        SelecionarClienteComponent,
-        NgxMaskPipe,
-        ProdutosComponent,
-        ProdutoObservacaoTouchComponent,
-        VendaListaTouchComponent,
-        ProdutoObservacaoTouchDeveComponent,
-    ],
-    templateUrl: './caixa-tela.component.html',
-    styleUrl: './caixa-tela.component.scss'
+  selector: 'app-caixa-tela',
+  imports: [
+    FormsModule,
+    SelecionarProdutosComponent,
+    PagamentosComponent,
+    TransferirMesaComponent,
+    ProdutoObservacaoComponent,
+    VendaListaComponent,
+    NgClass,
+    DatePipe,
+    SelecionarClienteComponent,
+    NgxMaskPipe,
+    ProdutosComponent,
+    ProdutoObservacaoTouchComponent,
+    VendaListaTouchComponent,
+    ProdutoObservacaoTouchDeveComponent,
+  ],
+  templateUrl: './caixa-tela.component.html',
+  styleUrl: './caixa-tela.component.scss',
 })
 export class CaixaTelaComponent implements OnInit {
   @ViewChild('quantidadeProdutoPeso', { static: false })
@@ -1729,29 +1729,29 @@ export class CaixaTelaComponent implements OnInit {
           this.pagar(this.chaveUnico, modalPagamentos);
         }
       } else {
-        if (
-          !this.venda.produtoVendas ||
-          this.venda.produtoVendas.length === 0
-        ) {
-          if (this.venda.dataVenda != null) {
-            this.vendaService.deletar(this.venda).subscribe({
-              next: (mensagem) => {
-                this.toastr.success(mensagem.mensagem);
-                this.retorno.emit(mensagem);
-                this.atualizarEstadoCaixa();
-              },
-              error: (erro) => {
-                this.toastr.error(erro.error.mensagem);
-              },
-            });
+        if (this.vendaAlterada()) {
+          this.valorTotal();
+          if (this.tipoCaixa === 'retirada' || this.tipoCaixa === 'entrega') {
+            this.lancarVendaViagem(modalPagamentos, modalConfirmarImpressao);
+          } else {
+            this.lancarVenda(modalConfirmarImpressao);
           }
         } else {
-          if (this.vendaAlterada()) {
-            this.valorTotal();
-            if (this.tipoCaixa === 'retirada' || this.tipoCaixa === 'entrega') {
-              this.lancarVendaViagem(modalPagamentos, modalConfirmarImpressao);
-            } else {
-              this.lancarVenda(modalConfirmarImpressao);
+          if (
+            !this.venda.produtoVendas ||
+            this.venda.produtoVendas.length === 0
+          ) {
+            if (this.venda.dataVenda != null) {
+              this.vendaService.deletar(this.venda).subscribe({
+                next: (mensagem) => {
+                  this.toastr.success(mensagem.mensagem);
+                  this.retorno.emit(mensagem);
+                  this.atualizarEstadoCaixa();
+                },
+                error: (erro) => {
+                  this.toastr.error(erro.error.mensagem);
+                },
+              });
             }
           }
         }

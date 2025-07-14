@@ -49,11 +49,11 @@ export class ProdutoListComponent implements OnInit {
 
   tituloModal!: string;
   indice!: number;
-  ativo?: string = '';
-  cardapio?: string = '';
-  estocavel?: string = '';
-  validarExestencia?: string = '';
-  categoriaNome?: string = '';
+  ativo?: string  | null = null;
+  cardapio?: string  | null = null;
+  estocavel?: string  | null = null;
+  validarExestencia?: string  | null = null;
+  categoriaNome?: string  | null = null;
   nome?: string = '';
 
   @HostListener('window:resize', ['$event'])

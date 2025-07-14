@@ -1,5 +1,5 @@
-@import 'bootstrap/scss/bootstrap';
-@import 'ngx-toastr/toastr';
+@use 'bootstrap/scss/bootstrap';
+@use 'ngx-toastr/toastr';
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
@@ -48,6 +48,7 @@
 
     /* Font sizes responsivos */
     --fs-h1: clamp(1.5rem, 2.5vw, 2.2rem) !important;
+    --fs-h3: clamp(.8rem, 2vw, 1.8rem) !important;
     --fs-span: clamp(0.3rem, .8vw, .8rem) !important;
     --fs-span-atalho: clamp(0.3rem, .6vw, .6rem) !important;
     --fs-input: clamp(1rem, 1.2vw, 1.25rem) !important;
@@ -71,6 +72,24 @@
 .tooltip-wrapper {
     position: relative;
     display: inline-block;
+}
+
+.regras-senha {
+    list-style: none;
+    padding-left: 0;
+
+    li {
+        font-size: 0.9rem;
+        transition: color 0.3s;
+    }
+
+    .ok {
+        color: var(--cor-laranja); // ou a cor laranja padrão do seu sistema
+    }
+
+    .nok {
+        color: var(--cor-vermelho);
+    }
 }
 
 .paginacao-container {
@@ -324,26 +343,6 @@ button:focus {
     direction: ltr;
 }
 
-.lista-btns::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-}
-
-.lista-btns::-webkit-scrollbar-track {
-    background: var(--cor-cinza-fundo);
-    border-radius: 10px;
-}
-
-.lista-btns::-webkit-scrollbar-thumb {
-    background: var(--cor-laranja);
-    border-radius: 10px;
-    cursor: pointer;
-}
-
-.lista-btns::-webkit-scrollbar-thumb:hover {
-    background: var(--cor-cinza-fundo);
-    cursor: pointer;
-}
 
 .btn-lista {
     background: transparent;
@@ -392,26 +391,6 @@ button:focus {
     direction: ltr;
 }
 
-.lista-pagamentos::-webkit-scrollbar {
-    width: 8px;
-}
-
-.lista-pagamentos::-webkit-scrollbar-track {
-    background: var(--cor-cinza-fundo);
-    border-radius: 4px;
-}
-
-.lista-pagamentos::-webkit-scrollbar-thumb {
-    cursor: pointer;
-    background: var(--cor-laranja);
-    border-radius: 4px;
-}
-
-.lista-pagamentos::-webkit-scrollbar-thumb:hover {
-    cursor: pointer;
-    background: var(--cor-cinza-fundo);
-}
-
 .lista-tamanho-60vh {
     flex-grow: 1;
     overflow: auto;
@@ -446,6 +425,7 @@ button:focus {
 }
 
 .lista table thead th,
+.lista-relatorio table thead th,
 .lista-tamanho-60vh table thead th,
 .lista-tamanho-50vh table thead th,
 .lista-curta table thead th {
@@ -461,8 +441,14 @@ button:focus {
 .lista-tamanho-60vh::-webkit-scrollbar,
 .lista-tamanho-50vh::-webkit-scrollbar,
 .lista-curta::-webkit-scrollbar,
+.lista-relatorio table::-webkit-scrollbar,
 .modal-fullscreen::-webkit-scrollbar,
-.modal-body::-webkit-scrollbar {
+.modal-body::-webkit-scrollbar,
+.lista-btns::-webkit-scrollbar,
+.lista-pagamentos::-webkit-scrollbar,
+textarea::-webkit-scrollbar,
+.scroll::-webkit-scrollbar,
+.content-container::-webkit-scrollbar {
     width: 8px;
     height: 8px;
 }
@@ -471,20 +457,37 @@ button:focus {
 .lista-tamanho-60vh::-webkit-scrollbar-track,
 .lista-tamanho-50vh::-webkit-scrollbar-track,
 .lista-curta::-webkit-scrollbar-track,
+.lista-relatorio table::-webkit-scrollbar-track,
 .modal-fullscreen::-webkit-scrollbar-track,
-.modal-body::-webkit-scrollbar-track {
+.modal-body::-webkit-scrollbar-track,
+.lista-btns::-webkit-scrollbar-track,
+.lista-pagamentos::-webkit-scrollbar-track {
     background: var(--cor-cinza-escuro);
     border-radius: 10px;
+}
+
+.content-container::-webkit-scrollbar-track,
+.scroll::-webkit-scrollbar-track {
+    background: var(--cor-cinza-escuro);
 }
 
 .lista::-webkit-scrollbar-thumb,
 .lista-tamanho-60vh::-webkit-scrollbar-thumb,
 .lista-tamanho-50vh::-webkit-scrollbar-thumb,
 .lista-curta::-webkit-scrollbar-thumb,
+.lista-relatorio table::-webkit-scrollbar-thumb,
 .modal-fullscreen::-webkit-scrollbar-thumb,
-.modal-body::-webkit-scrollbar-thumb {
+.modal-body::-webkit-scrollbar-thumb,
+.lista-btns::-webkit-scrollbar-thumb,
+.lista-pagamentos::-webkit-scrollbar-thumb {
     background: var(--cor-laranja);
     border-radius: 10px;
+    cursor: pointer;
+}
+
+.content-container::-webkit-scrollbar-thumb,
+.scroll::-webkit-scrollbar-thumb {
+    background: var(--cor-laranja);
     cursor: pointer;
 }
 
@@ -492,8 +495,14 @@ button:focus {
 .lista-tamanho-60vh::-webkit-scrollbar-thumb:hover,
 .lista-tamanho-50vh::-webkit-scrollbar-thumb:hover,
 .lista-curta::-webkit-scrollbar-thumb:hover,
+.lista-relatorio table::-webkit-scrollbar-thumb:hover,
 .modal-fullscreen::-webkit-scrollbar-thumb:hover,
-.modal-body::-webkit-scrollbar-thumb:hover {
+.modal-body::-webkit-scrollbar-thumb:hover,
+.lista-btns::-webkit-scrollbar-thumb:hover,
+.lista-pagamentos::-webkit-scrollbar-thumb:hover,
+textarea::-webkit-scrollbar-thumb:hover,
+.scroll::-webkit-scrollbar-thumb:hover,
+.content-container::-webkit-scrollbar-thumb:hover {
     background: var(--cor-cinza-fundo);
     cursor: pointer;
 }
@@ -585,6 +594,15 @@ option {
     }
 }
 
+.header-fixo {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: var(--cor-cinza-escuro);
+    padding: 1rem;
+    border-bottom: 1px solid var(--cor-laranja);
+}
+
 .tela {
     height: 100vh;
     width: 100%;
@@ -654,11 +672,6 @@ option {
     box-sizing: border-box;
 }
 
-textarea::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-}
-
 textarea::-webkit-scrollbar-track {
     background: var(--cor-cinza-escuro);
     border-radius: 4px;
@@ -672,11 +685,6 @@ textarea::-webkit-scrollbar-thumb {
     border-top-left-radius: 0px;
     border-bottom-left-radius: 0px;
     cursor: pointer;
-}
-
-textarea::-webkit-scrollbar-thumb:hover {
-    cursor: pointer;
-    background: var(--cor-cinza-fundo);
 }
 
 textarea {
@@ -1115,6 +1123,7 @@ label {
     color: var(--cor-white);
     border: 1px solid var(--cor-laranja);
     background-color: var(--cor-laranja);
+    font-size: var(--fs-button) !important;
 }
 
 .btn-comum-laranja {
@@ -1130,6 +1139,7 @@ label {
     color: var(--cor-white);
     border: 1px solid var(--cor-laranja) !important;
     background-color: var(--cor-cinza-escuro) !important;
+    font-size: var(--fs-button) !important;
 
     &:disabled {
         background-color: var(--cor-cinza-escuro) !important;
@@ -1283,7 +1293,8 @@ label {
         border-radius: 0.5rem;
     }
 
-    .btn-comum {
+    .btn-comum,
+    .btn-borda-laranja {
         font-size: 0.8rem !important;
         padding: 0.25rem 0.75rem !important;
     }

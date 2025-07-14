@@ -12,9 +12,9 @@ export class AuditoriaService {
   globalService = inject(GlobalService);
 
   listarAuditorias(
-    usuario?: string,
-    operacao?: string,
-    tipo?: string,
+    usuario?: string | null,
+    operacao?: string | null,
+    tipo?: string | null,
     dataInicio?: string,
     dataFim?: string,
     page?: number,

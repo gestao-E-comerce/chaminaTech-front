@@ -47,7 +47,7 @@ export class MateriaListComponent implements OnInit {
   tituloModal!: string;
   indice!: number;
   nome?: string = '';
-  ativo?: string = '';
+  ativo?: string | null = null;
 
   ngOnInit() {
     this.filtrarMaterias();

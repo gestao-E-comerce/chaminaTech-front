@@ -19,7 +19,7 @@ export class AdminService {
 
   listarMatrizes(
     termoPesquisa?: string,
-    ativo?: string
+    ativo?: string | null
   ): Observable<Matriz[]> {
     let params = new HttpParams();
     if (termoPesquisa != null && termoPesquisa !== '') {

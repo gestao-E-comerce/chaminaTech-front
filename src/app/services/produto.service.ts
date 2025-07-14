@@ -25,11 +25,11 @@ export class ProdutoService {
   }
 
   listarProdutos(
-    ativo?: string,
-    cardapio?: string,
-    estocavel?: string,
-    validarExestencia?: string,
-    categoriaNome?: string,
+    ativo?: string | null,
+    cardapio?: string | null,
+    estocavel?: string | null,
+    validarExestencia?: string | null,
+    categoriaNome?: string | null,
     nome?: string
   ): Observable<Produto[]> {
     return this.globalService.getMatrizAsync().pipe(
@@ -61,6 +61,18 @@ export class ProdutoService {
     );
   }
 
+  listarTudosProdutos(): Observable<Produto[]> {
+    return this.globalService.getMatrizAsync().pipe(
+      switchMap((matriz) => {
+        let params = new HttpParams().set('matrizId', matriz.id.toString());
+
+        return this.http.get<Produto[]>(`${this.API}/listaTudos`, {
+          params,
+        });
+      })
+    );
+  }
+
   listarProdutosEstoque(termoPesquisa?: string): Observable<Produto[]> {
     return this.globalService.getMatrizAsync().pipe(
       switchMap((matriz) => {
@@ -75,16 +87,21 @@ export class ProdutoService {
     );
   }
 
-  listarProdutosEstoqueDescartar(termoPesquisa?: string): Observable<Produto[]> {
+  listarProdutosEstoqueDescartar(
+    termoPesquisa?: string
+  ): Observable<Produto[]> {
     return this.globalService.getMatrizAsync().pipe(
       switchMap((matriz) => {
         let params = new HttpParams().set('matrizId', matriz.id.toString());
         if (termoPesquisa != null && termoPesquisa !== '') {
           params = params.set('termoPesquisa', termoPesquisa);
         }
-        return this.http.get<Produto[]>(`${this.API}/listarProdutosEstoqueDescartados`, {
-          params,
-        });
+        return this.http.get<Produto[]>(
+          `${this.API}/listarProdutosEstoqueDescartados`,
+          {
+            params,
+          }
+        );
       })
     );
   }

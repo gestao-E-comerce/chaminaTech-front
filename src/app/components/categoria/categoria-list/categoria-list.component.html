@@ -48,7 +48,7 @@
           [(ngModel)]="ativo"
           (change)="filtrarCategorias()"
         >
-          <option [ngValue]="undefined">Todos</option>
+          <option [ngValue]="null">Todos</option>
           <option value="true">Sim</option>
           <option value="false">Não</option>
         </select>
@@ -134,7 +134,7 @@
                 />
                 <span class="hover-text">Copiar</span>
               </button>
-              }@else { &nbsp; }
+              }
             </div>
           </td>
         </tr>

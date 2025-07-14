@@ -11,7 +11,7 @@ import { Mensagem } from '../../../models/mensagem';
 import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { MatrizService } from '../../../services/matriz.service';
-import { CommonModule, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { PermissaoListaComponent } from '../../permissao/permissao-lista/permissao-lista.component';
 import { Permissao } from '../../../models/permissao';
@@ -19,10 +19,10 @@ import { GlobalService } from '../../../services/global.service';
 import { NgxMaskDirective } from 'ngx-mask';
 
 @Component({
-    selector: 'app-matriz-detalhes',
-    imports: [FormsModule, NgxMaskDirective, NgClass, PermissaoListaComponent],
-    templateUrl: './matriz-detalhes.component.html',
-    styleUrl: './matriz-detalhes.component.scss'
+  selector: 'app-matriz-detalhes',
+  imports: [FormsModule, NgxMaskDirective, NgClass, PermissaoListaComponent],
+  templateUrl: './matriz-detalhes.component.html',
+  styleUrl: './matriz-detalhes.component.scss',
 })
 export class MatrizDetalhesComponent {
   @Input() matriz: Matriz = new Matriz();
@@ -131,6 +131,37 @@ export class MatrizDetalhesComponent {
       this.toastr.error('Permissão obrigatório!');
       return;
     }
+    const senha = this.matriz.password || '';
+    const errosSenha: string[] = [];
+
+    if (senha.trim()) {
+      if (senha.length < 8) {
+        errosSenha.push('mínimo de 8 caracteres');
+      }
+      if (!/[a-z]/.test(senha)) {
+        errosSenha.push('1 letra minúscula');
+      }
+      if (!/[A-Z]/.test(senha)) {
+        errosSenha.push('1 letra maiúscula');
+      }
+      if (!/\d/.test(senha)) {
+        errosSenha.push('1 número');
+      }
+      if (!/[\W_]/.test(senha)) {
+        errosSenha.push('1 caractere especial');
+      }
+      if (/\s/.test(senha)) {
+        errosSenha.push('sem espaços');
+      }
+
+      if (errosSenha.length > 0) {
+        this.toastr.error(
+          `Senha inválida: deve conter ${errosSenha.join(', ')}.`
+        );
+        return;
+      }
+    }
+
     const enderecoAtual = `${this.matriz.rua}, ${this.matriz.numero}, ${this.matriz.bairro}, ${this.matriz.cidade}, ${this.matriz.estado}`;
 
     if (enderecoAtual === this.enderecoOriginal) {
@@ -166,5 +197,28 @@ export class MatrizDetalhesComponent {
         );
       },
     });
+  }
+  temMaiuscula(): boolean {
+    return /[A-Z]/.test(this.matriz.password || '');
+  }
+
+  temMinuscula(): boolean {
+    return /[a-z]/.test(this.matriz.password || '');
+  }
+
+  temNumero(): boolean {
+    return /\d/.test(this.matriz.password || '');
+  }
+
+  temEspecial(): boolean {
+    return /[\W_]/.test(this.matriz.password || '');
+  }
+
+  temTamanho(): boolean {
+    return (this.matriz.password || '').length >= 8;
+  }
+
+  temEspaco(): boolean {
+    return /\s/.test(this.matriz.password || '');
   }
 }

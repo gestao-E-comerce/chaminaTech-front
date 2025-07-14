@@ -16,7 +16,7 @@ export class MateriaService {
 
   listarMaterias(
     termoPesquisa?: string,
-    ativo?: string
+    ativo?: string | null
   ): Observable<Materia[]> {
     return this.globalService.getMatrizAsync().pipe(
       switchMap((matriz) => {

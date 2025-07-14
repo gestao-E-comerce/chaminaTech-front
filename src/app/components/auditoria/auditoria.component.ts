@@ -28,9 +28,9 @@ export class AuditoriaComponent {
   toastr = inject(ToastrService);
   router = inject(Router);
 
-  tipo: string = '';
-  usuario: string = '';
-  operacao: string = '';
+  tipo: string | null = null;
+  usuario: string | null = null;
+  operacao: string | null = null;
   dataInicio: string = '';
   dataFim: string = '';
   funcionarios: Funcionario[] = [];
@@ -44,7 +44,7 @@ export class AuditoriaComponent {
 
     this.globalService.getMatrizAsync().subscribe({
       next: (matriz) => {
-        this.funcionarioService.listarFuncionarios().subscribe({
+        this.funcionarioService.listarTudosFuncionarios().subscribe({
           next: (lista) => {
             this.funcionarios = lista || [];
           },

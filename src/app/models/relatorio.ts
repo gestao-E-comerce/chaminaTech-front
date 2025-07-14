@@ -6,6 +6,7 @@ export class Relatorio {
   matriz!: Matriz;
   tipoConsulta: string | null = null;
   deletado: boolean | null = null;
+  ativo: boolean | null = null;
   funcionarioId: number | null = null;
   clienteId: number | null = null;
   balcao: boolean | null = null;
@@ -22,9 +23,14 @@ export class Relatorio {
   credito: boolean | null = null;
   dinheiro: boolean | null = null;
   periodoDia: string | null = null;
+  tipo: string | null = null;
+  caixaId: number | null = null;
+  funcionarioNome: string | null = null;
+  produtoId: number | null = null;
+  materiaId: number | null = null;
   ordenacao: string | null = null;
   pagina: number = 0;
   tamanho: number = 20;
 
-  agrupamento: string | null = "Dia";
+  agrupamento: string  | null = "DIA";
 }

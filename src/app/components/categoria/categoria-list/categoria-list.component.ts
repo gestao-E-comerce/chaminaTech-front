@@ -34,7 +34,7 @@ export class CategoriaListComponent implements OnInit {
   indice!: number;
   tituloModal!: string;
   nome?: string = '';
-  ativo?: string = '';
+  ativo?: string | null = null;
 
   ngOnInit() {
     this.filtrarCategorias();

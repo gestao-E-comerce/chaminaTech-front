@@ -1,12 +1,10 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable, switchMap } from 'rxjs';
 import { Mensagem } from '../models/mensagem';
 import { GlobalService } from './global.service';
 import { Config } from '../../config';
 import { Relatorio } from '../models/relatorio';
-import { Pagina } from '../models/pagina';
-import { Venda } from '../models/venda';
 
 @Injectable({
   providedIn: 'root',
@@ -28,32 +26,20 @@ export class RelatorioService {
     );
   }
 
-  save(relatorio: Relatorio): Observable<Mensagem> {
-    return this.globalService.getMatrizAsync().pipe(
-      switchMap((matriz) => {
-        relatorio.matriz = matriz;
-        if (relatorio.id) {
-          return this.http.put<Mensagem>(
-            `${this.API}/${relatorio.id}`,
-            relatorio
-          );
-        } else {
-          return this.http.post<Mensagem>(this.API, relatorio);
-        }
-      })
-    );
-  }
+  save(relatorio: Relatorio): Observable<Relatorio> {
+  return this.globalService.getMatrizAsync().pipe(
+    switchMap((matriz) => {
+      relatorio.matriz = matriz;
+      if (relatorio.id) {
+        return this.http.put<Relatorio>(`${this.API}/${relatorio.id}`, relatorio);
+      } else {
+        return this.http.post<Relatorio>(this.API, relatorio);
+      }
+    })
+  );
+}
 
   deletar(id: number): Observable<Mensagem> {
     return this.http.delete<Mensagem>(`${this.API}/${id}`);
-  }
-  gerarRelatorio(relatorio: Relatorio): Observable<Pagina<Venda>> {
-    return this.http.post<Pagina<Venda>>(
-      `${this.API}/gerarRelatorio`,
-      relatorio
-    );
-  }
-  gerarGrafico(relatorio: Relatorio): Observable<any[]> {
-    return this.http.post<any[]>(`${this.API}/grafico`, relatorio);
   }
 }

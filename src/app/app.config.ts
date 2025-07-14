@@ -7,6 +7,7 @@ import { provideToastr } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideEnvironmentNgxMask, provideNgxMask } from 'ngx-mask';
 import { httpinterceptorInterceptor } from './interceptors/httpinterceptor.interceptor';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -15,6 +16,7 @@ export const appConfig: ApplicationConfig = {
     provideToastr(),
     importProvidersFrom(BrowserAnimationsModule),
     provideEnvironmentNgxMask(),
-    provideNgxMask()
+    provideNgxMask(),
+    provideCharts(withDefaultRegisterables()),
   ],
 };

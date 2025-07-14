@@ -2,15 +2,6 @@
     background-color: var(--cor-cinza-escuro);
 }
 
-.header-fixo {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background-color: var(--cor-cinza-escuro);
-    padding: 1rem;
-    border-bottom: 1px solid var(--cor-laranja);
-}
-
 p {
     color: var(--cor-white) !important;
     font-weight: normal !important;

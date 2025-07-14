@@ -44,391 +44,1334 @@
         type="button"
         name="{{ relatorio.id }}"
         (click)="selecionarRelatorio(relatorio)"
-        class="btn-lista d-flex align-items-center justify-content-between px-3 py-2 m-1"
+        class="btn-lista d-flex align-items-center justify-content-start px-3 py-2 m-1"
         [ngClass]="{ 'btn-lista-active': active == relatorio }"
       >
-        <span class="text-start" style="width: 150px">
+        <span>
           <strong>{{ relatorio.nome }}</strong>
         </span>
-        @if (usuario && usuario.permissao && usuario.permissao.deletarRelatorio)
-        {
-        <button
-          type="button"
-          (click)="deletarRelatorio(modalDeletarRelatorio, relatorio, $index)"
-          class="hover-btn"
-          name="Deletar{{ $index }}"
-        >
-          <img
-            src="../../../../assets/images/botao_deletar.svg"
-            alt="Deletar"
-          />
-          <span class="hover-text">Deletar</span>
-        </button>
-        }
       </button>
       }
     </div>
     }
   </div>
-  <div class="d-flex flex-column p-3 w-100 content-container gap-2">
-    <div class="d-flex flex-wrap gap-3">
-      <div class="d-flex flex-column w-20">
-        <label>Tipo de objeto</label>
-        <select class="select-filtro p-1" [(ngModel)]="relatorio.tipoConsulta">
-          <option [ngValue]="null">Selecione</option>
-          <option value="VENDA">Venda</option>
 
-          <!-- <option value="CATEGORIA">Categoria</option>
-         <option value="PRODUTO">Produto</option>
-         <option value="CLIENTE">Cliente</option>
-         <option value="CAIXA">Caixa</option>
-         <option value="FUNCIONARIO">Funcionário</option>
-         <option value="PERMISSAO">Permissão</option>
-         <option value="ESTOQUE">Estoque</option>
-         <option value="DEPOSITO">Depósito</option>
-         <option value="MATERIA">Matéria</option>
-         <option value="CONFIGURACAO">Configuração</option>
-         <option value="SANGRIA">Sangria</option>
-         <option value="SUPRIMENTO">Suprimento</option>
-         <option value="IMPRESSAO">Impressão</option> -->
-        </select>
+  <div class="d-flex flex-column w-100 h-100 content-container">
+    <div
+      class="d-flex align-items-center justify-content-between header-fixo w-100"
+    >
+      <div class="d-flex align-items-center">
+        <h2 class="titulo m-0">Relatório: {{ relatorio.nome }}</h2>
       </div>
-      <div class="d-flex flex-column w-20">
-        <label>Data Início</label>
-        <input
-          type="text"
-          inputmode="numeric"
-          class="form-control"
-          [(ngModel)]="relatorio.dataInicio"
-          mask="00/00/0000 00:00"
-          placeholder="dd/MM/aaaa hh:mm"
-          [disabled]="!relatorio.tipoConsulta"
-        />
-      </div>
-      <div class="d-flex flex-column w-20">
-        <label>Data Fim</label>
-        <input
-          type="text"
-          inputmode="numeric"
-          class="form-control"
-          [(ngModel)]="relatorio.dataFim"
-          [disabled]="!relatorio.tipoConsulta"
-          mask="00/00/0000 00:00"
-          placeholder="dd/MM/aaaa hh:mm"
-        />
-      </div>
-      <div class="d-flex flex-column w-20">
-        <label>Período</label>
-        <select
-          class="select-filtro p-1"
-          [(ngModel)]="relatorio.periodoDia"
-          [disabled]="!relatorio.tipoConsulta"
+      <div class="d-flex justify-content-end align-items-center gap-3">
+        @if (relatorio.nome != null) {
+        <button
+          type="button"
+          name="editar"
+          class="btn-comum btn-comum-laranja"
+          (click)="fecharRelatorio()"
         >
-          <option [ngValue]="null">Selecione</option>
-          <option value="MANHA">Manhã</option>
-          <option value="TARDE">Tarde</option>
-          <option value="NOITE">Noite</option>
-          <option value="MADRUGADA">Madrugada</option>
-        </select>
-      </div>
-      <div class="d-flex flex-column w-25">
-        <label>Tipos de Venda</label>
-        <div class="d-flex flex-wrap gap-2">
-          <button
-            class="btn-comum btn-selecionar"
-            [ngClass]="{
-              'btn-selecionar-foco': relatorio.mesa,
-              'btn-selecionar': !relatorio.mesa
-            }"
-            (click)="alternarTipoVenda('MESA')"
-            [disabled]="!relatorio.tipoConsulta"
-          >
-            Mesa
-          </button>
-
-          <button
-            class="btn-comum btn-selecionar"
-            [ngClass]="{
-              'btn-selecionar-foco': relatorio.balcao,
-              'btn-selecionar': !relatorio.balcao
-            }"
-            (click)="alternarTipoVenda('BALCAO')"
-            [disabled]="!relatorio.tipoConsulta"
-          >
-            Balcão
-          </button>
-
-          <button
-            class="btn-comum btn-selecionar"
-            [ngClass]="{
-              'btn-selecionar-foco': relatorio.entrega,
-              'btn-selecionar': !relatorio.entrega
-            }"
-            (click)="alternarTipoVenda('ENTREGA')"
-            [disabled]="!relatorio.tipoConsulta"
-          >
-            Entrega
-          </button>
-
-          <button
-            class="btn-comum btn-selecionar"
-            [ngClass]="{
-              'btn-selecionar-foco': relatorio.retirada,
-              'btn-selecionar': !relatorio.retirada
-            }"
-            (click)="alternarTipoVenda('RETIRADA')"
-            [disabled]="!relatorio.tipoConsulta"
-          >
-            Retirada
-          </button>
-        </div>
-      </div>
-
-      <div class="d-flex flex-column w-20">
-        <label>Formas de Pagamento</label>
-        <div class="d-flex flex-wrap gap-2">
-          <button
-            class="btn-comum btn-selecionar"
-            [ngClass]="{
-              'btn-selecionar-foco': relatorio.dinheiro,
-              'btn-selecionar': !relatorio.dinheiro
-            }"
-            (click)="alternarTipoPagamento('DINHEIRO')"
-            [disabled]="!relatorio.tipoConsulta"
-          >
-            Dinheiro
-          </button>
-
-          <button
-            class="btn-comum btn-selecionar"
-            [ngClass]="{
-              'btn-selecionar-foco': relatorio.credito,
-              'btn-selecionar': !relatorio.credito
-            }"
-            (click)="alternarTipoPagamento('CREDITO')"
-            [disabled]="!relatorio.tipoConsulta"
-          >
-            Crédito
-          </button>
-
-          <button
-            class="btn-comum btn-selecionar"
-            [ngClass]="{
-              'btn-selecionar-foco': relatorio.debito,
-              'btn-selecionar': !relatorio.debito
-            }"
-            (click)="alternarTipoPagamento('DEBITO')"
-            [disabled]="!relatorio.tipoConsulta"
-          >
-            Débito
-          </button>
-
-          <button
-            class="btn-comum btn-selecionar"
-            [ngClass]="{
-              'btn-selecionar-foco': relatorio.pix,
-              'btn-selecionar': !relatorio.pix
-            }"
-            (click)="alternarTipoPagamento('PIX')"
-            [disabled]="!relatorio.tipoConsulta"
-          >
-            Pix
-          </button>
-        </div>
-      </div>
-      <div class="d-flex flex-column w-20">
-        <label>Vendas Deletadas</label>
-        <div class="btn-group w-100">
-          <button
-            type="button"
-            class="btn btn-borda-laranja p-2"
-            [ngClass]="{
-              'btn-comum-laranja': relatorio.deletado === true,
-              'btn-borda-laranja': relatorio.deletado !== true
-            }"
-            (click)="relatorio.deletado = true"
-            [disabled]="!relatorio.tipoConsulta"
-          >
-            SIM
-          </button>
-          <button
-            type="button"
-            class="btn btn-borda-laranja p-2"
-            [ngClass]="{
-              'btn-comum-laranja': relatorio.deletado === false,
-              'btn-borda-laranja': relatorio.deletado !== false
-            }"
-            (click)="relatorio.deletado = false"
-            [disabled]="!relatorio.tipoConsulta"
-          >
-            NÃO
-          </button>
-          <button
-            type="button"
-            class="btn btn-borda-laranja p-2"
-            [ngClass]="{
-              'btn-comum-laranja': relatorio.deletado === null,
-              'btn-borda-laranja': relatorio.deletado !== null
-            }"
-            (click)="relatorio.deletado = null"
-            [disabled]="!relatorio.tipoConsulta"
-          >
-            TODOS
-          </button>
-        </div>
-      </div>
-      <div class="d-flex flex-column w-20">
-        <label>Vendas Com Desconto</label>
-        <div class="btn-group w-100">
-          <button
-            type="button"
-            class="btn btn-borda-laranja p-2"
-            [ngClass]="{
-              'btn-comum-laranja': relatorio.desconto === true,
-              'btn-borda-laranja': relatorio.desconto !== true
-            }"
-            (click)="relatorio.desconto = true"
-            [disabled]="!relatorio.tipoConsulta"
-          >
-            SIM
-          </button>
-          <button
-            type="button"
-            class="btn btn-borda-laranja p-2"
-            [ngClass]="{
-              'btn-comum-laranja': relatorio.desconto === false,
-              'btn-borda-laranja': relatorio.desconto !== false
-            }"
-            (click)="relatorio.desconto = false"
-            [disabled]="!relatorio.tipoConsulta"
-          >
-            NÃO
-          </button>
-          <button
-            type="button"
-            class="btn btn-borda-laranja p-2"
-            [ngClass]="{
-              'btn-comum-laranja': relatorio.desconto === null,
-              'btn-borda-laranja': relatorio.desconto !== null
-            }"
-            (click)="relatorio.desconto = null"
-            [disabled]="!relatorio.tipoConsulta"
-          >
-            TODOS
-          </button>
-        </div>
-      </div>
-      <div class="d-flex flex-column w-20">
-        <label>Vendas Com Serviço</label>
-        <div class="btn-group w-100">
-          <button
-            type="button"
-            class="btn btn-borda-laranja p-2"
-            [ngClass]="{
-              'btn-comum-laranja': relatorio.taxaServico === true,
-              'btn-borda-laranja': relatorio.taxaServico !== true
-            }"
-            (click)="relatorio.taxaServico = true"
-            [disabled]="!relatorio.tipoConsulta"
-          >
-            SIM
-          </button>
-          <button
-            type="button"
-            class="btn btn-borda-laranja p-2"
-            [ngClass]="{
-              'btn-comum-laranja': relatorio.taxaServico === false,
-              'btn-borda-laranja': relatorio.taxaServico !== false
-            }"
-            (click)="relatorio.taxaServico = false"
-            [disabled]="!relatorio.tipoConsulta"
-          >
-            NÃO
-          </button>
-          <button
-            type="button"
-            class="btn btn-borda-laranja p-2"
-            [ngClass]="{
-              'btn-comum-laranja': relatorio.taxaServico === null,
-              'btn-borda-laranja': relatorio.taxaServico !== null
-            }"
-            (click)="relatorio.taxaServico = null"
-            [disabled]="!relatorio.tipoConsulta"
-          >
-            TODOS
-          </button>
-        </div>
-      </div>
-      <div class="d-flex flex-column w-20">
-        <label>Funcionário</label>
-        <select
-          class="select-filtro p-1"
-          [(ngModel)]="relatorio.funcionarioId"
-          [disabled]="!relatorio.tipoConsulta"
+          Fechar
+        </button>
+        } @if (usuario && usuario.permissao && usuario.permissao.editarRelatorio
+        && relatorio.id != null) {
+        <button
+          type="button"
+          name="editar"
+          class="btn-comum btn-comum-laranja"
+          (click)="editarRelatorio(modalRelatorio, relatorio)"
         >
-          <option [ngValue]="null">Todos</option>
-          @for (funcionario of funcionarios; track funcionario.id) {
-          <option [value]="funcionario.id">{{ funcionario.nome }}</option>
-          }
-        </select>
-      </div>
-      <div class="d-flex flex-column w-20">
-        <label>Cliente</label>
-        <select
-          class="select-filtro p-1"
-          [(ngModel)]="relatorio.clienteId"
-          [disabled]="!relatorio.tipoConsulta"
+          Editar Relatório
+        </button>
+        }@if (usuario && usuario.permissao && usuario.permissao.deletarRelatorio
+        && relatorio.id != null) {
+        <button
+          (click)="deletarRelatorio(modalDeletarRelatorio, relatorio)"
+          type="button"
+          name="deletar"
+          class="btn-comum btn-comum-vermelho"
         >
-          <option [ngValue]="null">Todos</option>
-          @for (cliente of clientes; track cliente.id) {
-          <option [value]="cliente.id">{{ cliente.nome }}</option>
-          }
-        </select>
-      </div>
-      <div class="d-flex flex-column w-20">
-        <label>Ordenar Por</label>
-        <select
-          class="select-filtro p-1"
-          [(ngModel)]="relatorio.ordenacao"
-          [disabled]="!relatorio.tipoConsulta"
-        >
-          <option [ngValue]="null">Selecione</option>
-
-          <option value="valorTotalDesc">Valor Total (maior → menor)</option>
-          <option value="valorTotalAsc">Valor Total (menor → maior)</option>
-
-          <option value="valorBrutoDesc">Valor Bruto (maior → menor)</option>
-          <option value="valorBrutoAsc">Valor Bruto (menor → maior)</option>
-
-          <option value="descontoDesc">Desconto (maior → menor)</option>
-          <option value="descontoAsc">Desconto (menor → maior)</option>
-
-          <option value="valorServicoDesc">Taxa Serviço (maior → menor)</option>
-          <option value="valorServicoAsc">Taxa Serviço (menor → maior)</option>
-
-          <option value="taxaEntregaDesc">Taxa Entrega (maior → menor)</option>
-          <option value="taxaEntregaAsc">Taxa Entrega (menor → maior)</option>
-
-          <option value="funcionarioAsc">Funcionário (A-Z)</option>
-          <option value="funcionarioDesc">Funcionário (Z-A)</option>
-
-          <option value="dataDesc">Data (mais recente)</option>
-          <option value="dataAsc">Data (mais antiga)</option>
-        </select>
+          Deletar Relatório
+        </button>
+        }
       </div>
     </div>
-    <div class="d-flex justify-content-center">
-      <button class="btn-comum btn-comum-laranja" (click)="aplicarRelatorio()">
-        Aplicar
-      </button>
-    </div>
-    <div class="lista">
-      <table class="table">
-        <thead>
-          <tr>
+    <div class="d-flex flex-column p-3 w-100 gap-4">
+      <div class="d-flex flex-wrap gap-3 w-100">
+        <div class="d-flex align-items-center flex-wrap gap-3 w-100">
+          <div class="d-flex flex-column">
+            <label>Tipo de objeto</label>
+            <select
+              class="select-filtro p-1"
+              [(ngModel)]="relatorio.tipoConsulta"
+              (change)="zerarRelatorio(relatorio.tipoConsulta)"
+            >
+              <option [ngValue]="null">Selecione</option>
+              <option value="VENDA">Venda</option>
+              <option value="CONSUMO">Consumo</option>
+              <option value="CAIXA">Caixa</option>
+              <option value="SANGRIA">Sangria</option>
+              <option value="SUPRIMENTO">Suprimento</option>
+              <option value="GORJETA">Gorjeta</option>
+              <option value="ESTOQUE">Estoque</option>
+              <option value="ESTOQUEDESCARTAR">Estoque Descartado</option>
+              <option value="DEPOSITO">Depósito</option>
+              <option value="DEPOSITODESCARTAR">Depósito Descartado</option>
+              <option value="PRODUTO">Produto Vendido</option>
+            </select>
+          </div>
+          <div class="d-flex flex-column">
+            <label>Data Início</label>
+            <input
+              type="text"
+              inputmode="numeric"
+              class="form-control p-1"
+              [(ngModel)]="relatorio.dataInicio"
+              mask="00/00/0000 00:00"
+              placeholder="dd/MM/aaaa hh:mm"
+              [disabled]="!relatorio.tipoConsulta"
+            />
+          </div>
+          <div class="d-flex flex-column">
+            <label>Data Fim</label>
+            <input
+              type="text"
+              inputmode="numeric"
+              class="form-control p-1"
+              [(ngModel)]="relatorio.dataFim"
+              [disabled]="!relatorio.tipoConsulta"
+              mask="00/00/0000 00:00"
+              placeholder="dd/MM/aaaa hh:mm"
+            />
+          </div>
+          @if (relatorio && relatorio.tipoConsulta === 'VENDA') {
+          <div class="d-flex flex-column">
+            <label>Período</label>
+            <select
+              class="select-filtro p-1"
+              [(ngModel)]="relatorio.periodoDia"
+              [disabled]="!relatorio.tipoConsulta"
+            >
+              <option [ngValue]="null">Selecione</option>
+              <option value="MANHA">Manhã</option>
+              <option value="TARDE">Tarde</option>
+              <option value="NOITE">Noite</option>
+              <option value="MADRUGADA">Madrugada</option>
+            </select>
+          </div>
+          <div class="d-flex flex-column">
+            <label>Cliente</label>
+            <select
+              class="select-filtro p-1"
+              [(ngModel)]="relatorio.clienteId"
+              [disabled]="!relatorio.tipoConsulta"
+            >
+              <option [ngValue]="null">Todos</option>
+              @for (cliente of clientes; track cliente.id) {
+              <option [value]="cliente.id">{{ cliente.nome }}</option>
+              }
+            </select>
+          </div>
+          } @if (relatorio && (relatorio.tipoConsulta === 'VENDA' ||
+          relatorio.tipoConsulta === 'CONSUMO' || relatorio.tipoConsulta ===
+          'CAIXA' || relatorio.tipoConsulta === 'SUPRIMENTO' ||
+          relatorio.tipoConsulta === 'SANGRIA' || relatorio.tipoConsulta ===
+          'GORJETA' || relatorio.tipoConsulta === 'PRODUTO')) {
+          <div class="d-flex flex-column">
+            <label>Operador</label>
+            <select
+              class="select-filtro p-1"
+              [(ngModel)]="relatorio.funcionarioId"
+              [disabled]="!relatorio.tipoConsulta"
+            >
+              <option [ngValue]="null">Todos</option>
+              @for (funcionario of funcionarios; track funcionario.id) {
+              <option [value]="funcionario.id">{{ funcionario.nome }}</option>
+              }
+            </select>
+          </div>
+          }
+        </div>
+        @if (relatorio && (relatorio.tipoConsulta === 'VENDA' ||
+        relatorio.tipoConsulta === 'CONSUMO' || relatorio.tipoConsulta ===
+        'PRODUTO')) {
+        <div class="d-flex flex-column">
+          <label>Tipos de Venda</label>
+          <div class="d-flex flex-wrap gap-2">
+            <button
+              class="btn-comum btn-selecionar"
+              [ngClass]="{
+                'btn-selecionar-foco': relatorio.mesa,
+                'btn-selecionar': !relatorio.mesa
+              }"
+              (click)="alternarTipoVenda('MESA')"
+              [disabled]="!relatorio.tipoConsulta"
+            >
+              Mesa
+            </button>
+
+            <button
+              class="btn-comum btn-selecionar"
+              [ngClass]="{
+                'btn-selecionar-foco': relatorio.balcao,
+                'btn-selecionar': !relatorio.balcao
+              }"
+              (click)="alternarTipoVenda('BALCAO')"
+              [disabled]="!relatorio.tipoConsulta"
+            >
+              Balcão
+            </button>
+
+            <button
+              class="btn-comum btn-selecionar"
+              [ngClass]="{
+                'btn-selecionar-foco': relatorio.entrega,
+                'btn-selecionar': !relatorio.entrega
+              }"
+              (click)="alternarTipoVenda('ENTREGA')"
+              [disabled]="!relatorio.tipoConsulta"
+            >
+              Entrega
+            </button>
+
+            <button
+              class="btn-comum btn-selecionar"
+              [ngClass]="{
+                'btn-selecionar-foco': relatorio.retirada,
+                'btn-selecionar': !relatorio.retirada
+              }"
+              (click)="alternarTipoVenda('RETIRADA')"
+              [disabled]="!relatorio.tipoConsulta"
+            >
+              Retirada
+            </button>
+          </div>
+        </div>
+        } @if (relatorio && relatorio.tipoConsulta === 'VENDA') {
+        <div class="d-flex flex-column">
+          <label>Formas de Pagamento</label>
+          <div class="d-flex flex-wrap gap-2">
+            <button
+              class="btn-comum btn-selecionar"
+              [ngClass]="{
+                'btn-selecionar-foco': relatorio.dinheiro,
+                'btn-selecionar': !relatorio.dinheiro
+              }"
+              (click)="alternarTipoPagamento('DINHEIRO')"
+              [disabled]="!relatorio.tipoConsulta"
+            >
+              Dinheiro
+            </button>
+
+            <button
+              class="btn-comum btn-selecionar"
+              [ngClass]="{
+                'btn-selecionar-foco': relatorio.credito,
+                'btn-selecionar': !relatorio.credito
+              }"
+              (click)="alternarTipoPagamento('CREDITO')"
+              [disabled]="!relatorio.tipoConsulta"
+            >
+              Crédito
+            </button>
+
+            <button
+              class="btn-comum btn-selecionar"
+              [ngClass]="{
+                'btn-selecionar-foco': relatorio.debito,
+                'btn-selecionar': !relatorio.debito
+              }"
+              (click)="alternarTipoPagamento('DEBITO')"
+              [disabled]="!relatorio.tipoConsulta"
+            >
+              Débito
+            </button>
+
+            <button
+              class="btn-comum btn-selecionar"
+              [ngClass]="{
+                'btn-selecionar-foco': relatorio.pix,
+                'btn-selecionar': !relatorio.pix
+              }"
+              (click)="alternarTipoPagamento('PIX')"
+              [disabled]="!relatorio.tipoConsulta"
+            >
+              Pix
+            </button>
+          </div>
+        </div>
+        } @if (relatorio && (relatorio.tipoConsulta === 'ESTOQUE' ||
+        relatorio.tipoConsulta === 'DEPOSITO')) {
+        <div class="d-flex flex-column">
+          <label>Deletados</label>
+          <div class="btn-group w-100">
+            <button
+              type="button"
+              class="btn btn-borda-laranja p-2"
+              [ngClass]="{
+                'btn-comum-laranja': relatorio.deletado === true,
+                'btn-borda-laranja': relatorio.deletado !== true
+              }"
+              (click)="relatorio.deletado = true"
+              [disabled]="!relatorio.tipoConsulta"
+            >
+              SIM
+            </button>
+            <button
+              type="button"
+              class="btn btn-borda-laranja p-2"
+              [ngClass]="{
+                'btn-comum-laranja': relatorio.deletado === false,
+                'btn-borda-laranja': relatorio.deletado !== false
+              }"
+              (click)="relatorio.deletado = false"
+              [disabled]="!relatorio.tipoConsulta"
+            >
+              NÃO
+            </button>
+            <button
+              type="button"
+              class="btn btn-borda-laranja p-2"
+              [ngClass]="{
+                'btn-comum-laranja': relatorio.deletado === null,
+                'btn-borda-laranja': relatorio.deletado !== null
+              }"
+              (click)="relatorio.deletado = null"
+              [disabled]="!relatorio.tipoConsulta"
+            >
+              TODOS
+            </button>
+          </div>
+        </div>
+        <div class="d-flex flex-column">
+          <label>Ativo</label>
+          <div class="btn-group w-100">
+            <button
+              type="button"
+              class="btn btn-borda-laranja p-2"
+              [ngClass]="{
+                'btn-comum-laranja': relatorio.ativo === true,
+                'btn-borda-laranja': relatorio.ativo !== true
+              }"
+              (click)="relatorio.ativo = true"
+              [disabled]="!relatorio.tipoConsulta"
+            >
+              SIM
+            </button>
+            <button
+              type="button"
+              class="btn btn-borda-laranja p-2"
+              [ngClass]="{
+                'btn-comum-laranja': relatorio.ativo === false,
+                'btn-borda-laranja': relatorio.ativo !== false
+              }"
+              (click)="relatorio.ativo = false"
+              [disabled]="!relatorio.tipoConsulta"
+            >
+              NÃO
+            </button>
+            <button
+              type="button"
+              class="btn btn-borda-laranja p-2"
+              [ngClass]="{
+                'btn-comum-laranja': relatorio.ativo === null,
+                'btn-borda-laranja': relatorio.ativo !== null
+              }"
+              (click)="relatorio.ativo = null"
+              [disabled]="!relatorio.tipoConsulta"
+            >
+              TODOS
+            </button>
+          </div>
+        </div>
+        } @if (relatorio && (relatorio.tipoConsulta === 'ESTOQUE' ||
+        relatorio.tipoConsulta === 'DEPOSITO' || relatorio.tipoConsulta ===
+        'ESTOQUEDESCARTAR' || relatorio.tipoConsulta === 'DEPOSITODESCARTAR' ||
+        relatorio.tipoConsulta === 'PRODUTO')) {
+        <div class="d-flex flex-column">
+          <label>Produto</label>
+          <select
+            class="select-filtro p-1"
+            [(ngModel)]="relatorio.produtoId"
+            [disabled]="!relatorio.tipoConsulta"
+          >
+            <option [ngValue]="null">Todos</option>
+            @for (produto of produtos; track produto.id) {
+            <option [value]="produto.id">{{ produto.nome }}</option>
+            }
+          </select>
+        </div>
+        } @if (relatorio && relatorio.tipoConsulta === 'CAIXA') {
+        <div class="d-flex flex-column">
+          <label>Caixas Deletadas</label>
+          <div class="btn-group w-100">
+            <button
+              type="button"
+              class="btn btn-borda-laranja p-2"
+              [ngClass]="{
+                'btn-comum-laranja': relatorio.deletado === true,
+                'btn-borda-laranja': relatorio.deletado !== true
+              }"
+              (click)="relatorio.deletado = true"
+              [disabled]="!relatorio.tipoConsulta"
+            >
+              SIM
+            </button>
+            <button
+              type="button"
+              class="btn btn-borda-laranja p-2"
+              [ngClass]="{
+                'btn-comum-laranja': relatorio.deletado === false,
+                'btn-borda-laranja': relatorio.deletado !== false
+              }"
+              (click)="relatorio.deletado = false"
+              [disabled]="!relatorio.tipoConsulta"
+            >
+              NÃO
+            </button>
+            <button
+              type="button"
+              class="btn btn-borda-laranja p-2"
+              [ngClass]="{
+                'btn-comum-laranja': relatorio.deletado === null,
+                'btn-borda-laranja': relatorio.deletado !== null
+              }"
+              (click)="relatorio.deletado = null"
+              [disabled]="!relatorio.tipoConsulta"
+            >
+              TODOS
+            </button>
+          </div>
+        </div>
+        <div class="d-flex flex-column">
+          <label>Caixas Status</label>
+          <div class="btn-group w-100">
+            <button
+              type="button"
+              class="btn btn-borda-laranja p-2"
+              [ngClass]="{
+                'btn-comum-laranja': relatorio.ativo === true,
+                'btn-borda-laranja': relatorio.ativo !== true
+              }"
+              (click)="relatorio.ativo = true"
+              [disabled]="!relatorio.tipoConsulta"
+            >
+              ABERTA
+            </button>
+            <button
+              type="button"
+              class="btn btn-borda-laranja p-2"
+              [ngClass]="{
+                'btn-comum-laranja': relatorio.ativo === false,
+                'btn-borda-laranja': relatorio.ativo !== false
+              }"
+              (click)="relatorio.ativo = false"
+              [disabled]="!relatorio.tipoConsulta"
+            >
+              FECHADA
+            </button>
+            <button
+              type="button"
+              class="btn btn-borda-laranja p-2"
+              [ngClass]="{
+                'btn-comum-laranja': relatorio.ativo === null,
+                'btn-borda-laranja': relatorio.ativo !== null
+              }"
+              (click)="relatorio.ativo = null"
+              [disabled]="!relatorio.tipoConsulta"
+            >
+              TODOS
+            </button>
+          </div>
+        </div>
+        } @if (relatorio && (relatorio.tipoConsulta === 'VENDA' ||
+        relatorio.tipoConsulta === 'CONSUMO')) {
+        <div class="d-flex flex-column">
+          <label>Deletadas</label>
+          <div class="btn-group w-100">
+            <button
+              type="button"
+              class="btn btn-borda-laranja p-2"
+              [ngClass]="{
+                'btn-comum-laranja': relatorio.deletado === true,
+                'btn-borda-laranja': relatorio.deletado !== true
+              }"
+              (click)="relatorio.deletado = true"
+              [disabled]="!relatorio.tipoConsulta"
+            >
+              SIM
+            </button>
+            <button
+              type="button"
+              class="btn btn-borda-laranja p-2"
+              [ngClass]="{
+                'btn-comum-laranja': relatorio.deletado === false,
+                'btn-borda-laranja': relatorio.deletado !== false
+              }"
+              (click)="relatorio.deletado = false"
+              [disabled]="!relatorio.tipoConsulta"
+            >
+              NÃO
+            </button>
+            <button
+              type="button"
+              class="btn btn-borda-laranja p-2"
+              [ngClass]="{
+                'btn-comum-laranja': relatorio.deletado === null,
+                'btn-borda-laranja': relatorio.deletado !== null
+              }"
+              (click)="relatorio.deletado = null"
+              [disabled]="!relatorio.tipoConsulta"
+            >
+              TODOS
+            </button>
+          </div>
+        </div>
+        }@if (relatorio && (relatorio.tipoConsulta === 'PRODUTO')) {
+        <div class="d-flex flex-column">
+          <label>Produto Deletados</label>
+          <div class="btn-group w-100">
+            <button
+              type="button"
+              class="btn btn-borda-laranja p-2"
+              [ngClass]="{
+                'btn-comum-laranja': relatorio.deletado === true,
+                'btn-borda-laranja': relatorio.deletado !== true
+              }"
+              (click)="relatorio.deletado = true"
+              [disabled]="!relatorio.tipoConsulta"
+            >
+              SIM
+            </button>
+            <button
+              type="button"
+              class="btn btn-borda-laranja p-2"
+              [ngClass]="{
+                'btn-comum-laranja': relatorio.deletado === false,
+                'btn-borda-laranja': relatorio.deletado !== false
+              }"
+              (click)="relatorio.deletado = false"
+              [disabled]="!relatorio.tipoConsulta"
+            >
+              NÃO
+            </button>
+            <button
+              type="button"
+              class="btn btn-borda-laranja p-2"
+              [ngClass]="{
+                'btn-comum-laranja': relatorio.deletado === null,
+                'btn-borda-laranja': relatorio.deletado !== null
+              }"
+              (click)="relatorio.deletado = null"
+              [disabled]="!relatorio.tipoConsulta"
+            >
+              TODOS
+            </button>
+          </div>
+        </div>
+        } @if (relatorio && relatorio.tipoConsulta === 'VENDA') {
+        <div class="d-flex flex-column">
+          <label>Com Desconto</label>
+          <div class="btn-group w-100">
+            <button
+              type="button"
+              class="btn btn-borda-laranja p-2"
+              [ngClass]="{
+                'btn-comum-laranja': relatorio.desconto === true,
+                'btn-borda-laranja': relatorio.desconto !== true
+              }"
+              (click)="relatorio.desconto = true"
+              [disabled]="!relatorio.tipoConsulta"
+            >
+              SIM
+            </button>
+            <button
+              type="button"
+              class="btn btn-borda-laranja p-2"
+              [ngClass]="{
+                'btn-comum-laranja': relatorio.desconto === false,
+                'btn-borda-laranja': relatorio.desconto !== false
+              }"
+              (click)="relatorio.desconto = false"
+              [disabled]="!relatorio.tipoConsulta"
+            >
+              NÃO
+            </button>
+            <button
+              type="button"
+              class="btn btn-borda-laranja p-2"
+              [ngClass]="{
+                'btn-comum-laranja': relatorio.desconto === null,
+                'btn-borda-laranja': relatorio.desconto !== null
+              }"
+              (click)="relatorio.desconto = null"
+              [disabled]="!relatorio.tipoConsulta"
+            >
+              TODOS
+            </button>
+          </div>
+        </div>
+        <div class="d-flex flex-column">
+          <label>Com Serviço</label>
+          <div class="btn-group w-100">
+            <button
+              type="button"
+              class="btn btn-borda-laranja p-2"
+              [ngClass]="{
+                'btn-comum-laranja': relatorio.taxaServico === true,
+                'btn-borda-laranja': relatorio.taxaServico !== true
+              }"
+              (click)="relatorio.taxaServico = true"
+              [disabled]="!relatorio.tipoConsulta"
+            >
+              SIM
+            </button>
+            <button
+              type="button"
+              class="btn btn-borda-laranja p-2"
+              [ngClass]="{
+                'btn-comum-laranja': relatorio.taxaServico === false,
+                'btn-borda-laranja': relatorio.taxaServico !== false
+              }"
+              (click)="relatorio.taxaServico = false"
+              [disabled]="!relatorio.tipoConsulta"
+            >
+              NÃO
+            </button>
+            <button
+              type="button"
+              class="btn btn-borda-laranja p-2"
+              [ngClass]="{
+                'btn-comum-laranja': relatorio.taxaServico === null,
+                'btn-borda-laranja': relatorio.taxaServico !== null
+              }"
+              (click)="relatorio.taxaServico = null"
+              [disabled]="!relatorio.tipoConsulta"
+            >
+              TODOS
+            </button>
+          </div>
+        </div>
+        <div class="d-flex flex-column">
+          <label>Com Taxa Entrega</label>
+          <div class="btn-group w-100">
+            <button
+              type="button"
+              class="btn btn-borda-laranja p-2"
+              [ngClass]="{
+                'btn-comum-laranja': relatorio.taxaEntrega === true,
+                'btn-borda-laranja': relatorio.taxaEntrega !== true
+              }"
+              (click)="relatorio.taxaEntrega = true"
+              [disabled]="!relatorio.tipoConsulta"
+            >
+              SIM
+            </button>
+            <button
+              type="button"
+              class="btn btn-borda-laranja p-2"
+              [ngClass]="{
+                'btn-comum-laranja': relatorio.taxaEntrega === false,
+                'btn-borda-laranja': relatorio.taxaEntrega !== false
+              }"
+              (click)="relatorio.taxaEntrega = false"
+              [disabled]="!relatorio.tipoConsulta"
+            >
+              NÃO
+            </button>
+            <button
+              type="button"
+              class="btn btn-borda-laranja p-2"
+              [ngClass]="{
+                'btn-comum-laranja': relatorio.taxaEntrega === null,
+                'btn-borda-laranja': relatorio.taxaEntrega !== null
+              }"
+              (click)="relatorio.taxaEntrega = null"
+              [disabled]="!relatorio.tipoConsulta"
+            >
+              TODOS
+            </button>
+          </div>
+        </div>
+        } @if (relatorio && (relatorio.tipoConsulta === 'SANGRIA' ||
+        relatorio.tipoConsulta === 'SUPRIMENTO' || relatorio.tipoConsulta ===
+        'GORJETA')) {
+        <div class="d-flex flex-column">
+          <label>Caixa ID</label>
+          <select
+            class="select-filtro p-1"
+            [(ngModel)]="relatorio.caixaId"
+            [disabled]="!relatorio.tipoConsulta"
+          >
+            <option [ngValue]="null">Todos</option>
+            @for (caixa of caixas; track caixa.id) {
+            <option [value]="caixa.id">{{ caixa.id }}</option>
+            }
+          </select>
+        </div>
+        } @if (relatorio && relatorio.tipoConsulta === 'SANGRIA') {
+        <div class="d-flex flex-column">
+          <label>Tipo de sangria</label>
+          <select class="select-filtro p-1" [(ngModel)]="relatorio.tipo">
+            <option [ngValue]="null">Selecione</option>
+            <option ngValue="FUNCIONARIO">Adiantamento para Funcionário</option>
+            <option ngValue="GASTO">Despesa Geral</option>
+            <option ngValue="MERCADORIA">Compra de Mercadoria</option>
+          </select>
+        </div>
+        @if (relatorio && relatorio.tipo === 'FUNCIONARIO') {
+        <div class="d-flex flex-column">
+          <label>Funcionário</label>
+          <select
+            class="select-filtro p-1"
+            [(ngModel)]="relatorio.funcionarioNome"
+            [disabled]="!relatorio.tipoConsulta"
+          >
+            <option [ngValue]="null">Todos</option>
+            @for (funcionario of funcionarios; track funcionario.id) {
+            <option [value]="funcionario.nome">{{ funcionario.nome }}</option>
+            }
+          </select>
+        </div>
+        } }
+        <div class="d-flex flex-column">
+          <label>Ordenar Por</label>
+          <select
+            class="select-filtro p-1"
+            [(ngModel)]="relatorio.ordenacao"
+            [disabled]="!relatorio.tipoConsulta"
+          >
+            <option [ngValue]="null">Selecione</option>
+            @if (relatorio && (relatorio.tipoConsulta === 'SANGRIA' ||
+            relatorio.tipoConsulta === 'SUPRIMENTO' || relatorio.tipoConsulta
+            === 'GORJETA' || relatorio.tipoConsulta === 'ESTOQUE' ||
+            relatorio.tipoConsulta === 'DEPOSITO')) {
+
+            <option value="valorDesc">Valor (maior → menor)</option>
+            <option value="valorAsc">Valor (menor → maior)</option>
+            } @if (relatorio && relatorio.tipoConsulta === 'CAIXA') {
+
+            <option value="saldoDesc">Saldo (maior → menor)</option>
+            <option value="saldoAsc">Saldo (menor → maior)</option>
+            } @if (relatorio && (relatorio.tipoConsulta === 'VENDA' ||
+            relatorio.tipoConsulta === 'CONSUMO')) {
+            <option value="valorTotalDesc">Valor Total (maior → menor)</option>
+            <option value="valorTotalAsc">Valor Total (menor → maior)</option>
+            } @if (relatorio && relatorio.tipoConsulta === 'VENDA') {
+            <option value="valorBrutoDesc">Valor Bruto (maior → menor)</option>
+            <option value="valorBrutoAsc">Valor Bruto (menor → maior)</option>
+
+            <option value="descontoDesc">Desconto (maior → menor)</option>
+            <option value="descontoAsc">Desconto (menor → maior)</option>
+
+            <option value="valorServicoDesc">
+              Taxa Serviço (maior → menor)
+            </option>
+            <option value="valorServicoAsc">
+              Taxa Serviço (menor → maior)
+            </option>
+
+            <option value="taxaEntregaDesc">
+              Taxa Entrega (maior → menor)
+            </option>
+            <option value="taxaEntregaAsc">Taxa Entrega (menor → maior)</option>
+            } @if (relatorio && (relatorio.tipoConsulta === 'VENDA' ||
+            relatorio.tipoConsulta === 'CONSUMO' || relatorio.tipoConsulta ===
+            'CAIXA' || relatorio.tipoConsulta === 'SUPRIMENTO' ||
+            relatorio.tipoConsulta === 'SANGRIA' || relatorio.tipoConsulta ===
+            'GORJETA')) {
+            <option value="funcionarioAsc">Operador (A-Z)</option>
+            <option value="funcionarioDesc">Operador (Z-A)</option>
+            } @if (relatorio && relatorio.tipoConsulta !== 'PRODUTO') {
+            <option value="dataDesc">Data (mais recente)</option>
+            <option value="dataAsc">Data (mais antiga)</option>
+            } @if (relatorio && relatorio.tipoConsulta === 'PRODUTO') {
+            <option value="quantidadeDesc">
+              Quantidade Vendida (maior → menor)
+            </option>
+            <option value="quantidadeAsc">
+              Quantidade Vendida (menor → maior)
+            </option>
+            <option value="valorDesc">Valor Total (maior → menor)</option>
+            <option value="valorAsc">Valor Total (menor → maior)</option>
+            }
+          </select>
+        </div>
+      </div>
+      <div class="d-flex justify-content-center">
+        <button
+          class="btn-comum btn-comum-laranja"
+          (click)="aplicarRelatorio()"
+        >
+          Aplicar
+        </button>
+      </div>
+      @if (relatorio && relatorio.id != null) {
+      <div class="d-flex flex-column w-100 gap-3">
+        <div class="d-flex align-items-center gap-3 w-100 flex-wrap">
+          <div class="d-flex flex-column">
+            <label>Tipo de Gráfico</label>
+            <select
+              class="select-filtro p-1"
+              [(ngModel)]="chartType"
+              (change)="mudarTipoGrafico(chartType)"
+              [disabled]="!relatorio.tipoConsulta"
+            >
+              <option value="bar">Barras</option>
+              <option value="line">Linha</option>
+              <option value="pie">Pizza</option>
+              <option value="doughnut">Rosquinha</option>
+            </select>
+          </div>
+          @if (relatorio && (relatorio.tipoConsulta === 'VENDA' ||
+          relatorio.tipoConsulta === 'CONSUMO')) {
+          <div class="d-flex flex-column">
+            <label>Grafico Valor Total Por</label>
+            <div class="btn-group w-100">
+              <button
+                type="button"
+                class="btn btn-borda-laranja p-2"
+                [ngClass]="{
+                  'btn-comum-laranja': relatorio.agrupamento === 'HORA',
+                  'btn-borda-laranja': relatorio.agrupamento !== 'HORA'
+                }"
+                (click)="trocarAgrupamento('HORA')"
+                [disabled]="!relatorio.tipoConsulta"
+              >
+                HORA
+              </button>
+              <button
+                type="button"
+                class="btn btn-borda-laranja p-2"
+                [ngClass]="{
+                  'btn-comum-laranja': relatorio.agrupamento === 'DIA',
+                  'btn-borda-laranja': relatorio.agrupamento !== 'DIA'
+                }"
+                (click)="trocarAgrupamento('DIA')"
+                [disabled]="!relatorio.tipoConsulta"
+              >
+                DIA
+              </button>
+              <button
+                type="button"
+                class="btn btn-borda-laranja p-2"
+                [ngClass]="{
+                  'btn-comum-laranja': relatorio.agrupamento === 'MES',
+                  'btn-borda-laranja': relatorio.agrupamento !== 'MES'
+                }"
+                (click)="trocarAgrupamento('MES')"
+                [disabled]="!relatorio.tipoConsulta"
+              >
+                MES
+              </button>
+              <button
+                type="button"
+                class="btn btn-borda-laranja p-2"
+                [ngClass]="{
+                  'btn-comum-laranja': relatorio.agrupamento === 'ANO',
+                  'btn-borda-laranja': relatorio.agrupamento !== 'ANO'
+                }"
+                (click)="trocarAgrupamento('ANO')"
+                [disabled]="!relatorio.tipoConsulta"
+              >
+                ANO
+              </button>
+            </div>
+          </div>
+          }
+        </div>
+        @if (relatorio && relatorio.tipoConsulta === 'SUPRIMENTO') {
+        <div
+          class="d-flex align-items-center justify-content-between w-100 grafico"
+        >
+          <div class="w-100 d-flex flex-column align-items-center grafico-div">
+            <div class="d-flex justify-content-start w-100">
+              <h3>Total por Caixa</h3>
+            </div>
+            <div
+              class="d-flex justify-content-center align-items-center w-25 grafico-scroll"
+            >
+              <canvas
+                baseChart
+                [datasets]="chartDataTotalSuprimento"
+                [labels]="chartLabelsTotalSuprimento"
+                [options]="chartOptions"
+                [type]="chartType"
+              >
+              </canvas>
+            </div>
+          </div>
+        </div>
+        }@if (relatorio && relatorio.tipoConsulta === 'GORJETA') {
+        <div
+          class="d-flex align-items-center justify-content-between w-100 grafico"
+        >
+          <div class="w-50 d-flex flex-column align-items-center grafico-div">
+            <div class="d-flex justify-content-start w-100">
+              <h3>Total por Caixa</h3>
+            </div>
+            <div
+              class="d-flex justify-content-center align-items-center w-50 grafico-scroll"
+            >
+              <canvas
+                baseChart
+                [datasets]="chartDataTotalGorjeta"
+                [labels]="chartLabelsTotalGorjeta"
+                [options]="chartOptions"
+                [type]="chartType"
+              >
+              </canvas>
+            </div>
+          </div>
+          <div class="w-50 d-flex flex-column align-items-center grafico-div">
+            <div class="d-flex justify-content-start w-100">
+              <h3>Formas de pagamento</h3>
+            </div>
+            <div
+              class="d-flex justify-content-center align-items-center w-50 grafico-scroll"
+            >
+              <canvas
+                baseChart
+                [datasets]="chartDataPagamento"
+                [labels]="chartLabelsPagamento"
+                [options]="chartOptions"
+                [type]="chartType"
+              >
+              </canvas>
+            </div>
+          </div>
+        </div>
+        } @if (relatorio && relatorio.tipoConsulta === 'SANGRIA') {
+        <div
+          class="d-flex align-items-center justify-content-between w-100 grafico"
+        >
+          <div class="w-50 d-flex flex-column align-items-center grafico-div">
+            <div class="d-flex justify-content-start w-100">
+              <h3>Total por Tipo de Sangria</h3>
+            </div>
+            <div
+              class="d-flex justify-content-center align-items-center w-50 grafico-scroll"
+            >
+              <canvas
+                baseChart
+                [datasets]="chartDataTipoSangria"
+                [labels]="chartLabelsTipoSangria"
+                [options]="chartOptions"
+                [type]="chartType"
+              >
+              </canvas>
+            </div>
+          </div>
+          <div class="w-50 d-flex flex-column align-items-center grafico-div">
+            <div class="d-flex justify-content-start w-100">
+              <h3>Total por Caixa</h3>
+            </div>
+            <div
+              class="d-flex justify-content-center align-items-center w-50 grafico-scroll"
+            >
+              <canvas
+                baseChart
+                [datasets]="chartDataTotalSangria"
+                [labels]="chartLabelsTotalSangria"
+                [options]="chartOptions"
+                [type]="chartType"
+              >
+              </canvas>
+            </div>
+          </div>
+        </div>
+        } @if (relatorio && relatorio.tipoConsulta === 'CAIXA') {
+        <div
+          class="d-flex align-items-center justify-content-between w-100 grafico"
+        >
+          <div class="w-50 d-flex flex-column align-items-center grafico-div">
+            <div class="d-flex justify-content-start w-100">
+              <h3>Resumo De Caixas</h3>
+            </div>
+            <div
+              class="d-flex justify-content-center align-items-center w-50 grafico-scroll"
+            >
+              <canvas
+                baseChart
+                [datasets]="chartDataResumoCaixa"
+                [labels]="chartLabelsResumoCaixa"
+                [options]="chartOptions"
+                [type]="chartType"
+              >
+              </canvas>
+            </div>
+          </div>
+          <div class="w-50 d-flex flex-column align-items-center grafico-div">
+            <div class="d-flex justify-content-start w-100">
+              <h3>Pagamentos Em Detalhes</h3>
+            </div>
+            <div
+              class="d-flex justify-content-center align-items-center w-50 grafico-scroll"
+            >
+              <canvas
+                baseChart
+                [datasets]="chartDataComposicaoPagamentosCaixa"
+                [labels]="chartLabelsComposicaoSaldoCaixa"
+                [options]="chartOptions"
+                [type]="chartType"
+              >
+              </canvas>
+            </div>
+          </div>
+        </div>
+        <div
+          class="d-flex align-items-center justify-content-between w-100 grafico"
+        >
+          <div class="w-50 d-flex flex-column align-items-center grafico-div">
+            <div class="d-flex justify-content-start w-100">
+              <h3>Descontos Em Detalhes</h3>
+            </div>
+            <div
+              class="d-flex justify-content-center align-items-center w-50 grafico-scroll"
+            >
+              <canvas
+                baseChart
+                [datasets]="chartDataComposicaoDescontosCaixa"
+                [labels]="chartLabelsComposicaoSaldoCaixa"
+                [options]="chartOptions"
+                [type]="chartType"
+              >
+              </canvas>
+            </div>
+          </div>
+          <div class="w-50 d-flex flex-column align-items-center grafico-div">
+            <div class="d-flex justify-content-start w-100">
+              <h3>Gorjetas Em Detalhes</h3>
+            </div>
+            <div
+              class="d-flex justify-content-center align-items-center w-50 grafico-scroll"
+            >
+              <canvas
+                baseChart
+                [datasets]="chartDataComposicaoGorjetasCaixa"
+                [labels]="chartLabelsComposicaoSaldoCaixa"
+                [options]="chartOptions"
+                [type]="chartType"
+              >
+              </canvas>
+            </div>
+          </div>
+          <div class="w-50 d-flex flex-column align-items-center grafico-div">
+            <div class="d-flex justify-content-start w-100">
+              <h3>Serviço Em Detalhes</h3>
+            </div>
+            <div
+              class="d-flex justify-content-center align-items-center w-50 grafico-scroll"
+            >
+              <canvas
+                baseChart
+                [datasets]="chartDataComposicaoServicoCaixa"
+                [labels]="chartLabelsComposicaoSaldoCaixa"
+                [options]="chartOptions"
+                [type]="chartType"
+              >
+              </canvas>
+            </div>
+          </div>
+        </div>
+        } @if (relatorio && (relatorio.tipoConsulta === 'VENDA' ||
+        relatorio.tipoConsulta === 'CONSUMO')) {
+        <div
+          class="d-flex align-items-center justify-content-between w-100 grafico"
+        >
+          <div class="w-50 d-flex flex-column align-items-center grafico-div">
+            <div class="d-flex justify-content-start w-100">
+              <h3>Valor total de vendas</h3>
+            </div>
+            <div
+              class="d-flex justify-content-center align-items-center w-50 grafico-scroll"
+            >
+              <canvas
+                baseChart
+                [datasets]="chartDataValorTotal"
+                [labels]="chartLabelsValorTotal"
+                [options]="chartOptions"
+                [type]="chartType"
+              >
+              </canvas>
+            </div>
+          </div>
+          <div class="w-50 d-flex flex-column align-items-center grafico-div">
+            <div class="d-flex justify-content-start w-100">
+              <h3>Tipos de venda</h3>
+            </div>
+            <div
+              class="d-flex justify-content-center align-items-center w-50 grafico-scroll"
+            >
+              <canvas
+                baseChart
+                [datasets]="chartDataTipoVenda"
+                [labels]="chartLabelsTipoVenda"
+                [options]="chartOptions"
+                [type]="chartType"
+              >
+              </canvas>
+            </div>
+          </div>
+        </div>
+        @if (relatorio && relatorio.tipoConsulta === 'VENDA') {
+        <div
+          class="d-flex align-items-center justify-content-between w-100 grafico"
+        >
+          <div class="w-50 d-flex flex-column align-items-center grafico-div">
+            <div class="d-flex justify-content-start w-100">
+              <h3>Formas de pagamento</h3>
+            </div>
+            <div
+              class="d-flex justify-content-center align-items-center w-50 grafico-scroll"
+            >
+              <canvas
+                baseChart
+                [datasets]="chartDataPagamento"
+                [labels]="chartLabelsPagamento"
+                [options]="chartOptions"
+                [type]="chartType"
+              >
+              </canvas>
+            </div>
+          </div>
+          <div class="w-50 d-flex flex-column align-items-center grafico-div">
+            <div class="d-flex justify-content-start w-100">
+              <h3>Vendas por período</h3>
+            </div>
+            <div
+              class="d-flex justify-content-center align-items-center w-50 grafico-scroll"
+            >
+              <canvas
+                baseChart
+                [datasets]="chartDataPeriodo"
+                [labels]="chartLabelsPeriodo"
+                [options]="chartOptions"
+                [type]="chartType"
+              >
+              </canvas>
+            </div>
+          </div>
+        </div>
+        } } @if (relatorio && relatorio.tipoConsulta === 'ESTOQUE') {
+        <div
+          class="d-flex align-items-center justify-content-between w-100 grafico"
+        >
+          <div class="w-100 d-flex flex-column align-items-center grafico-div">
+            <div class="d-flex justify-content-start w-100">
+              <h3>Resumo de Estoques por Produto</h3>
+            </div>
+            <div
+              class="d-flex justify-content-center align-items-center w-25 grafico-scroll"
+            >
+              <canvas
+                baseChart
+                [datasets]="chartDataResumoEstoque"
+                [labels]="chartLabelsResumoEstoque"
+                [options]="chartOptions"
+                [type]="chartType"
+              >
+              </canvas>
+            </div>
+          </div>
+        </div>
+        } @if (relatorio && relatorio.tipoConsulta === 'ESTOQUEDESCARTAR') {
+        <div
+          class="d-flex align-items-center justify-content-between w-100 grafico"
+        >
+          <div class="w-100 d-flex flex-column align-items-center grafico-div">
+            <div class="d-flex justify-content-start w-100">
+              <h3>Resumo de Estoques Descartados por Produto</h3>
+            </div>
+            <div
+              class="d-flex justify-content-center align-items-center w-25 grafico-scroll"
+            >
+              <canvas
+                baseChart
+                [datasets]="chartDataResumoEstoqueDescartar"
+                [labels]="chartLabelsResumoEstoqueDescartar"
+                [options]="chartOptions"
+                [type]="chartType"
+              >
+              </canvas>
+            </div>
+          </div>
+        </div>
+        } @if (relatorio && relatorio.tipoConsulta === 'DEPOSITO') {
+        <div
+          class="d-flex align-items-center justify-content-between w-100 grafico"
+        >
+          <div class="w-100 d-flex flex-column align-items-center grafico-div">
+            <div class="d-flex justify-content-start w-100">
+              <h3>Resumo de Depositos por Matéria</h3>
+            </div>
+            <div
+              class="d-flex justify-content-center align-items-center w-25 grafico-scroll"
+            >
+              <canvas
+                baseChart
+                [datasets]="chartDataResumoDeposito"
+                [labels]="chartLabelsResumoDeposito"
+                [options]="chartOptions"
+                [type]="chartType"
+              >
+              </canvas>
+            </div>
+          </div>
+        </div>
+        } @if (relatorio && relatorio.tipoConsulta === 'DEPOSITODESCARTAR') {
+        <div
+          class="d-flex align-items-center justify-content-between w-100 grafico"
+        >
+          <div class="w-100 d-flex flex-column align-items-center grafico-div">
+            <div class="d-flex justify-content-start w-100">
+              <h3>Resumo de Depositos Descartados por Matéria</h3>
+            </div>
+            <div
+              class="d-flex justify-content-center align-items-center w-25 grafico-scroll"
+            >
+              <canvas
+                baseChart
+                [datasets]="chartDataResumoDepositoDescartar"
+                [labels]="chartLabelsResumoDepositoDescartar"
+                [options]="chartOptions"
+                [type]="chartType"
+              >
+              </canvas>
+            </div>
+          </div>
+        </div>
+        } @if (relatorio && relatorio.tipoConsulta === 'PRODUTO') {
+        <div
+          class="d-flex align-items-center justify-content-between w-100 grafico"
+        >
+          <div class="w-50 d-flex flex-column align-items-center grafico-div">
+            <div class="d-flex justify-content-start w-100">
+              <h3>Produtos Mais Vendidos - Retirada</h3>
+            </div>
+            <div
+              class="d-flex justify-content-center align-items-center w-50 grafico-scroll"
+            >
+              <canvas
+                baseChart
+                [datasets]="chartDataProdutoRetirada"
+                [labels]="chartLabelsProdutoRetirada"
+                [options]="chartOptions"
+                [type]="chartType"
+              >
+              </canvas>
+            </div>
+          </div>
+          <div class="w-50 d-flex flex-column align-items-center grafico-div">
+            <div class="d-flex justify-content-start w-100">
+              <h3>Produtos Mais Vendidos - Entrega</h3>
+            </div>
+            <div
+              class="d-flex justify-content-center align-items-center w-50 grafico-scroll"
+            >
+              <canvas
+                baseChart
+                [datasets]="chartDataProdutoEntrega"
+                [labels]="chartLabelsProdutoEntrega"
+                [options]="chartOptions"
+                [type]="chartType"
+              >
+              </canvas>
+            </div>
+          </div>
+        </div>
+         <div
+          class="d-flex align-items-center justify-content-between w-100 grafico"
+        >
+          <div class="w-50 d-flex flex-column align-items-center grafico-div">
+            <div class="d-flex justify-content-start w-100">
+              <h3>Produtos Mais Vendidos - Balcão</h3>
+            </div>
+            <div
+              class="d-flex justify-content-center align-items-center w-50 grafico-scroll"
+            >
+              <canvas
+                baseChart
+                [datasets]="chartDataProdutoBalcao"
+                [labels]="chartLabelsProdutoBalcao"
+                [options]="chartOptions"
+                [type]="chartType"
+              >
+              </canvas>
+            </div>
+          </div>
+          <div class="w-50 d-flex flex-column align-items-center grafico-div">
+            <div class="d-flex justify-content-start w-100">
+              <h3>Produtos Mais Vendidos - Mesa</h3>
+            </div>
+            <div
+              class="d-flex justify-content-center align-items-center w-50 grafico-scroll"
+            >
+              <canvas
+                baseChart
+                [datasets]="chartDataProdutoMesa"
+                [labels]="chartLabelsProdutoMesa"
+                [options]="chartOptions"
+                [type]="chartType"
+              >
+              </canvas>
+            </div>
+          </div>
+        </div>
+        } @if (relatorio && relatorio.tipoConsulta === 'DEPOSITO') {
+        <div
+          class="d-flex align-items-center justify-content-between w-100 grafico"
+        >
+          <div class="w-100 d-flex flex-column align-items-center grafico-div">
+            <div class="d-flex justify-content-start w-100">
+              <h3>Resumo de Depositos por Matéria</h3>
+            </div>
+            <div
+              class="d-flex justify-content-center align-items-center w-25 grafico-scroll"
+            >
+              <canvas
+                baseChart
+                [datasets]="chartDataResumoDeposito"
+                [labels]="chartLabelsResumoDeposito"
+                [options]="chartOptions"
+                [type]="chartType"
+              >
+              </canvas>
+            </div>
+          </div>
+        </div>
+        } @if (relatorio && relatorio.tipoConsulta === 'DEPOSITODESCARTAR') {
+        <div
+          class="d-flex align-items-center justify-content-between w-100 grafico"
+        >
+          <div class="w-100 d-flex flex-column align-items-center grafico-div">
+            <div class="d-flex justify-content-start w-100">
+              <h3>Resumo de Depositos Descartados por Matéria</h3>
+            </div>
+            <div
+              class="d-flex justify-content-center align-items-center w-25 grafico-scroll"
+            >
+              <canvas
+                baseChart
+                [datasets]="chartDataResumoDepositoDescartar"
+                [labels]="chartLabelsResumoDepositoDescartar"
+                [options]="chartOptions"
+                [type]="chartType"
+              >
+              </canvas>
+            </div>
+          </div>
+        </div>
+        }
+      </div>
+      @if (relatorio && relatorio.tipoConsulta === 'VENDA') {
+      <div class="lista-relatorio">
+        <h3 class="p-2"><strong>Lista De Vendas</strong></h3>
+        <table class="table">
+          <thead>
             <th class="text-center col-1">#</th>
             <th class="text-center col-1">ID</th>
-            <th class="text-center col-2">Funcionário</th>
+            <th class="text-center col-2">Operador</th>
             <th class="text-center col-1">Venda</th>
             <th class="text-center col-1">Bruto</th>
             <th class="text-center col-1">Desconto</th>
@@ -437,121 +1380,538 @@
             <th class="text-center col-1">Total</th>
             <th class="text-center col-2">Pagamento</th>
             <th class="text-center col-2">Data/Hora</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (venda of listaVendas; track $index) {
-          <tr>
-            <td class="text-center">{{ $index + 1 + page * size }}</td>
-            <td class="text-center">{{ venda.id }}</td>
-            <td class="text-center">{{ venda.funcionario.nome || "-" }}</td>
-            <td class="text-center">
-              {{
-                venda.mesa != null
-                  ? " Mesa"
-                  : venda.retirada
-                  ? " Retirada"
-                  : venda.entrega
-                  ? " Entrega"
-                  : venda.balcao
-                  ? " Balcão"
-                  : ""
-              }}
-            </td>
-            <td class="text-center">
-              {{ venda.valorBruto | currency : "BRL" }}
-            </td>
-            <td class="text-center">{{ venda.desconto | currency : "BRL" }}</td>
-            <td class="text-center">
-              {{ venda.valorServico | currency : "BRL" }}
-            </td>
-            <td class="text-center">
-              {{ venda.taxaEntrega | currency : "BRL" }}
-            </td>
-            <td class="text-center">
-              {{ venda.valorTotal | currency : "BRL" }}
-            </td>
-            @if (venda.vendaPagamento) {
-            <td class="text-center">
-              @if (venda.vendaPagamento.dinheiro > 0) {
-              <span>
-                Dinheiro
-                {{ venda.vendaPagamento.dinheiro || 0 | currency : "BRL" }}
-              </span>
-              } @if (venda.vendaPagamento.credito > 0) {
-              <span>
-                Crédito
-                {{ venda.vendaPagamento.credito || 0 | currency : "BRL" }}</span
-              >
-              } @if (venda.vendaPagamento.debito > 0) {
-              <span>
-                Débito
-                {{ venda.vendaPagamento.debito || 0 | currency : "BRL" }}</span
-              >
-              } @if (venda.vendaPagamento.pix > 0) {
-              <span>
-                PIX {{ venda.vendaPagamento.pix || 0 | currency : "BRL" }}</span
-              >
+          </thead>
+          <tbody>
+            @for (venda of listaVendas; track $index) {
+            <tr>
+              <td class="text-center">{{ $index + 1 + page * size }}</td>
+              <td class="text-center">{{ venda.id }}</td>
+              <td class="text-center">{{ venda.funcionario.nome || "-" }}</td>
+              <td class="text-center">
+                {{
+                  venda.mesa != null
+                    ? " Mesa"
+                    : venda.retirada
+                    ? " Retirada"
+                    : venda.entrega
+                    ? " Entrega"
+                    : venda.balcao
+                    ? " Balcão"
+                    : ""
+                }}
+              </td>
+              <td class="text-center">
+                {{ venda.valorBruto | currency : "BRL" }}
+              </td>
+              <td class="text-center">
+                {{ venda.desconto | currency : "BRL" }}
+              </td>
+              <td class="text-center">
+                {{ venda.valorServico | currency : "BRL" }}
+              </td>
+              <td class="text-center">
+                {{ venda.taxaEntrega | currency : "BRL" }}
+              </td>
+              <td class="text-center">
+                {{ venda.valorTotal | currency : "BRL" }}
+              </td>
+              @if (venda.vendaPagamento) {
+              <td class="text-center">
+                @if (venda.vendaPagamento.dinheiro > 0) {
+                <span>
+                  Dinheiro
+                  {{ venda.vendaPagamento.dinheiro || 0 | currency : "BRL" }}
+                </span>
+                } @if (venda.vendaPagamento.credito > 0) {
+                <span>
+                  Crédito
+                  {{
+                    venda.vendaPagamento.credito || 0 | currency : "BRL"
+                  }}</span
+                >
+                } @if (venda.vendaPagamento.debito > 0) {
+                <span>
+                  Débito
+                  {{
+                    venda.vendaPagamento.debito || 0 | currency : "BRL"
+                  }}</span
+                >
+                } @if (venda.vendaPagamento.pix > 0) {
+                <span>
+                  PIX
+                  {{ venda.vendaPagamento.pix || 0 | currency : "BRL" }}</span
+                >
+                }
+              </td>
+              } @else {
+              <td class="text-center"></td>
               }
-            </td>
-            } @else { &nbsp; }
-            <td class="text-center">
-              {{ venda.dataVenda | date : "dd/MM/yyyy HH:mm:ss" }}
-            </td>
-          </tr>
-          }
-        </tbody>
-      </table>
-    </div>
-    <div class="d-flex justify-content-between align-items-center">
-      <div></div>
-      <div class="d-flex align-items-center justify-content-center">
-        <div class="paginacao-container mt-2">
-          <button
-            class="paginacao-botao"
-            [ngClass]="{
-              none: page === 0
-            }"
-            (click)="setPage(page - 1)"
-          >
-            <i class="bi bi-chevron-left"></i>
-          </button>
-
-          @for (i of pagesVisiveis(); track i) {
-          <button
-            class="paginacao-botao"
-            [class.ativo]="i === page"
-            [disabled]="i === page"
-            (click)="setPage(i)"
-          >
-            {{ i + 1 }}
-          </button>
-          }
-
-          <button
-            class="paginacao-botao"
-            [ngClass]="{
-              none: page + 1 >= totalPages
-            }"
-            (click)="setPage(page + 1)"
-          >
-            <i class="bi bi-chevron-right"></i>
-          </button>
-        </div>
+              <td class="text-center">
+                {{ venda.dataVenda | date : "dd/MM/yyyy HH:mm:ss a" }}
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
       </div>
-      <div>
-        <div class="d-flex align-items-center tamanho-select">
-          <div class="d-flex flex-column w-100">
-            <label>Itens por página</label>
-            <select class="select-filtro p-1" (change)="alterarTamanho($event)">
-              <option [value]="20">20</option>
-              <option [value]="50">50</option>
-              <option [value]="100">100</option>
-              <option [value]="100">200</option>
-            </select>
+      }@if (relatorio && relatorio.tipoConsulta === 'CONSUMO') {
+      <div class="lista-relatorio">
+        <h3 class="p-2"><strong>Lista De Vendas</strong></h3>
+        <table class="table">
+          <thead>
+            <th class="text-center col-1">#</th>
+            <th class="text-center col-1">ID</th>
+            <th class="text-center col-3">Operador</th>
+            <th class="text-center col-3">Venda</th>
+            <th class="text-center col-3">Total</th>
+            <th class="text-center col-4">Data/Hora</th>
+          </thead>
+          <tbody>
+            @for (venda of listaVendasConsumo; track $index) {
+            <tr>
+              <td class="text-center">{{ $index + 1 + page * size }}</td>
+              <td class="text-center">{{ venda.id }}</td>
+              <td class="text-center">{{ venda.funcionario.nome || "-" }}</td>
+              <td class="text-center">
+                {{
+                  venda.mesa != null
+                    ? " Mesa"
+                    : venda.retirada
+                    ? " Retirada"
+                    : venda.entrega
+                    ? " Entrega"
+                    : venda.balcao
+                    ? " Balcão"
+                    : ""
+                }}
+              </td>
+              <td class="text-center">
+                {{ venda.valorTotal | currency : "BRL" }}
+              </td>
+              <td class="text-center">
+                {{ venda.dataVenda | date : "dd/MM/yyyy HH:mm:ss a" }}
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      }@if (relatorio && relatorio.tipoConsulta === 'CAIXA') {
+      <div class="lista-relatorio">
+        <h3 class="p-2"><strong>Lista De Caixas</strong></h3>
+        <table class="table">
+          <thead>
+            <th class="text-center col-1">#</th>
+            <th class="text-center col-1">ID</th>
+            <th class="text-center col-1">Status</th>
+            <th class="text-center col-3">Operador</th>
+            <th class="text-center col-1">Saldo</th>
+            <th class="text-center col-4">Data Abertura</th>
+            <th class="text-center col-4">Data Fechamento</th>
+          </thead>
+          <tbody>
+            @for (caixa of listaCaixas; track $index) {
+            <tr>
+              <td class="text-center">{{ $index + 1 + page * size }}</td>
+              <td class="text-center">{{ caixa.id }}</td>
+              <td class="text-center">
+                {{ caixa.ativo ? "Aberta" : "Fechada" }}
+              </td>
+              <td class="text-center">{{ caixa.funcionario.nome || "-" }}</td>
+              <td class="text-center">
+                {{ caixa.saldo | currency : "BRL" }}
+              </td>
+              <td class="text-center">
+                {{ caixa.dataAbertura | date : "dd/MM/yyyy HH:mm:ss a" }}
+              </td>
+              <td class="text-center">
+                {{ caixa.dataFechamento | date : "dd/MM/yyyy HH:mm:ss a" }}
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      }@if (relatorio && relatorio.tipoConsulta === 'SANGRIA') {
+      <div class="lista-relatorio">
+        <h3 class="p-2"><strong>Lista De Sangrias</strong></h3>
+        <table class="table">
+          <thead>
+            <th class="text-center col-1">#</th>
+            <th class="text-center col-1">ID</th>
+            <th class="text-center col-2">Operador</th>
+            <th class="text-center col-3">Tipo</th>
+            <th class="text-start col-3">Motivo</th>
+            <th class="text-center col-2">Funcionário</th>
+            <th class="text-center col-1">Valor</th>
+            <th class="text-center col-1">Caixa ID</th>
+            <th class="text-center col-2">Data Emissão</th>
+          </thead>
+          <tbody>
+            @for (sangria of listaSangrias; track $index) {
+            <tr>
+              <td class="text-center">{{ $index + 1 + page * size }}</td>
+              <td class="text-center">{{ sangria.id }}</td>
+              <td class="text-center">{{ sangria.funcionario.nome || "-" }}</td>
+              <td class="text-center">{{ sangria.tipo }}</td>
+              <td class="text-start">{{ sangria.motivo }}</td>
+              <td class="text-center">{{ sangria.nomeFuncionario }}</td>
+              <td class="text-center">
+                {{ sangria.valor | currency : "BRL" }}
+              </td>
+              <td class="text-center">{{ sangria.caixa.id }}</td>
+              <td class="text-center">
+                {{ sangria.dataSangria | date : "dd/MM/yyyy HH:mm:ss a" }}
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      }@if (relatorio && relatorio.tipoConsulta === 'SUPRIMENTO') {
+      <div class="lista-relatorio">
+        <h3 class="p-2"><strong>Lista De Suprimentos</strong></h3>
+        <table class="table">
+          <thead>
+            <th class="text-center col-1">#</th>
+            <th class="text-center col-1">ID</th>
+            <th class="text-center col-2">Operador</th>
+            <th class="text-start col-4">Motivo</th>
+            <th class="text-center col-2">Valor</th>
+            <th class="text-center col-1">Caixa ID</th>
+            <th class="text-center col-3">Data Emissão</th>
+          </thead>
+          <tbody>
+            @for (suprimento of listaSuprimentos; track $index) {
+            <tr>
+              <td class="text-center">{{ $index + 1 + page * size }}</td>
+              <td class="text-center">{{ suprimento.id }}</td>
+              <td class="text-center">
+                {{ suprimento.funcionario.nome || "-" }}
+              </td>
+              <td class="text-start">{{ suprimento.motivo }}</td>
+              <td class="text-center">
+                {{ suprimento.valor | currency : "BRL" }}
+              </td>
+              <td class="text-center">{{ suprimento.caixa.id }}</td>
+              <td class="text-center">
+                {{ suprimento.dataSuprimento | date : "dd/MM/yyyy HH:mm:ss a" }}
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      }@if (relatorio && relatorio.tipoConsulta === 'GORJETA') {
+      <div class="lista-relatorio">
+        <h3 class="p-2"><strong>Lista De Gorjetas</strong></h3>
+        <table class="table">
+          <thead>
+            <th class="text-center col-1">#</th>
+            <th class="text-center col-1">ID</th>
+            <th class="text-center col-2">Operador</th>
+            <th class="text-center col-4">Pagamentos</th>
+            <th class="text-center col-2">Total</th>
+            <th class="text-center col-1">Caixa ID</th>
+            <th class="text-center col-3">Data Emissão</th>
+          </thead>
+          <tbody>
+            @for (gorjeta of listaGorjetas; track $index) {
+            <tr>
+              <td class="text-center">{{ $index + 1 + page * size }}</td>
+              <td class="text-center">{{ gorjeta.id }}</td>
+              <td class="text-center">
+                {{ gorjeta.funcionario.nome || "-" }}
+              </td>
+              <td class="text-center">
+                @if (gorjeta.dinheiro > 0) {
+                <span>
+                  Dinheiro
+                  {{ gorjeta.dinheiro || 0 | currency : "BRL" }}
+                </span>
+                } @if (gorjeta.credito > 0) {
+                <span>
+                  Crédito
+                  {{ gorjeta.credito || 0 | currency : "BRL" }}</span
+                >
+                } @if (gorjeta.debito > 0) {
+                <span>
+                  Débito
+                  {{ gorjeta.debito || 0 | currency : "BRL" }}</span
+                >
+                } @if (gorjeta.pix > 0) {
+                <span>
+                  PIX
+                  {{ gorjeta.pix || 0 | currency : "BRL" }}</span
+                >
+                }
+              </td>
+              <td class="text-center">
+                {{
+                  (gorjeta.dinheiro || 0) +
+                    (gorjeta.credito || 0) +
+                    (gorjeta.debito || 0) +
+                    (gorjeta.pix || 0) | currency : "BRL"
+                }}
+              </td>
+              <td class="text-center">{{ gorjeta.caixa.id }}</td>
+              <td class="text-center">
+                {{ gorjeta.dataGorjeta | date : "dd/MM/yyyy HH:mm:ss a" }}
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      }@if (relatorio && relatorio.tipoConsulta === 'ESTOQUE') {
+      <div class="lista-relatorio">
+        <h3 class="p-2"><strong>Lista De Estoques</strong></h3>
+        <table class="table">
+          <thead>
+            <th class="text-center col-1">#</th>
+            <th class="text-center col-1">ID</th>
+            <th class="text-center col-1">Produto</th>
+            <th class="text-center col-1">Quantedade</th>
+            <th class="text-center col-1">Quantedade Vendido</th>
+            <th class="text-center col-1">Quantedade disponível</th>
+            <th class="text-center col-2">Data Cadastro</th>
+            <th class="text-center col-2">Data Esgotar</th>
+            <th class="text-center col-1">Valor Compra</th>
+          </thead>
+          <tbody>
+            @for (estoque of listaEstoques; track $index) {
+            <tr>
+              <td class="text-center">{{ $index + 1 + page * size }}</td>
+              <td class="text-center">{{ estoque.id }}</td>
+              <td class="text-center">{{ estoque.produto.nome }}</td>
+              <td class="text-center">{{ estoque.quantidade }}</td>
+              <td class="text-center">{{ estoque.quantidadeVendido }}</td>
+              <td class="text-center">
+                {{ estoque.quantidade - estoque.quantidadeVendido }}
+              </td>
+              <td class="text-center">
+                {{ estoque.dataCadastrar | date : "dd/MM/yyyy HH:mm:ss a" }}
+              </td>
+              <td class="text-center">
+                {{ estoque.dataDesativar | date : "dd/MM/yyyy HH:mm:ss a" }}
+              </td>
+              <td class="text-center">
+                {{ estoque.valorTotal || 0 | currency : "BRL" }}
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      }@if (relatorio && relatorio.tipoConsulta === 'ESTOQUEDESCARTAR') {
+      <div class="lista-relatorio">
+        <h3 class="p-2"><strong>Lista De Estoques Descartados</strong></h3>
+        <table class="table">
+          <thead>
+            <th class="text-center col-1">#</th>
+            <th class="text-center col-1">ID</th>
+            <th class="text-center col-1">Produto</th>
+            <th class="text-center col-1">Quantedade</th>
+            <th class="text-center col-2">Data Descartar</th>
+            <th class="text-center col-2">Motivo</th>
+          </thead>
+          <tbody>
+            @for (estoqueDescartar of listaEstoquesDescatados; track $index) {
+            <tr>
+              <td class="text-center">{{ $index + 1 + page * size }}</td>
+              <td class="text-center">{{ estoqueDescartar.id }}</td>
+              <td class="text-center">{{ estoqueDescartar.produto.nome }}</td>
+              <td class="text-center">{{ estoqueDescartar.quantidade }}</td>
+              <td class="text-center">
+                {{
+                  estoqueDescartar.dataDescartar
+                    | date : "dd/MM/yyyy HH:mm:ss a"
+                }}
+              </td>
+              <td class="text-center">{{ estoqueDescartar.motivo }}</td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      }@if (relatorio && relatorio.tipoConsulta === 'DEPOSITO') {
+      <div class="lista-relatorio">
+        <h3 class="p-2"><strong>Lista De Depositos</strong></h3>
+        <table class="table">
+          <thead>
+            <th class="text-center col-1">#</th>
+            <th class="text-center col-1">ID</th>
+            <th class="text-center col-1">Matéria</th>
+            <th class="text-center col-1">Quantedade</th>
+            <th class="text-center col-1">Quantedade Vendido</th>
+            <th class="text-center col-1">Quantedade disponível</th>
+            <th class="text-center col-2">Data Cadastro</th>
+            <th class="text-center col-2">Data Esgotar</th>
+            <th class="text-center col-1">Valor Compra</th>
+          </thead>
+          <tbody>
+            @for (deposito of listaDepositos; track $index) {
+            <tr>
+              <td class="text-center">{{ $index + 1 + page * size }}</td>
+              <td class="text-center">{{ deposito.id }}</td>
+              <td class="text-center">{{ deposito.materia.nome }}</td>
+              <td class="text-center">{{ deposito.quantidade }}</td>
+              <td class="text-center">{{ deposito.quantidadeVendido }}</td>
+              <td class="text-center">
+                {{ deposito.quantidade - deposito.quantidadeVendido }}
+              </td>
+              <td class="text-center">
+                {{ deposito.dataCadastrar | date : "dd/MM/yyyy HH:mm:ss a" }}
+              </td>
+              <td class="text-center">
+                {{ deposito.dataDesativar | date : "dd/MM/yyyy HH:mm:ss a" }}
+              </td>
+              <td class="text-center">
+                {{ deposito.valorTotal || 0 | currency : "BRL" }}
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      }@if (relatorio && relatorio.tipoConsulta === 'DEPOSITODESCARTAR') {
+      <div class="lista-relatorio">
+        <h3 class="p-2"><strong>Lista De Depositos Descartados</strong></h3>
+        <table class="table">
+          <thead>
+            <th class="text-center col-1">#</th>
+            <th class="text-center col-1">ID</th>
+            <th class="text-center col-1">Matéria</th>
+            <th class="text-center col-1">Quantedade</th>
+            <th class="text-center col-2">Data Descartar</th>
+            <th class="text-center col-2">Motivo</th>
+          </thead>
+          <tbody>
+            @for (depositoDescartar of listaDepositosDescatados; track $index) {
+            <tr>
+              <td class="text-center">{{ $index + 1 + page * size }}</td>
+              <td class="text-center">{{ depositoDescartar.id }}</td>
+              <td class="text-center">{{ depositoDescartar.materia.nome }}</td>
+              <td class="text-center">{{ depositoDescartar.quantidade }}</td>
+              <td class="text-center">
+                {{
+                  depositoDescartar.dataDescartar
+                    | date : "dd/MM/yyyy HH:mm:ss a"
+                }}
+              </td>
+              <td class="text-center">{{ depositoDescartar.motivo }}</td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      }@if (relatorio && relatorio.tipoConsulta === 'PRODUTO') {
+      <div class="lista-relatorio">
+        <h3 class="p-2"><strong>Lista De Produtos</strong></h3>
+        <table class="table">
+          <thead>
+            <th class="text-center col-1">#</th>
+            <th class="text-start col-4">Produto</th>
+            <th class="text-center col-1">Total Vendas</th>
+            <th class="text-center col-1">Quantedade Total</th>
+            <th class="text-center col-1">Valor Total</th>
+          </thead>
+          <tbody>
+            @for (produtoVendido of listaProdutosMaisVendidos; track $index) {
+            <tr>
+              <td class="text-center">{{ $index }}</td>
+              <td class="text-start">{{ produtoVendido.produtoNome }}</td>
+              <td class="text-center">{{ produtoVendido.totalVendas }}</td>
+              <td class="text-center">{{ produtoVendido.quantidadeTotal }}</td>
+              <td class="text-center">
+                {{ produtoVendido.valorTotal || 0 | currency : "BRL" }}
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      } @if (relatorio && relatorio.tipoConsulta !== 'PRODUTO') {
+      <div class="d-flex justify-content-between align-items-center flex-wrap">
+        <div></div>
+        <div class="d-flex align-items-center justify-content-center">
+          <div class="paginacao-container mt-2">
+            <button
+              class="paginacao-botao"
+              [ngClass]="{ none: page === 0 }"
+              (click)="setPage(0)"
+            >
+              <i class="bi bi-chevron-bar-left"></i>
+            </button>
+            <button
+              class="paginacao-botao"
+              [ngClass]="{
+                none: page === 0
+              }"
+              (click)="setPage(page - 1)"
+            >
+              <i class="bi bi-chevron-left"></i>
+            </button>
+
+            @for (i of pagesVisiveis(); track i) {
+            <button
+              class="paginacao-botao"
+              [class.ativo]="i === page"
+              [disabled]="i === page"
+              (click)="setPage(i)"
+            >
+              {{ i + 1 }}
+            </button>
+            } @if (pagesVisiveis()[0] > 1) {
+            <span>...</span>
+            } @if (pagesVisiveis()[pagesVisiveis().length - 1] < totalPages - 1)
+            {
+            <button
+              class="paginacao-botao"
+              [class.ativo]="totalPages - 1 === page"
+              (click)="setPage(totalPages - 1)"
+            >
+              {{ totalPages }}
+            </button>
+            }
+
+            <button
+              class="paginacao-botao"
+              [ngClass]="{
+                none: page + 1 >= totalPages
+              }"
+              (click)="setPage(page + 1)"
+            >
+              <i class="bi bi-chevron-right"></i>
+            </button>
+            <button
+              class="paginacao-botao"
+              [ngClass]="{ none: page + 1 >= totalPages }"
+              (click)="setPage(totalPages - 1)"
+            >
+              <i class="bi bi-chevron-bar-right"></i>
+            </button>
+          </div>
+        </div>
+        <div>
+          <div class="d-flex align-items-center tamanho-select">
+            <div class="d-flex flex-column w-100">
+              <label>Itens por página</label>
+              <select
+                class="select-filtro p-1"
+                (change)="alterarTamanho($event)"
+                [disabled]="!relatorio.tipoConsulta"
+              >
+                <option [value]="20">20</option>
+                <option [value]="50">50</option>
+                <option [value]="100">100</option>
+                <option [value]="100">200</option>
+              </select>
+            </div>
           </div>
         </div>
       </div>
+      } }
     </div>
   </div>
 </div>
@@ -578,5 +1938,42 @@
     >
       Fechar
     </button>
+  </div>
+</ng-template>
+<ng-template #modalRelatorio let-modal>
+  <div class="modal-header modal-style">
+    <h4 class="modal-title">{{ tituloModal }}</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+      name="close"
+    ></button>
+  </div>
+  <div class="modal-body modal-style">
+    <div class="d-flex justify-content-between">
+      <div class="mb-3">
+        <label for="nome" class="form-label">Nome Relatório</label>
+        <input
+          autocomplete="off"
+          #nome
+          type="text"
+          class="form-control"
+          name="nome"
+          [(ngModel)]="relatorio.nome"
+        />
+      </div>
+    </div>
+    <div class="d-flex justify-content-center">
+      <button
+        type="button"
+        name="salvar"
+        class="btn-comum btn-comum-laranja"
+        (click)="aplicarRelatorio()"
+      >
+        Salvar
+      </button>
+    </div>
   </div>
 </ng-template>

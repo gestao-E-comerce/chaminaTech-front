@@ -16,7 +16,7 @@ export class AdminFuncionarioService {
 
   listarAdminFuncionarios(
     termoPesquisa?: string,
-    ativo?: string
+    ativo?: string | null
   ): Observable<AdminFuncionario[]> {
     return this.globalService.getAdminAsync().pipe(
       switchMap((admin) => {

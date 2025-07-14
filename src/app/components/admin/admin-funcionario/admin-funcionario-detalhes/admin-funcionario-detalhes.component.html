@@ -14,8 +14,6 @@
         [ngClass]="{ 'borda-vermelha': !nome.valid && nome.touched }"
       />
     </div>
-  </div>
-  <div class="d-flex justify-content-between">
     <div class="mb-3">
       <label for="userName" class="form-label">Username</label>
       <input
@@ -30,6 +28,8 @@
         [ngClass]="{ 'borda-vermelha': !userName.valid && userName.touched }"
       />
     </div>
+  </div>
+  <div class="d-flex justify-content-between">
     <div class="mb-3">
       <label for="senha" class="form-label">Password</label>
       <input
@@ -43,6 +43,22 @@
         #senha="ngModel"
         [ngClass]="{ 'borda-vermelha': !senha.valid && senha.touched }"
       />
+      <ul class="mt-2 regras-senha">
+        <li [ngClass]="{ ok: temMaiuscula(), nok: !temMaiuscula() }">
+          1 letra maiúscula
+        </li>
+        <li [ngClass]="{ ok: temMinuscula(), nok: !temMinuscula() }">
+          1 letra minúscula
+        </li>
+        <li [ngClass]="{ ok: temNumero(), nok: !temNumero() }">1 número</li>
+        <li [ngClass]="{ ok: temEspecial(), nok: !temEspecial() }">
+          1 caractere especial
+        </li>
+        <li [ngClass]="{ ok: temTamanho(), nok: !temTamanho() }">
+          Mínimo de 8 caracteres
+        </li>
+        <li [ngClass]="{ ok: !temEspaco(), nok: temEspaco() }">Sem espaços</li>
+      </ul>
     </div>
   </div>
   <div class="mt-2 d-flex flex-column">

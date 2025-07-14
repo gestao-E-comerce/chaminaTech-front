@@ -35,8 +35,9 @@ export class LoginComponent {
     } else {
       this.loginService.logar(this.login).subscribe({
         next: usuario => {
+          console.log(usuario);
+          this.globalService.setUsuario(usuario);
           this.loginService.adken(usuario.token);
-          // this.roteador.navigate(['home']);
           window.location.replace('/home');
         },
         error: erro => {

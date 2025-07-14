@@ -4,7 +4,6 @@ import { Funcionario } from './funcionario';
 export class Gorjeta {
   id!: number;
   ativo!: boolean;
-  motivo!: string;
   dinheiro!: number;
   debito!: number;
   credito!: number;

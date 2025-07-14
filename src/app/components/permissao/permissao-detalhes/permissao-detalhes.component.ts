@@ -122,6 +122,10 @@ export class PermissaoDetalhesComponent {
       'cadastrarProduto',
       'editarProduto',
       'deletarProduto',
+      'relatorio',
+      'cadastrarRelatorio',
+      'editarRelatorio',
+      'deletarRelatorio',
       'editarConfiguracoes',
       'auditoria',
     ];
@@ -201,6 +205,10 @@ export class PermissaoDetalhesComponent {
       'cadastrarProduto',
       'editarProduto',
       'deletarProduto',
+      'relatorio',
+      'cadastrarRelatorio',
+      'editarRelatorio',
+      'deletarRelatorio',
       'editarConfiguracoes',
       'auditoria',
     ];

@@ -39,7 +39,7 @@ export class FuncionarioListComponent implements OnInit {
   globalService = inject(GlobalService);
 
   tituloModal!: string;
-  ativo?: string = '';
+  ativo?: string | null = null;
   nome?: string = '';
   indice!: number;
 

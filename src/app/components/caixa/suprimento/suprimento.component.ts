@@ -12,7 +12,6 @@ import { ToastrService } from 'ngx-toastr';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { NgClass } from '@angular/common';
-import { LoginService } from '../../../services/login.service';
 import { SuprimentoService } from '../../../services/suprimento.service';
 import { GlobalService } from '../../../services/global.service';
 import { take } from 'rxjs';
@@ -32,7 +31,6 @@ export class SuprimentoComponent implements OnInit {
 
   toastr = inject(ToastrService);
   suprimentoService = inject(SuprimentoService);
-  loginService = inject(LoginService);
   globalService = inject(GlobalService);
   modalService = inject(NgbModal);
 

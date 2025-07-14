@@ -16,10 +16,10 @@ import { take } from 'rxjs';
 import { Observacoes } from '../../../models/observacoes';
 
 @Component({
-    selector: 'app-historico-venda',
-    imports: [FormsModule, DatePipe, NgClass, RouterLink],
-    templateUrl: './historico-venda.component.html',
-    styleUrl: './historico-venda.component.scss'
+  selector: 'app-historico-venda',
+  imports: [FormsModule, DatePipe, NgClass, RouterLink],
+  templateUrl: './historico-venda.component.html',
+  styleUrl: './historico-venda.component.scss',
 })
 export class HistoricoVendaComponent implements OnInit {
   @Input() modoModal: boolean = false;
@@ -43,7 +43,7 @@ export class HistoricoVendaComponent implements OnInit {
   termoPesquisa!: 0;
   active!: any;
   cupomSelecionado!: GestaoCaixa | null;
-  filtroTipo: string = '';
+  filtroTipo: string | null = null;
   urlString!: string;
   motivoDeletar: string = '';
   menuAberto = true;
@@ -88,14 +88,18 @@ export class HistoricoVendaComponent implements OnInit {
 
   pesquisarCupom(termo: number) {
     const tipoValido =
-      this.filtroTipo.trim() !== '' ? this.filtroTipo : undefined;
+      this.filtroTipo && this.filtroTipo.trim() !== ''
+        ? this.filtroTipo
+        : undefined;
     const cupom = termo > 0 ? termo : undefined;
 
     this.listaCupons(tipoValido, cupom);
   }
   filtrarPorTipo() {
     const tipoValido =
-      this.filtroTipo.trim() !== '' ? this.filtroTipo : undefined;
+      this.filtroTipo && this.filtroTipo.trim() !== ''
+        ? this.filtroTipo
+        : undefined;
     const cupom = this.termoPesquisa > 0 ? this.termoPesquisa : undefined;
 
     this.listaCupons(tipoValido, cupom);

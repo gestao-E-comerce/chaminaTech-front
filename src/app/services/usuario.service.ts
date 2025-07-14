@@ -11,7 +11,9 @@ export class UsuarioService {
   private readonly API = `${Config.BACKEND_URL}/usuario`;
   http = inject(HttpClient);
 
-  buscarUsuarioPorId(id: number): Observable<Usuario> {
-    return this.http.get<Usuario>(this.API + '/' + `${id}`);
+  buscarUsuarioPorToken(token: string): Observable<Usuario> {
+    return this.http.post<Usuario>(`${this.API}/token`, token, {
+      headers: { 'Content-Type': 'text/plain' },
+    });
   }
 }

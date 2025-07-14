@@ -58,7 +58,7 @@ export class EstoqueListComponent implements OnInit {
   indice!: number;
   tituloModal!: string;
   termoPesquisa!: '';
-  ativo?: string = '';
+  ativo?: string | null = null;
   produtoNome?: string = '';
   lista: string = 'estoques'; // 'estoques' ou 'produtos'
 

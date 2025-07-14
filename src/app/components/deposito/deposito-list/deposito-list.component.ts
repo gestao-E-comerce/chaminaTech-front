@@ -58,7 +58,7 @@ export class DepositoListComponent implements OnInit {
   indice!: number;
   tituloModal!: string;
   termoPesquisa!: '';
-  ativo?: string = '';
+  ativo?: string | null = null;
   materiaNome?: string = '';
   lista: string = 'depositos'; // 'depositos' ou 'materias'
 

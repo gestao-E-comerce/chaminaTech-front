@@ -56,7 +56,7 @@ export class SangriaComponent implements OnInit {
       .subscribe({
         next: (matriz) => {
           this.matriz = matriz;
-          this.funcionarioService.listarFuncionarios().subscribe({
+          this.funcionarioService.listarTudosFuncionarios().subscribe({
             next: (list) => {
               this.funcionarios = list.filter((f) => !f.deletado);
             },

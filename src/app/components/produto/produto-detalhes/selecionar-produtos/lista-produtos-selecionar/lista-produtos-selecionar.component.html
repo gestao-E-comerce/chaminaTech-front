@@ -29,7 +29,7 @@
         [(ngModel)]="cardapio"
         (change)="filtrarProdutos()"
       >
-        <option [ngValue]="undefined">Todos</option>
+        <option [ngValue]="null">Todos</option>
         <option value="true">Sim</option>
         <option value="false">Não</option>
       </select>
@@ -42,7 +42,7 @@
         [(ngModel)]="categoriaNome"
         (change)="filtrarProdutos()"
       >
-        <option [ngValue]="undefined">Todos</option>
+        <option [ngValue]="null">Todos</option>
         @for (categoria of listaCategorias; track $index) {
         <option value="{{ categoria.nome }}">{{ categoria.nome }}</option>
         }
